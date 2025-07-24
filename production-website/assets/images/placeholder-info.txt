@@ -1,0 +1,94 @@
+REQUIRED IMAGES FOR ZINGA LINGA WEBSITE
+==========================================
+
+Please add the following image files to this directory before uploading to your host:
+
+ESSENTIAL IMAGES (Required):
+---------------------------
+1. logo.png - Main Zinga Linga logo
+   - Recommended size: 200x60px
+   - Format: PNG with transparent background
+   - Used in: Header, footer
+
+2. kiki.png - Kiki character image
+   - Recommended size: 200x200px
+   - Format: PNG with transparent background
+   - Used in: Hero section, modules, modals
+
+3. tano.png - Tano character image
+   - Recommended size: 200x200px
+   - Format: PNG with transparent background
+   - Used in: Hero section, modules, modals
+
+4. favicon.ico - Website favicon
+   - Size: 16x16px and 32x32px (multi-size ICO)
+   - Format: ICO
+   - Used in: Browser tab
+
+5. apple-touch-icon.png - iOS home screen icon
+   - Size: 180x180px
+   - Format: PNG
+   - Used in: iOS devices when adding to home screen
+
+OPTIONAL IMAGES (Recommended):
+-----------------------------
+6. about-illustration.png - About section illustration
+   - Recommended size: 500x400px
+   - Format: PNG or JPG
+   - Used in: About section
+
+7. demo-thumbnail.jpg - Demo video thumbnail
+   - Recommended size: 640x360px (16:9 aspect ratio)
+   - Format: JPG
+   - Used in: Demo section
+
+8. og-image.jpg - Open Graph image for social sharing
+   - Size: 1200x630px
+   - Format: JPG
+   - Used in: Social media sharing
+
+9. twitter-card.jpg - Twitter card image
+   - Size: 1200x600px
+   - Format: JPG
+   - Used in: Twitter sharing
+
+PWA ICONS (For Progressive Web App):
+-----------------------------------
+10. icon-72x72.png (72x72px)
+11. icon-96x96.png (96x96px)
+12. icon-128x128.png (128x128px)
+13. icon-144x144.png (144x144px)
+14. icon-152x152.png (152x152px)
+15. icon-192x192.png (192x192px)
+16. icon-384x384.png (384x384px)
+17. icon-512x512.png (512x512px)
+
+SCREENSHOTS (For PWA):
+---------------------
+18. screenshot-desktop.png - Desktop screenshot
+    - Size: 1280x720px
+    - Format: PNG
+    - Used in: PWA app store listings
+
+19. screenshot-mobile.png - Mobile screenshot
+    - Size: 375x667px
+    - Format: PNG
+    - Used in: PWA app store listings
+
+IMAGE OPTIMIZATION TIPS:
+------------------------
+- Compress images to reduce file size
+- Use WebP format for better compression (with fallbacks)
+- Ensure images are optimized for web
+- Use descriptive alt text for accessibility
+- Consider using a CDN for faster loading
+
+TOOLS FOR IMAGE CREATION:
+------------------------
+- Canva (for social media images)
+- GIMP (free image editor)
+- Photoshop (professional image editor)
+- TinyPNG (for compression)
+- Favicon.io (for favicon generation)
+
+Once you have these images, simply place them in this directory and your website will be complete and ready for hosting!
