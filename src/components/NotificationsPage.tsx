@@ -1,34 +1,27 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback, useMemo } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
 import { 
   Bell, 
   Search, 
-  Filter, 
-  Eye, 
-  EyeOff, 
-  Trash2, 
+  RefreshCw, 
+  Clock, 
   Check, 
-  X, 
+  CheckCircle, 
+  ChevronDown, 
+  ChevronUp, 
   ShoppingCart, 
   User, 
-  AlertTriangle, 
   Settings, 
-  RefreshCw,
-  Download,
-  Calendar,
-  Clock,
-  Star,
-  TrendingUp,
-  Mail,
-  CheckCircle,
-  AlertCircle,
-  Info,
-  Plus,
-  MoreVertical,
-  Archive,
-  Flag,
-  MessageSquare
+  AlertTriangle 
 } from 'lucide-react';
-import { Notification, notificationService } from '../utils/notificationService';
+import { formatDistanceToNow } from 'date-fns';
+import { Notification } from '../types';
+import { notificationService } from '../services/notificationService';
+
+const ITEMS_PER_PAGE = 10;
+
+type SortByType = 'date' | 'priority' | 'type';
+type SortOrderType = 'asc' | 'desc';
 
 interface NotificationsPageProps {
   onRefresh: () => void;
@@ -36,17 +29,390 @@ interface NotificationsPageProps {
 
 export const NotificationsPage: React.FC<NotificationsPageProps> = ({ onRefresh }) => {
   const [notifications, setNotifications] = useState<Notification[]>([]);
-  const [filteredNotifications, setFilteredNotifications] = useState<Notification[]>([]);
-  const [searchTerm, setSearchTerm] = useState('');
-  const [filterType, setFilterType] = useState<'all' | 'unread' | 'purchase' | 'user_registration' | 'system' | 'payment_failed'>('all');
-  const [filterPriority, setFilterPriority] = useState<'all' | 'urgent' | 'high' | 'medium' | 'low'>('all');
-  const [sortBy, setSortBy] = useState<'date' | 'priority' | 'type'>('date');
-  const [sortOrder, setSortOrder] = useState<'asc' | 'desc'>('desc');
-  const [selectedNotifications, setSelectedNotifications] = useState<string[]>([]);
-  const [showBulkActions, setShowBulkActions] = useState(false);
-  const [currentPage, setCurrentPage] = useState(1);
-  const [itemsPerPage] = useState(20);
   const [isLoading, setIsLoading] = useState(false);
+  const [isRefreshing, setIsRefreshing] = useState(false);
+  const [searchTerm, setSearchTerm] = useState('');
+  const [filterType, setFilterType] = useState('all');
+  const [filterPriority, setFilterPriority] = useState('all');
+  const [sortBy, setSortBy] = useState<SortByType>('date');
+  const [sortOrder, setSortOrder] = useState<SortOrderType>('desc');
+  const [currentPage, setCurrentPage] = useState(1);
+  const [selectedNotifications, setSelectedNotifications] = useState<string[]>([]);
+
+  const filteredNotifications = useMemo(() => {
+    let result = [...notifications];
+
+    // Apply search filter
+    if (searchTerm) {
+      const term = searchTerm.toLowerCase();
+    if (filterType !== 'all') {
+      result = result.filter(n => n.type === filterType);
+    }
+    if (filterPriority !== 'all') {
+      result = result.filter(n => n.priority === filterPriority);
+    }
+    if (searchTerm) {
+      const term = searchTerm.toLowerCase();
+      result = result.filter(n =>
+        n.title.toLowerCase().includes(term) ||
+        n.message.toLowerCase().includes(term)
+      );
+    }
+    return result;
+  }, [notifications, filterType, filterPriority, searchTerm]);
+
+  const paginatedNotifications = useMemo(() => {
+    const startIndex = (currentPage - 1) * ITEMS_PER_PAGE;
+    return filteredNotifications.slice(startIndex, startIndex + ITEMS_PER_PAGE);
+  }, [filteredNotifications, currentPage]);
+
+  const hasSelectedAll = useMemo(() => {
+    return selectedNotifications.length === paginatedNotifications.length;
+  }, [selectedNotifications, paginatedNotifications]);
+
+  const toggleSelectAll = useCallback(() => {
+    if (hasSelectedAll) {
+      setSelectedNotifications([]);
+    } else {
+      const pageIds = paginatedNotifications.map(n => n.id);
+      setSelectedNotifications(prev => [...new Set([...prev, ...pageIds])]);
+    }
+  }, [hasSelectedAll, paginatedNotifications]);
+
+  const toggleNotificationSelect = useCallback((id: string) => {
+    setSelectedNotifications(prev => 
+      prev.includes(id) 
+        ? prev.filter(i => i !== id) 
+        : [...prev, id]
+    );
+  }, []);
+
+  const markSelectedAsRead = useCallback(async () => {
+    await Promise.all(
+      selectedNotifications.map(id => notificationService.markAsRead(id))
+    );
+    setSelectedNotifications([]);
+  }, [selectedNotifications]);
+
+  const deleteSelected = useCallback(async () => {
+    if (window.confirm('Delete selected notifications?')) {
+      await Promise.all(
+        selectedNotifications.map(id => notificationService.deleteNotification(id))
+      );
+      setSelectedNotifications([]);
+    }
+  }, [selectedNotifications]);
+
+  const markAllAsRead = useCallback(async () => {
+    await notificationService.markAllAsRead();
+  }, []);
+
+  const handleRefresh = useCallback(async () => {
+    setIsRefreshing(true);
+    try {
+      await notificationService.refresh();
+      loadNotifications();
+    } finally {
+      setIsRefreshing(false);
+    }
+  }, [loadNotifications]);
+
+  const loadNotifications = useCallback(async () => {
+    setIsLoading(true);
+    try {
+      const data = await notificationService.getNotifications();
+      setNotifications(data);
+      setUnreadCount(data.filter(n => !n.read).length);
+      setTotalPages(Math.ceil(data.length / ITEMS_PER_PAGE));
+    } catch (error) {
+      console.error('Failed to load notifications:', error);
+    } finally {
+      setIsLoading(false);
+    }
+  }, []);
+
+  useEffect(() => {
+    loadNotifications();
+  }, [loadNotifications]);
+
+  const getNotificationIcon = useCallback((type: NotificationType) => {
+    switch (type) {
+      case 'purchase':
+        return <ShoppingCart className="h-5 w-5 text-blue-600" />;
+      case 'user_registration':
+        return <User className="h-5 w-5 text-green-600" />;
+      case 'system':
+        return <Settings className="h-5 w-5 text-purple-600" />;
+      case 'payment_failed':
+        return <AlertTriangle className="h-5 w-5 text-red-600" />;
+      default:
+        return <Bell className="h-5 w-5 text-gray-600" />;
+    }
+  }, []);
+
+  const getPriorityBadge = useCallback((priority: PriorityType) => {
+    const colors = {
+      urgent: 'bg-red-100 text-red-800 border-red-200',
+      high: 'bg-yellow-100 text-yellow-800 border-yellow-200',
+      medium: 'bg-blue-100 text-blue-800 border-blue-200',
+      low: 'bg-green-100 text-green-800 border-green-200'
+    };
+    return (
+      <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium border ${colors[priority]}`}>
+        {priority}
+      </span>
+    );
+  }, []);
+
+  const formatTime = useCallback((timestamp: Date) => {
+    return formatDistanceToNow(new Date(timestamp), { addSuffix: true });
+  }, []);
+
+  if (isLoading) {
+    return (
+      <div className="flex items-center justify-center h-64">
+        <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-blue-500"></div>
+      </div>
+    );
+  }
+
+  return (
+    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+      <div className="flex flex-col space-y-6">
+        {/* Header */}
+        <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+          <div>
+            <h1 className="text-2xl font-bold text-gray-900">Notifications</h1>
+            <p className="mt-1 text-sm text-gray-500">
+              {unreadCount > 0 ? `${unreadCount} unread notifications` : 'All caught up!'}
+            </p>
+          </div>
+          <div className="flex items-center space-x-3">
+            <button
+              onClick={handleRefresh}
+              disabled={isRefreshing}
+              className="inline-flex items-center px-3 py-2 border border-gray-300 shadow-sm text-sm leading-4 font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 disabled:opacity-50"
+            >
+              <RefreshCw className={`h-4 w-4 mr-2 ${isRefreshing ? 'animate-spin' : ''}`} />
+              Refresh
+            </button>
+            <button
+              onClick={markAllAsRead}
+              disabled={unreadCount === 0}
+              className="inline-flex items-center px-3 py-2 border border-transparent text-sm leading-4 font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 disabled:opacity-50"
+            >
+              <Check className="h-4 w-4 mr-2" />
+              Mark all as read
+            </button>
+          </div>
+        </div>
+
+        {/* Filters */}
+        <div className="bg-white shadow rounded-lg p-4 space-y-4">
+          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+            <div className="relative flex-1">
+              <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                <Search className="h-5 w-5 text-gray-400" />
+              </div>
+              <input
+                type="text"
+                className="block w-full pl-10 pr-3 py-2 border border-gray-300 rounded-md leading-5 bg-white placeholder-gray-500 focus:outline-none focus:placeholder-gray-400 focus:ring-1 focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
+                placeholder="Search notifications..."
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+              />
+            </div>
+            <div className="flex items-center space-x-2">
+              <select
+                className="block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm rounded-md"
+                value={filterType}
+                onChange={(e) => setFilterType(e.target.value as any)}
+              >
+                <option value="all">All Types</option>
+                <option value="unread">Unread</option>
+                <option value="purchase">Purchases</option>
+                <option value="user_registration">User Registrations</option>
+                <option value="system">System</option>
+                <option value="payment_failed">Payment Issues</option>
+              </select>
+              <select
+                className="block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm rounded-md"
+                value={filterPriority}
+                onChange={(e) => setFilterPriority(e.target.value as any)}
+              >
+                <option value="all">All Priorities</option>
+                <option value="urgent">Urgent</option>
+                <option value="high">High</option>
+                <option value="medium">Medium</option>
+                <option value="low">Low</option>
+              </select>
+              <button
+                onClick={() => setSortOrder(prev => prev === 'asc' ? 'desc' : 'asc')}
+                className="inline-flex items-center px-3 py-2 border border-gray-300 shadow-sm text-sm leading-4 font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
+              >
+                {sortOrder === 'asc' ? (
+                  <ChevronUp className="h-4 w-4 mr-1" />
+                ) : (
+                  <ChevronDown className="h-4 w-4 mr-1" />
+                )}
+                Sort
+              </button>
+            </div>
+          </div>
+
+          {/* Bulk Actions */}
+          {selectedNotifications.length > 0 && (
+            <div className="flex items-center justify-between bg-blue-50 p-3 rounded-md">
+              <div className="flex items-center space-x-2">
+                <CheckCircle className="h-5 w-5 text-blue-600" />
+                <span className="text-sm font-medium text-blue-800">
+                  {selectedNotifications.length} selected
+                </span>
+              </div>
+              <div className="flex space-x-2">
+                <button
+                  onClick={markSelectedAsRead}
+                  className="inline-flex items-center px-3 py-1.5 border border-transparent text-xs font-medium rounded text-blue-700 bg-blue-100 hover:bg-blue-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
+                >
+                  Mark as read
+                </button>
+                <button
+                  onClick={deleteSelected}
+                  className="inline-flex items-center px-3 py-1.5 border border-transparent text-xs font-medium rounded text-red-700 bg-red-100 hover:bg-red-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500"
+                >
+                  Delete
+                </button>
+              </div>
+            </div>
+          )}
+        </div>
+
+        {/* Notifications List */}
+        <div className="bg-white shadow overflow-hidden sm:rounded-lg">
+          <ul className="divide-y divide-gray-200">
+            {paginatedNotifications.length === 0 ? (
+              <div className="text-center py-12">
+                <Bell className="mx-auto h-12 w-12 text-gray-400" />
+                <h3 className="mt-2 text-sm font-medium text-gray-900">No notifications</h3>
+                <p className="mt-1 text-sm text-gray-500">
+                  {searchTerm || filterType !== 'all' || filterPriority !== 'all'
+                    ? 'No notifications match your current filters.'
+                    : 'No notifications to display.'}
+                </p>
+              </div>
+            ) : (
+              <AnimatePresence>
+                {paginatedNotifications.map((notification) => (
+                  <motion.li 
+                    key={notification.id}
+                    initial={{ opacity: 0, y: 10 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    exit={{ opacity: 0, y: -10 }}
+                    transition={{ duration: 0.2 }}
+                    className="hover:bg-gray-50"
+                  >
+                    <div className={`px-4 py-4 sm:px-6 ${!notification.read ? 'bg-blue-50' : 'bg-white'}`}>
+                      <div className="flex items-center">
+                        <div className="min-w-0 flex-1">
+                          <div className="flex items-center">
+                            <div className="flex-shrink-0 h-10 w-10 flex items-center justify-center rounded-full bg-blue-100">
+                              {getNotificationIcon(notification.type)}
+                            </div>
+                            <div className="ml-4">
+                              <div className="flex items-center">
+                                <p className="text-sm font-medium text-gray-900">
+                                  {notification.title}
+                                </p>
+                                <div className="ml-2">
+                                  {getPriorityBadge(notification.priority)}
+                                </div>
+                              </div>
+                              <p className="text-sm text-gray-500 mt-1">
+                                {notification.message}
+                              </p>
+                              <div className="mt-2 flex items-center text-xs text-gray-500">
+                                <Clock className="h-3.5 w-3.5 mr-1" />
+                                <span>{formatTime(notification.timestamp)}</span>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                        <div className="ml-4 flex items-center space-x-2">
+                          {!notification.read && (
+                            <button
+                              onClick={() => notificationService.markAsRead(notification.id)}
+                              className="text-sm text-blue-600 hover:text-blue-500"
+                            >
+                              Mark as read
+                            </button>
+                          )}
+                          <button
+                            onClick={() => {
+                              if (window.confirm('Delete this notification?')) {
+                                notificationService.deleteNotification(notification.id);
+                              }
+                            }}
+                            className="text-sm text-red-600 hover:text-red-500"
+                          >
+                            Delete
+                          </button>
+                        </div>
+                      </div>
+                    </div>
+                  </motion.li>
+                ))}
+              </AnimatePresence>
+            )}
+          </ul>
+
+          {/* Pagination */}
+          {totalPages > 1 && (
+            <div className="bg-white px-4 py-3 flex items-center justify-between border-t border-gray-200 sm:px-6">
+              <div className="flex-1 flex justify-between sm:justify-end">
+                <button
+                  onClick={() => setCurrentPage(p => Math.max(1, p - 1))}
+                  disabled={currentPage === 1}
+                  className="relative inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 disabled:opacity-50"
+                >
+                  Previous
+                </button>
+                <button
+                  onClick={() => setCurrentPage(p => Math.min(totalPages, p + 1))}
+                  disabled={currentPage === totalPages}
+                  className="ml-3 relative inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 disabled:opacity-50"
+                >
+                  Next
+                </button>
+              </div>
+            </div>
+          )}
+        </div>
+      </div>
+    </div>
+  );
+
+type NotificationType = Notification['type'];
+type PriorityType = Notification['priority'];
+type SortByType = 'date' | 'priority' | 'type';
+type SortOrderType = 'asc' | 'desc';
+
+interface NotificationsPageProps {
+  onRefresh: () => void;
+}
+
+const ITEMS_PER_PAGE = 10;
+
+export const NotificationsPage: React.FC<NotificationsPageProps> = ({ onRefresh }) => {
+  const [notifications, setNotifications] = useState<Notification[]>([]);
+  const [searchTerm, setSearchTerm] = useState('');
+  const [filterType, setFilterType] = useState<'all' | 'unread' | NotificationType>('all');
+  const [filterPriority, setFilterPriority] = useState<'all' | PriorityType>('all');
+  const [sortBy, setSortBy] = useState<SortByType>('date');
+  const [sortOrder, setSortOrder] = useState<SortOrderType>('desc');
+  const [selectedNotifications, setSelectedNotifications] = useState<string[]>([]);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [isLoading, setIsLoading] = useState(true);
+  const [isRefreshing, setIsRefreshing] = useState(false);
 
   useEffect(() => {
     loadNotifications();
@@ -67,169 +433,67 @@ export const NotificationsPage: React.FC<NotificationsPageProps> = ({ onRefresh 
     filterAndSortNotifications();
   }, [notifications, searchTerm, filterType, filterPriority, sortBy, sortOrder]);
 
-  const loadNotifications = () => {
-    setIsLoading(true);
-    const allNotifications = notificationService.getNotifications();
-    setNotifications(allNotifications);
-    setIsLoading(false);
-  };
+  const loadNotifications = useCallback(async () => {
+    try {
+      setIsLoading(true);
+      setIsRefreshing(true);
+      const allNotifications = notificationService.getNotifications();
+      const sortedNotifications = [...allNotifications].sort((a, b) => 
+        new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime()
+      );
+      setNotifications(sortedNotifications);
+    } catch (error) {
+      console.error('Error loading notifications:', error);
+    } finally {
+      setIsLoading(false);
+      setIsRefreshing(false);
+    }
+  }, []);
 
-  const filterAndSortNotifications = () => {
-    let filtered = [...notifications];
+  const filteredNotifications = useMemo(() => {
+    let result = [...notifications];
 
     // Apply search filter
     if (searchTerm) {
-      filtered = filtered.filter(notification =>
-        notification.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        notification.message.toLowerCase().includes(searchTerm.toLowerCase())
+      const term = searchTerm.toLowerCase();
+      result = result.filter(notification =>
+        notification.title.toLowerCase().includes(term) ||
+        notification.message.toLowerCase().includes(term)
       );
     }
 
     // Apply type filter
     if (filterType !== 'all') {
-      if (filterType === 'unread') {
-        filtered = filtered.filter(n => !n.read);
-      } else {
-        filtered = filtered.filter(n => n.type === filterType);
-      }
+      result = filterType === 'unread' 
+        ? result.filter(n => !n.read)
+        : result.filter(n => n.type === filterType);
     }
 
     // Apply priority filter
     if (filterPriority !== 'all') {
-      filtered = filtered.filter(n => n.priority === filterPriority);
+      result = result.filter(n => n.priority === filterPriority);
     }
 
     // Apply sorting
-    filtered.sort((a, b) => {
-      let comparison = 0;
-      
-      switch (sortBy) {
-        case 'date':
-          comparison = new Date(a.timestamp).getTime() - new Date(b.timestamp).getTime();
-          break;
-        case 'priority':
-          const priorityOrder = { urgent: 4, high: 3, medium: 2, low: 1 };
-          comparison = priorityOrder[a.priority] - priorityOrder[b.priority];
-          break;
-        case 'type':
-          comparison = a.type.localeCompare(b.type);
-          break;
-      }
-      
-      return sortOrder === 'desc' ? -comparison : comparison;
-    });
-
-    setFilteredNotifications(filtered);
-  };
-
-  const getNotificationIcon = (type: Notification['type']) => {
-    switch (type) {
-      case 'purchase':
-        return <ShoppingCart className="w-5 h-5 text-green-600" />;
-      case 'user_registration':
-        return <User className="w-5 h-5 text-blue-600" />;
-      case 'payment_failed':
-        return <AlertTriangle className="w-5 h-5 text-red-600" />;
-      case 'system':
-        return <Settings className="w-5 h-5 text-purple-600" />;
-      default:
-        return <Bell className="w-5 h-5 text-gray-600" />;
-    }
-  };
-
-  const getPriorityColor = (priority: Notification['priority']) => {
-    switch (priority) {
-      case 'urgent':
-        return 'bg-red-100 text-red-800 border-red-200';
-      case 'high':
-        return 'bg-orange-100 text-orange-800 border-orange-200';
-      case 'medium':
-        return 'bg-blue-100 text-blue-800 border-blue-200';
-      case 'low':
-        return 'bg-gray-100 text-gray-800 border-gray-200';
-      default:
-        return 'bg-gray-100 text-gray-800 border-gray-200';
-    }
-  };
-
-  const formatTimeAgo = (timestamp: string) => {
-    const now = new Date();
-    const time = new Date(timestamp);
-    const diffInMinutes = Math.floor((now.getTime() - time.getTime()) / (1000 * 60));
-
-    if (diffInMinutes < 1) return 'Just now';
-    if (diffInMinutes < 60) return `${diffInMinutes}m ago`;
-    if (diffInMinutes < 1440) return `${Math.floor(diffInMinutes / 60)}h ago`;
-    if (diffInMinutes < 10080) return `${Math.floor(diffInMinutes / 1440)}d ago`;
-    return time.toLocaleDateString();
-  };
-
-  const handleMarkAsRead = (notificationId: string) => {
-    notificationService.markAsRead(notificationId);
-  };
-
-  const handleMarkAllAsRead = () => {
-    notificationService.markAllAsRead();
-  };
-
-  const handleDeleteNotification = (notificationId: string) => {
-    notificationService.deleteNotification(notificationId);
-  };
-
-  const handleBulkAction = (action: 'read' | 'delete') => {
-    selectedNotifications.forEach(id => {
-      if (action === 'read') {
-        notificationService.markAsRead(id);
-      } else if (action === 'delete') {
-        notificationService.deleteNotification(id);
+    return result.sort((a, b) => {
+      if (sortBy === 'date') {
+        return sortOrder === 'asc'
+          ? new Date(a.timestamp).getTime() - new Date(b.timestamp).getTime()
+          : new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime();
+      } else if (sortBy === 'priority') {
+        const priorityOrder = { urgent: 4, high: 3, medium: 2, low: 1 };
+        return sortOrder === 'asc'
+          ? priorityOrder[a.priority] - priorityOrder[b.priority]
+          : priorityOrder[b.priority] - priorityOrder[a.priority];
+      } else {
+        // Sort by type
+        return sortOrder === 'asc'
+          ? a.type.localeCompare(b.type)
+          : b.type.localeCompare(a.type);
       }
     });
-    setSelectedNotifications([]);
-    setShowBulkActions(false);
-  };
-
-  const handleSelectNotification = (notificationId: string) => {
-    setSelectedNotifications(prev => 
-      prev.includes(notificationId)
-        ? prev.filter(id => id !== notificationId)
-        : [...prev, notificationId]
-    );
-  };
-
-  const handleSelectAll = () => {
-    const currentPageNotifications = getCurrentPageNotifications();
-    const allSelected = currentPageNotifications.every(n => selectedNotifications.includes(n.id));
-    
-    if (allSelected) {
-      setSelectedNotifications(prev => prev.filter(id => !currentPageNotifications.map(n => n.id).includes(id)));
-    } else {
-      setSelectedNotifications(prev => [...new Set([...prev, ...currentPageNotifications.map(n => n.id)])]);
-    }
-  };
-
-  const getCurrentPageNotifications = () => {
-    const startIndex = (currentPage - 1) * itemsPerPage;
-    const endIndex = startIndex + itemsPerPage;
-    return filteredNotifications.slice(startIndex, endIndex);
-  };
-
-  const totalPages = Math.ceil(filteredNotifications.length / itemsPerPage);
-  const unreadCount = notifications.filter(n => !n.read).length;
-  const stats = notificationService.getStats();
-
-  const createTestNotification = () => {
-    const types: Notification['type'][] = ['purchase', 'user_registration', 'system', 'payment_failed'];
-    const priorities: Notification['priority'][] = ['urgent', 'high', 'medium', 'low'];
-    const randomType = types[Math.floor(Math.random() * types.length)];
-    const randomPriority = priorities[Math.floor(Math.random() * priorities.length)];
-    
-    const messages = {
-      purchase: `New purchase of $${(Math.random() * 50 + 10).toFixed(2)} from customer`,
-      user_registration: 'New user registered on the platform',
-      system: 'System maintenance completed successfully',
-      payment_failed: 'Payment processing failed for order'
-    };
-
+  }, [notifications, searchTerm, filterType, filterPriority, sortBy, sortOrder]);
+};
     notificationService.createNotification(
       randomType,
       `🔔 ${randomType.replace('_', ' ').toUpperCase()}`,
@@ -241,60 +505,228 @@ export const NotificationsPage: React.FC<NotificationsPageProps> = ({ onRefresh 
     );
   };
 
+  if (isLoading) {
+    return (
+      <div className="flex items-center justify-center h-64">
+        <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-blue-500"></div>
+      </div>
+    );
+  }
+
   return (
-    <div className="space-y-8">
-      {/* Header */}
-      <div className="flex flex-col lg:flex-row justify-between items-start lg:items-center gap-4">
-        <div>
-          <h3 className="text-3xl font-mali font-bold text-gray-800">All Notifications</h3>
-          <p className="font-mali text-gray-600">Manage and view all system notifications</p>
+    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+      <div className="flex flex-col space-y-6">
+        {/* Header */}
+        <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+          <div>
+            <h1 className="text-2xl font-bold text-gray-900">Notifications</h1>
+            <p className="mt-1 text-sm text-gray-500">
+              {unreadCount > 0 ? `${unreadCount} unread notifications` : 'All caught up!'}
+            </p>
+          </div>
+          <div className="flex items-center space-x-3">
+            <button
+              onClick={handleRefresh}
+              disabled={isRefreshing}
+              className="inline-flex items-center px-3 py-2 border border-gray-300 shadow-sm text-sm leading-4 font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 disabled:opacity-50"
+            >
+              <RefreshCw className={`h-4 w-4 mr-2 ${isRefreshing ? 'animate-spin' : ''}`} />
+              Refresh
+            </button>
+            <button
+              onClick={markAllAsRead}
+              disabled={unreadCount === 0}
+              className="inline-flex items-center px-3 py-2 border border-transparent text-sm leading-4 font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 disabled:opacity-50"
+            >
+              <Check className="h-4 w-4 mr-2" />
+              Mark all as read
+            </button>
+          </div>
         </div>
-        
-        <div className="flex items-center gap-3">
-          <button
-            onClick={createTestNotification}
-            className="flex items-center gap-2 px-4 py-2 bg-brand-yellow text-white rounded-lg hover:bg-yellow-600 transition-colors font-mali font-bold"
-          >
-            <Plus className="w-4 h-4" />
-            Test Notification
-          </button>
-          
-          <button
-            onClick={handleMarkAllAsRead}
-            disabled={unreadCount === 0}
-            className="flex items-center gap-2 px-4 py-2 bg-green-500 text-white rounded-lg hover:bg-green-600 transition-colors font-mali font-bold disabled:opacity-50 disabled:cursor-not-allowed"
-          >
-            <CheckCircle className="w-4 h-4" />
-            Mark All Read
-          </button>
-          
-          <button
-            onClick={() => {
-              setIsLoading(true);
-              onRefresh();
-              loadNotifications();
-            }}
-            disabled={isLoading}
-            className="flex items-center gap-2 px-4 py-2 bg-brand-blue text-white rounded-lg hover:bg-blue-600 transition-colors font-mali font-bold disabled:opacity-50"
-          >
-            <RefreshCw className={`w-4 h-4 ${isLoading ? 'animate-spin' : ''}`} />
-            Refresh
-          </button>
+
+        {/* Filters */}
+        <div className="bg-white shadow rounded-lg p-4 space-y-4">
+          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+            <div className="relative flex-1">
+              <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                <Search className="h-5 w-5 text-gray-400" />
+              </div>
+              <input
+                type="text"
+                className="block w-full pl-10 pr-3 py-2 border border-gray-300 rounded-md leading-5 bg-white placeholder-gray-500 focus:outline-none focus:placeholder-gray-400 focus:ring-1 focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
+                placeholder="Search notifications..."
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+              />
+            </div>
+            <div className="flex items-center space-x-2">
+              <select
+                className="block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm rounded-md"
+                value={filterType}
+                onChange={(e) => setFilterType(e.target.value as any)}
+              >
+                <option value="all">All Types</option>
+                <option value="unread">Unread</option>
+                <option value="purchase">Purchases</option>
+                <option value="user_registration">User Registrations</option>
+                <option value="system">System</option>
+                <option value="payment_failed">Payment Issues</option>
+              </select>
+              <select
+                className="block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm rounded-md"
+                value={filterPriority}
+                onChange={(e) => setFilterPriority(e.target.value as any)}
+              >
+                <option value="all">All Priorities</option>
+                <option value="urgent">Urgent</option>
+                <option value="high">High</option>
+                <option value="medium">Medium</option>
+                <option value="low">Low</option>
+              </select>
+              <button
+                onClick={() => setSortOrder(prev => prev === 'asc' ? 'desc' : 'asc')}
+                className="inline-flex items-center px-3 py-2 border border-gray-300 shadow-sm text-sm leading-4 font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
+              >
+                {sortOrder === 'asc' ? (
+                  <ChevronUp className="h-4 w-4 mr-1" />
+                ) : (
+                  <ChevronDown className="h-4 w-4 mr-1" />
+                )}
+                Sort
+              </button>
+            </div>
+          </div>
+
+          {/* Bulk Actions */}
+          {selectedNotifications.length > 0 && (
+            <div className="flex items-center justify-between bg-blue-50 p-3 rounded-md">
+              <div className="flex items-center space-x-2">
+                <CheckCircle className="h-5 w-5 text-blue-600" />
+                <span className="text-sm font-medium text-blue-800">
+                  {selectedNotifications.length} selected
+                </span>
+              </div>
+              <div className="flex space-x-2">
+                <button
+                  onClick={markSelectedAsRead}
+                  className="inline-flex items-center px-3 py-1.5 border border-transparent text-xs font-medium rounded text-blue-700 bg-blue-100 hover:bg-blue-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
+                >
+                  Mark as read
+                </button>
+                <button
+                  onClick={deleteSelected}
+                  className="inline-flex items-center px-3 py-1.5 border border-transparent text-xs font-medium rounded text-red-700 bg-red-100 hover:bg-red-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500"
+                >
+                  Delete
+                </button>
+              </div>
+            </div>
+          )}
+        </div>
+
+        {/* Notifications List */}
+        <div className="bg-white shadow overflow-hidden sm:rounded-lg">
+          <ul className="divide-y divide-gray-200">
+            {paginatedNotifications.length === 0 ? (
+              <div className="text-center py-12">
+                <Bell className="mx-auto h-12 w-12 text-gray-400" />
+                <h3 className="mt-2 text-sm font-medium text-gray-900">No notifications</h3>
+                <p className="mt-1 text-sm text-gray-500">
+                  {searchTerm || filterType !== 'all' || filterPriority !== 'all'
+                    ? 'No notifications match your current filters.'
+                    : 'No notifications to display.'}
+                </p>
+              </div>
+            ) : (
+              <AnimatePresence>
+                {paginatedNotifications.map((notification) => (
+                  <motion.li 
+                    key={notification.id}
+                    initial={{ opacity: 0, y: 10 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    exit={{ opacity: 0, y: -10 }}
+                    transition={{ duration: 0.2 }}
+                    className="hover:bg-gray-50"
+                  >
+                    <div className={`px-4 py-4 sm:px-6 ${!notification.read ? 'bg-blue-50' : 'bg-white'}`}>
+                      <div className="flex items-center">
+                        <div className="min-w-0 flex-1">
+                          <div className="flex items-center">
+                            <div className="flex-shrink-0 h-10 w-10 flex items-center justify-center rounded-full bg-blue-100">
+                              {getNotificationIcon(notification.type)}
+                            </div>
+                            <div className="ml-4">
+                              <div className="flex items-center">
+                                <p className="text-sm font-medium text-gray-900">
+                                  {notification.title}
+                                </p>
+                                <div className="ml-2">
+                                  {getPriorityBadge(notification.priority)}
+                                </div>
+                              </div>
+                              <p className="text-sm text-gray-500 mt-1">
+                                {notification.message}
+                              </p>
+                              <div className="mt-2 flex items-center text-xs text-gray-500">
+                                <Clock className="h-3.5 w-3.5 mr-1" />
+                                <span>{formatTime(notification.timestamp)}</span>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                        <div className="ml-4 flex items-center space-x-2">
+                          {!notification.read && (
+                            <button
+                              onClick={() => notificationService.markAsRead(notification.id)}
+                              className="text-sm text-blue-600 hover:text-blue-500"
+                            >
+                              Mark as read
+                            </button>
+                          )}
+                          <button
+                            onClick={() => {
+                              if (window.confirm('Delete this notification?')) {
+                                notificationService.deleteNotification(notification.id);
+                              }
+                            }}
+                            className="text-sm text-red-600 hover:text-red-500"
+                          >
+                            Delete
+                          </button>
+                        </div>
+                      </div>
+                    </div>
+                  </motion.li>
+                ))}
+              </AnimatePresence>
+            )}
+          </ul>
+
+          {/* Pagination */}
+          {filteredNotifications.length > ITEMS_PER_PAGE && (
+            <div className="bg-white px-4 py-3 flex items-center justify-between border-t border-gray-200 sm:px-6">
+              <div className="flex-1 flex justify-between sm:justify-end">
+                <button
+                  onClick={() => setCurrentPage(p => Math.max(1, p - 1))}
+                  disabled={currentPage === 1}
+                  className="relative inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 disabled:opacity-50"
+                >
+                  Previous
+                </button>
+                <button
+                  onClick={() => setCurrentPage(p => Math.min(totalPages, p + 1))}
+                  disabled={currentPage === totalPages}
+                  className="ml-3 relative inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 disabled:opacity-50"
+                >
+                  Next
+                </button>
+              </div>
+            </div>
+          )}
         </div>
       </div>
-
-      {/* Stats Cards */}
-      <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
-        <div className="bg-white rounded-2xl p-6 shadow-lg border border-gray-100">
-          <div className="flex items-center justify-between mb-4">
-            <div className="p-3 rounded-full bg-gradient-to-br from-blue-500 to-blue-600">
-              <Bell className="w-6 h-6 text-white" />
-            </div>
-            <TrendingUp className="w-5 h-5 text-blue-500" />
-          </div>
-          <h3 className="text-3xl font-mali font-bold text-gray-800 mb-1">{stats.total}</h3>
-          <p className="font-mali text-gray-600">Total Notifications</p>
-        </div>
+    </div>
+  );
 
         <div className="bg-white rounded-2xl p-6 shadow-lg border border-gray-100">
           <div className="flex items-center justify-between mb-4">
@@ -325,7 +757,7 @@ export const NotificationsPage: React.FC<NotificationsPageProps> = ({ onRefresh 
             </div>
             <TrendingUp className="w-5 h-5 text-purple-500" />
           </div>
-          <h3 className="text-3xl font-mali font-bold text-gray-800 mb-1">{stats.byType.user_registration || 0}</h3>
+          <h3 className="text-3xl font-mali font-bold text-gray-800 mb-1">{notifications.filter(n => n.type === 'user_registration').length}</h3>
           <p className="font-mali text-gray-600">New Users</p>
         </div>
       </div>
@@ -559,7 +991,7 @@ export const NotificationsPage: React.FC<NotificationsPageProps> = ({ onRefresh 
           <div className="bg-gray-50 border-t border-gray-200 px-6 py-4">
             <div className="flex items-center justify-between">
               <div className="font-mali text-gray-600">
-                Showing {((currentPage - 1) * itemsPerPage) + 1} to {Math.min(currentPage * itemsPerPage, filteredNotifications.length)} of {filteredNotifications.length} notifications
+                Showing {((currentPage - 1) * ITEMS_PER_PAGE) + 1} to {Math.min(currentPage * ITEMS_PER_PAGE, filteredNotifications.length)} of {filteredNotifications.length} notifications
               </div>
               
               <div className="flex items-center gap-2">

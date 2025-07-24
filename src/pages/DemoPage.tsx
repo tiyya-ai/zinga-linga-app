@@ -1,34 +1,30 @@
 import React from 'react';
 import { ArrowLeft, Play, Volume2, Gamepad2, Star, Heart, Download } from 'lucide-react';
+import { Header } from '../components/Header';
+import { Footer } from '../components/Footer';
 
 interface DemoPageProps {
   onBack: () => void;
+  onNavigate?: (page: string) => void;
 }
 
-export const DemoPage: React.FC<DemoPageProps> = ({ onBack }) => {
+export const DemoPage: React.FC<DemoPageProps> = ({ onBack, onNavigate }) => {
   return (
     <div className="min-h-screen bg-gradient-to-br from-brand-yellow/20 via-white to-brand-blue/20">
-      {/* Header */}
-      <div className="bg-white shadow-sm border-b">
-        <div className="max-w-7xl mx-auto px-6 py-4">
-          <div className="flex items-center gap-4">
-            <button
-              onClick={onBack}
-              className="flex items-center gap-2 text-gray-600 hover:text-gray-800 transition-colors"
-            >
-              <ArrowLeft className="w-5 h-5" />
-              <span className="font-mali font-bold">Back to Home</span>
-            </button>
-            <div className="h-6 w-px bg-gray-300"></div>
-            <h1 className="text-2xl font-mali font-bold text-gray-800">Try Our Demo</h1>
-          </div>
-        </div>
-      </div>
-
-      {/* Main Content */}
-      <div className="max-w-7xl mx-auto px-6 py-12">
-        {/* Hero Section */}
-        <div className="text-center mb-12">
+      <Header onLoginClick={() => {}} isMenuOpen={false} setIsMenuOpen={() => {}} onNavigate={onNavigate} />
+      
+      {/* Hero Section */}
+      <section className="pt-32 pb-20 px-4">
+        <div className="max-w-7xl mx-auto">
+          <button 
+            onClick={onBack}
+            className="flex items-center gap-2 text-gray-600 hover:text-gray-800 transition-colors mb-8"
+          >
+            <ArrowLeft className="w-5 h-5" />
+            <span className="font-mali font-bold">Back to Home</span>
+          </button>
+          
+          <div className="text-center mb-12">
           <h2 className="text-4xl md:text-5xl font-mali font-bold text-gray-800 mb-6">
             Experience the Magic of Learning!
           </h2>
@@ -162,7 +158,10 @@ export const DemoPage: React.FC<DemoPageProps> = ({ onBack }) => {
             </button>
           </div>
         </div>
-      </div>
+        </div>
+      </section>
+      
+      <Footer onNavigate={onNavigate} />
     </div>
   );
 };

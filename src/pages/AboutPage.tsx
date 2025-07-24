@@ -2,16 +2,18 @@ import React from 'react';
 import { ArrowLeft, Heart, Globe, Users, Award, BookOpen, Music, Video } from 'lucide-react';
 import { Header } from '../components/Header';
 import { Footer } from '../components/Footer';
+import { GoToTopWithProgress } from '../components/GoToTop';
 import { Kiki, Tano } from '../components/Characters';
 
 interface AboutPageProps {
   onBack: () => void;
+  onNavigate?: (page: string) => void;
 }
 
-export const AboutPage: React.FC<AboutPageProps> = ({ onBack }) => {
+export const AboutPage: React.FC<AboutPageProps> = ({ onBack, onNavigate }) => {
   return (
     <div className="min-h-screen bg-white font-mali">
-      <Header onLoginClick={() => {}} isMenuOpen={false} setIsMenuOpen={() => {}} />
+      <Header onLoginClick={() => {}} isMenuOpen={false} setIsMenuOpen={() => {}} onNavigate={onNavigate} />
       
       {/* Hero Section */}
       <section className="pt-32 pb-20 px-4 bg-gradient-to-br from-brand-blue via-brand-pink to-brand-red">
@@ -238,7 +240,10 @@ export const AboutPage: React.FC<AboutPageProps> = ({ onBack }) => {
         </div>
       </section>
 
-      <Footer />
+      <Footer onNavigate={onNavigate} />
+      
+      {/* Go to Top Button */}
+      <GoToTopWithProgress showAfter={300} />
     </div>
   );
 };

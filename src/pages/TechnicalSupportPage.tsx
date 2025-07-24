@@ -5,9 +5,10 @@ import { Footer } from '../components/Footer';
 
 interface TechnicalSupportPageProps {
   onBack: () => void;
+  onNavigate?: (page: string) => void;
 }
 
-export const TechnicalSupportPage: React.FC<TechnicalSupportPageProps> = ({ onBack }) => {
+export const TechnicalSupportPage: React.FC<TechnicalSupportPageProps> = ({ onBack, onNavigate }) => {
   const [selectedIssue, setSelectedIssue] = useState('');
 
   const commonIssues = [
@@ -393,7 +394,7 @@ export const TechnicalSupportPage: React.FC<TechnicalSupportPageProps> = ({ onBa
         </div>
       </section>
 
-      <Footer />
+      <Footer onNavigate={onNavigate} />
     </div>
   );
 };

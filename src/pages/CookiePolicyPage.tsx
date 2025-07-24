@@ -5,9 +5,10 @@ import { Footer } from '../components/Footer';
 
 interface CookiePolicyPageProps {
   onBack: () => void;
+  onNavigate?: (page: string) => void;
 }
 
-export const CookiePolicyPage: React.FC<CookiePolicyPageProps> = ({ onBack }) => {
+export const CookiePolicyPage: React.FC<CookiePolicyPageProps> = ({ onBack, onNavigate }) => {
   return (
     <div className="min-h-screen bg-white font-mali">
       <Header onLoginClick={() => {}} isMenuOpen={false} setIsMenuOpen={() => {}} />
@@ -338,7 +339,7 @@ export const CookiePolicyPage: React.FC<CookiePolicyPageProps> = ({ onBack }) =>
         </div>
       </section>
 
-      <Footer />
+      <Footer onNavigate={onNavigate} />
     </div>
   );
 };

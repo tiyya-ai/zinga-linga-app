@@ -5,9 +5,10 @@ import { Footer } from '../components/Footer';
 
 interface ContactPageProps {
   onBack: () => void;
+  onNavigate?: (page: string) => void;
 }
 
-export const ContactPage: React.FC<ContactPageProps> = ({ onBack }) => {
+export const ContactPage: React.FC<ContactPageProps> = ({ onBack, onNavigate }) => {
   const [formData, setFormData] = useState({
     name: '',
     email: '',
@@ -38,7 +39,7 @@ export const ContactPage: React.FC<ContactPageProps> = ({ onBack }) => {
 
   return (
     <div className="min-h-screen bg-white font-mali">
-      <Header onLoginClick={() => {}} isMenuOpen={false} setIsMenuOpen={() => {}} />
+      <Header onLoginClick={() => {}} isMenuOpen={false} setIsMenuOpen={() => {}} onNavigate={onNavigate} />
       
       {/* Hero Section */}
       <section className="pt-32 pb-20 px-4 bg-gradient-to-br from-brand-pink via-brand-blue to-brand-green">
@@ -312,7 +313,7 @@ export const ContactPage: React.FC<ContactPageProps> = ({ onBack }) => {
       </section>
 
       
-      <Footer />
+      <Footer onNavigate={onNavigate} />
     </div>
   );
 };

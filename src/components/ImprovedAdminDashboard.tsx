@@ -10,6 +10,7 @@ import { NotificationsPage } from './NotificationsPage';
 import { EmailNotificationSettings } from './EmailNotificationSettings';
 import { CouponManagement } from './CouponManagement';
 import { AdminSettings } from './AdminSettings';
+import { EnhancedModuleManagement } from './EnhancedModuleManagement';
 import { notificationService } from '../utils/notificationService';
 import { 
   Users, 
@@ -1101,45 +1102,17 @@ export const ImprovedAdminDashboard: React.FC<ImprovedAdminDashboardProps> = ({ 
             </div>
           )}
 
-          {/* Modules Tab */}
+          {/* Enhanced Modules Management */}
           {activeTab === 'modules' && (
-            <div className="space-y-8">
-              <div className="bg-white rounded-2xl p-8 shadow-lg border border-gray-100">
-                <h3 className="text-2xl font-mali font-bold text-gray-800 mb-6">Module Management</h3>
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                  {modules.map((module) => (
-                    <div key={module.id} className="border border-gray-200 rounded-xl p-6 hover:shadow-lg transition-shadow">
-                      <div className="flex items-center justify-between mb-4">
-                        <h4 className="text-lg font-mali font-bold text-gray-800">{module.title}</h4>
-                        <span className={`px-2 py-1 rounded-full text-xs font-mali font-bold ${
-                          module.isActive ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'
-                        }`}>
-                          {module.isActive ? 'Active' : 'Inactive'}
-                        </span>
-                      </div>
-                      <p className="font-mali text-gray-600 text-sm mb-4">{module.description}</p>
-                      <div className="space-y-2">
-                        <div className="flex justify-between">
-                          <span className="font-mali text-gray-600">Price:</span>
-                          <span className="font-mali font-bold">${module.price}</span>
-                        </div>
-                        <div className="flex justify-between">
-                          <span className="font-mali text-gray-600">Rating:</span>
-                          <div className="flex items-center gap-1">
-                            <Star className="w-4 h-4 text-yellow-500 fill-current" />
-                            <span className="font-mali font-bold">{module.rating}</span>
-                          </div>
-                        </div>
-                        <div className="flex justify-between">
-                          <span className="font-mali text-gray-600">Age Range:</span>
-                          <span className="font-mali font-bold">{module.ageRange}</span>
-                        </div>
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              </div>
-            </div>
+            <EnhancedModuleManagement
+              modules={modules}
+              users={users}
+              onModulesUpdate={(updatedModules) => {
+                setModules(updatedModules);
+                saveData();
+              }}
+              onRefresh={loadData}
+            />
           )}
 
           {/* Content Tab */}

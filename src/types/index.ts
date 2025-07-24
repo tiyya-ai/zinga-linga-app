@@ -24,6 +24,11 @@ export interface Module {
   fullContent: ContentItem[];
   isPurchased?: boolean;
   isActive: boolean;
+  isVisible?: boolean; // Controls if module appears in user dashboard/store
+  category?: string;
+  difficulty?: 'beginner' | 'intermediate' | 'advanced';
+  estimatedDuration?: string;
+  tags?: string[];
   createdAt: string;
   updatedAt: string;
 }

@@ -5,9 +5,10 @@ import { Footer } from '../components/Footer';
 
 interface TroubleshootingPageProps {
   onBack: () => void;
+  onNavigate?: (page: string) => void;
 }
 
-export const TroubleshootingPage: React.FC<TroubleshootingPageProps> = ({ onBack }) => {
+export const TroubleshootingPage: React.FC<TroubleshootingPageProps> = ({ onBack, onNavigate }) => {
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedCategory, setSelectedCategory] = useState('all');
 
@@ -556,7 +557,7 @@ export const TroubleshootingPage: React.FC<TroubleshootingPageProps> = ({ onBack
         </div>
       </section>
 
-      <Footer />
+      <Footer onNavigate={onNavigate} />
     </div>
   );
 };

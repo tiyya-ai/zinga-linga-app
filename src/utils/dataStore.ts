@@ -77,6 +77,11 @@ class DataStore {
         price: 11.00,
         ageRange: '1-3 years',
         isActive: true,
+        isVisible: true,
+        category: 'learning',
+        difficulty: 'beginner' as const,
+        estimatedDuration: '30 minutes',
+        tags: ['alphabet', 'animals', 'african', 'kiki', 'early-learning'],
         rating: 4.9,
         totalRatings: 1247,
         createdAt: new Date(Date.now() - 180 * 24 * 60 * 60 * 1000).toISOString(),
@@ -91,12 +96,12 @@ class DataStore {
         ],
         demoVideo: "/demo/kiki-alphabet.mp4",
         fullContent: [
-          { id: 'content-001', type: 'video', title: 'Welcome to Kiki\'s Animal World', duration: 180 },
-          { id: 'content-002', type: 'game', title: 'Letter A - Antelope Adventure', duration: 300 },
-          { id: 'content-003', type: 'audio', title: 'Animal Alphabet Song', duration: 240 },
-          { id: 'content-004', type: 'game', title: 'Letter B - Baboon Bounce', duration: 280 },
-          { id: 'content-005', type: 'video', title: 'African Safari Tour', duration: 320 },
-          { id: 'content-006', type: 'game', title: 'Complete Alphabet Quiz', duration: 600 }
+          { id: 'content-001', type: 'video', title: 'Welcome to Kiki\'s Animal World', duration: '3:00', thumbnail: '/thumbnails/kiki-welcome.jpg' },
+          { id: 'content-002', type: 'game', title: 'Letter A - Antelope Adventure', duration: '5:00', thumbnail: '/thumbnails/antelope-game.jpg' },
+          { id: 'content-003', type: 'audio', title: 'Animal Alphabet Song', duration: '4:00', thumbnail: '/thumbnails/alphabet-song.jpg' },
+          { id: 'content-004', type: 'game', title: 'Letter B - Baboon Bounce', duration: '4:40', thumbnail: '/thumbnails/baboon-game.jpg' },
+          { id: 'content-005', type: 'video', title: 'African Safari Tour', duration: '5:20', thumbnail: '/thumbnails/safari-tour.jpg' },
+          { id: 'content-006', type: 'game', title: 'Complete Alphabet Quiz', duration: '10:00', thumbnail: '/thumbnails/alphabet-quiz.jpg' }
         ]
       },
       {
@@ -107,6 +112,11 @@ class DataStore {
         price: 6.99,
         ageRange: '2-6 years',
         isActive: true,
+        isVisible: true,
+        category: 'music',
+        difficulty: 'beginner' as const,
+        estimatedDuration: '25 minutes',
+        tags: ['music', 'songs', 'african', 'tano', 'cultural'],
         rating: 4.8,
         totalRatings: 892,
         createdAt: new Date(Date.now() - 150 * 24 * 60 * 60 * 1000).toISOString(),
@@ -121,12 +131,12 @@ class DataStore {
         ],
         demoVideo: "/demo/tano-songs.mp4",
         fullContent: [
-          { id: 'content-007', type: 'video', title: 'Welcome to Tano\'s Jungle', duration: 200 },
-          { id: 'content-008', type: 'audio', title: 'African Drum Circle', duration: 180 },
-          { id: 'content-009', type: 'game', title: 'Rhythm Matching Game', duration: 350 },
-          { id: 'content-010', type: 'audio', title: 'Jungle Animal Sounds', duration: 240 },
-          { id: 'content-011', type: 'video', title: 'Traditional Dance Moves', duration: 280 },
-          { id: 'content-012', type: 'game', title: 'Musical Memory Challenge', duration: 400 }
+          { id: 'content-007', type: 'video', title: 'Welcome to Tano\'s Jungle', duration: '3:20', thumbnail: '/thumbnails/tano-welcome.jpg' },
+          { id: 'content-008', type: 'audio', title: 'African Drum Circle', duration: '3:00', thumbnail: '/thumbnails/drum-circle.jpg' },
+          { id: 'content-009', type: 'game', title: 'Rhythm Matching Game', duration: '5:50', thumbnail: '/thumbnails/rhythm-game.jpg' },
+          { id: 'content-010', type: 'audio', title: 'Jungle Animal Sounds', duration: '4:00', thumbnail: '/thumbnails/jungle-sounds.jpg' },
+          { id: 'content-011', type: 'video', title: 'Traditional Dance Moves', duration: '4:40', thumbnail: '/thumbnails/dance-moves.jpg' },
+          { id: 'content-012', type: 'game', title: 'Musical Memory Challenge', duration: '6:40', thumbnail: '/thumbnails/memory-game.jpg' }
         ]
       },
       {
@@ -137,6 +147,11 @@ class DataStore {
         price: 9.99,
         ageRange: '2-5 years',
         isActive: true,
+        isVisible: true,
+        category: 'math',
+        difficulty: 'intermediate' as const,
+        estimatedDuration: '35 minutes',
+        tags: ['counting', 'numbers', 'math', 'kiki', 'safari'],
         rating: 4.7,
         totalRatings: 634,
         createdAt: new Date(Date.now() - 120 * 24 * 60 * 60 * 1000).toISOString(),
@@ -151,12 +166,12 @@ class DataStore {
         ],
         demoVideo: "/demo/kiki-counting.mp4",
         fullContent: [
-          { id: 'content-013', type: 'video', title: 'Safari Counting Adventure', duration: 220 },
-          { id: 'content-014', type: 'game', title: 'Count the Elephants', duration: 300 },
-          { id: 'content-015', type: 'audio', title: 'Counting Songs Collection', duration: 360 },
-          { id: 'content-016', type: 'game', title: 'Number Matching Safari', duration: 280 },
-          { id: 'content-017', type: 'video', title: 'Big Numbers, Big Animals', duration: 250 },
-          { id: 'content-018', type: 'game', title: 'Safari Math Challenge', duration: 450 }
+          { id: 'content-013', type: 'video', title: 'Safari Counting Adventure', duration: '3:40', thumbnail: '/thumbnails/counting-safari.jpg' },
+          { id: 'content-014', type: 'game', title: 'Count the Elephants', duration: '5:00', thumbnail: '/thumbnails/elephant-counting.jpg' },
+          { id: 'content-015', type: 'audio', title: 'Counting Songs Collection', duration: '6:00', thumbnail: '/thumbnails/counting-songs.jpg' },
+          { id: 'content-016', type: 'game', title: 'Number Matching Safari', duration: '4:40', thumbnail: '/thumbnails/number-matching.jpg' },
+          { id: 'content-017', type: 'video', title: 'Big Numbers, Big Animals', duration: '4:10', thumbnail: '/thumbnails/big-numbers.jpg' },
+          { id: 'content-018', type: 'game', title: 'Safari Math Challenge', duration: '7:30', thumbnail: '/thumbnails/math-challenge.jpg' }
         ]
       }
     ] as Module[],
@@ -452,6 +467,43 @@ class DataStore {
       return this.defaultData;
     }
     return existingData;
+  }
+
+  // Force refresh data with updated structure
+  refreshDataStructure() {
+    // Clear old data and reload with new structure
+    localStorage.removeItem(this.storageKey);
+    const newData = this.defaultData;
+    this.saveData(newData);
+    return newData;
+  }
+
+  // Migrate old data to new structure
+  migrateData() {
+    try {
+      const stored = localStorage.getItem(this.storageKey);
+      if (stored) {
+        const data = JSON.parse(stored);
+        
+        // Update modules with new properties if they don't exist
+        if (data.modules) {
+          data.modules = data.modules.map((module: any) => ({
+            ...module,
+            isVisible: module.isVisible !== undefined ? module.isVisible : true,
+            category: module.category || 'learning',
+            difficulty: module.difficulty || 'beginner',
+            estimatedDuration: module.estimatedDuration || '30 minutes',
+            tags: module.tags || []
+          }));
+        }
+        
+        this.saveData(data);
+        return data;
+      }
+    } catch (error) {
+      console.error('Error migrating data:', error);
+    }
+    return this.defaultData;
   }
 }
 

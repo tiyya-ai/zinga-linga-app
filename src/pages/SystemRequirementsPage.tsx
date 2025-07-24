@@ -5,9 +5,10 @@ import { Footer } from '../components/Footer';
 
 interface SystemRequirementsPageProps {
   onBack: () => void;
+  onNavigate?: (page: string) => void;
 }
 
-export const SystemRequirementsPage: React.FC<SystemRequirementsPageProps> = ({ onBack }) => {
+export const SystemRequirementsPage: React.FC<SystemRequirementsPageProps> = ({ onBack, onNavigate }) => {
   const requirements = {
     minimum: {
       mobile: {
@@ -457,7 +458,7 @@ export const SystemRequirementsPage: React.FC<SystemRequirementsPageProps> = ({ 
         </div>
       </section>
 
-      <Footer />
+      <Footer onNavigate={onNavigate} />
     </div>
   );
 };

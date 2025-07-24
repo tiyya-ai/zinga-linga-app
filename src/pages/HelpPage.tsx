@@ -5,9 +5,10 @@ import { Footer } from '../components/Footer';
 
 interface HelpPageProps {
   onBack: () => void;
+  onNavigate?: (page: string) => void;
 }
 
-export const HelpPage: React.FC<HelpPageProps> = ({ onBack }) => {
+export const HelpPage: React.FC<HelpPageProps> = ({ onBack, onNavigate }) => {
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedCategory, setSelectedCategory] = useState('all');
 
@@ -82,7 +83,7 @@ export const HelpPage: React.FC<HelpPageProps> = ({ onBack }) => {
 
   return (
     <div className="min-h-screen bg-white font-mali">
-      <Header onLoginClick={() => {}} isMenuOpen={false} setIsMenuOpen={() => {}} />
+      <Header onLoginClick={() => {}} isMenuOpen={false} setIsMenuOpen={() => {}} onNavigate={onNavigate} />
       
       {/* Hero Section */}
       <section className="pt-32 pb-20 px-4 bg-gradient-to-br from-brand-green via-brand-blue to-brand-pink">
@@ -232,7 +233,7 @@ export const HelpPage: React.FC<HelpPageProps> = ({ onBack }) => {
         </div>
       </section>
 
-      <Footer />
+      <Footer onNavigate={onNavigate} />
     </div>
   );
 };

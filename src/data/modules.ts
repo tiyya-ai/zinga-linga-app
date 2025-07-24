@@ -25,7 +25,15 @@ export const modules: Module[] = [
         duration: '15:30',
         thumbnail: 'https://images.pexels.com/photos/8613089/pexels-photo-8613089.jpeg'
       }
-    ]
+    ],
+    isActive: true,
+    isVisible: true,
+    category: 'learning',
+    difficulty: 'beginner',
+    estimatedDuration: '15 minutes',
+    tags: ['video', 'educational', 'kiki', 'early-learning'],
+    createdAt: '2024-01-01T00:00:00Z',
+    updatedAt: '2024-01-01T00:00:00Z'
   },
   {
     id: 'premium-video-package-2',
@@ -51,7 +59,15 @@ export const modules: Module[] = [
         duration: '18:45',
         thumbnail: 'https://images.pexels.com/photos/8613089/pexels-photo-8613089.jpeg'
       }
-    ]
+    ],
+    isActive: true,
+    isVisible: true,
+    category: 'learning',
+    difficulty: 'intermediate',
+    estimatedDuration: '18 minutes',
+    tags: ['video', 'advanced', 'tano', 'preschool'],
+    createdAt: '2024-01-02T00:00:00Z',
+    updatedAt: '2024-01-02T00:00:00Z'
   }
 ];
 

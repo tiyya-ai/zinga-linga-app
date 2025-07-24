@@ -72,31 +72,31 @@ export const PageRouter: React.FC<PageRouterProps> = ({
   const renderCurrentPage = () => {
     switch (currentPage) {
       case 'about':
-        return <AboutPage onBack={() => handleNavigation('home')} />;
+        return <AboutPage onBack={() => handleNavigation('home')} onNavigate={handleNavigation} />;
       case 'help':
-        return <HelpPage onBack={() => handleNavigation('home')} />;
+        return <HelpPage onBack={() => handleNavigation('home')} onNavigate={handleNavigation} />;
       case 'privacy':
-        return <PrivacyPage onBack={() => handleNavigation('home')} />;
+        return <PrivacyPage onBack={() => handleNavigation('home')} onNavigate={handleNavigation} />;
       case 'terms':
-        return <TermsPage onBack={() => handleNavigation('home')} />;
+        return <TermsPage onBack={() => handleNavigation('home')} onNavigate={handleNavigation} />;
       case 'contact':
-        return <ContactPage onBack={() => handleNavigation('home')} />;
+        return <ContactPage onBack={() => handleNavigation('home')} onNavigate={handleNavigation} />;
       case 'guide':
-        return <ParentGuidePage onBack={() => handleNavigation('home')} />;
+        return <ParentGuidePage onBack={() => handleNavigation('home')} onNavigate={handleNavigation} />;
       case 'support':
-        return <TechnicalSupportPage onBack={() => handleNavigation('home')} />;
+        return <TechnicalSupportPage onBack={() => handleNavigation('home')} onNavigate={handleNavigation} />;
       case 'requirements':
-        return <SystemRequirementsPage onBack={() => handleNavigation('home')} />;
+        return <SystemRequirementsPage onBack={() => handleNavigation('home')} onNavigate={handleNavigation} />;
       case 'troubleshoot':
-        return <TroubleshootingPage onBack={() => handleNavigation('home')} />;
+        return <TroubleshootingPage onBack={() => handleNavigation('home')} onNavigate={handleNavigation} />;
       case 'cookies':
-        return <CookiePolicyPage onBack={() => handleNavigation('home')} />;
+        return <CookiePolicyPage onBack={() => handleNavigation('home')} onNavigate={handleNavigation} />;
       case 'refund':
-        return <RefundPolicyPage onBack={() => handleNavigation('home')} />;
+        return <RefundPolicyPage onBack={() => handleNavigation('home')} onNavigate={handleNavigation} />;
       case 'coppa':
-        return <COPPACompliancePage onBack={() => handleNavigation('home')} />;
+        return <COPPACompliancePage onBack={() => handleNavigation('home')} onNavigate={handleNavigation} />;
       case 'demo':
-        return <DemoPage onBack={() => handleNavigation('home')} />;
+        return <DemoPage onBack={() => handleNavigation('home')} onNavigate={handleNavigation} />;
       case 'home':
       default:
         return (

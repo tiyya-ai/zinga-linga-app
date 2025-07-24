@@ -5,9 +5,10 @@ import { Footer } from '../components/Footer';
 
 interface COPPACompliancePageProps {
   onBack: () => void;
+  onNavigate?: (page: string) => void;
 }
 
-export const COPPACompliancePage: React.FC<COPPACompliancePageProps> = ({ onBack }) => {
+export const COPPACompliancePage: React.FC<COPPACompliancePageProps> = ({ onBack, onNavigate }) => {
   return (
     <div className="min-h-screen bg-white font-mali">
       <Header onLoginClick={() => {}} isMenuOpen={false} setIsMenuOpen={() => {}} />
@@ -499,7 +500,7 @@ export const COPPACompliancePage: React.FC<COPPACompliancePageProps> = ({ onBack
         </div>
       </section>
 
-      <Footer />
+      <Footer onNavigate={onNavigate} />
     </div>
   );
 };

@@ -5,9 +5,10 @@ import { Footer } from '../components/Footer';
 
 interface RefundPolicyPageProps {
   onBack: () => void;
+  onNavigate?: (page: string) => void;
 }
 
-export const RefundPolicyPage: React.FC<RefundPolicyPageProps> = ({ onBack }) => {
+export const RefundPolicyPage: React.FC<RefundPolicyPageProps> = ({ onBack, onNavigate }) => {
   return (
     <div className="min-h-screen bg-white font-mali">
       <Header onLoginClick={() => {}} isMenuOpen={false} setIsMenuOpen={() => {}} />
@@ -447,7 +448,7 @@ export const RefundPolicyPage: React.FC<RefundPolicyPageProps> = ({ onBack }) =>
         </div>
       </section>
 
-      <Footer />
+      <Footer onNavigate={onNavigate} />
     </div>
   );
 };

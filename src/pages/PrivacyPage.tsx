@@ -5,12 +5,13 @@ import { Footer } from '../components/Footer';
 
 interface PrivacyPageProps {
   onBack: () => void;
+  onNavigate?: (page: string) => void;
 }
 
-export const PrivacyPage: React.FC<PrivacyPageProps> = ({ onBack }) => {
+export const PrivacyPage: React.FC<PrivacyPageProps> = ({ onBack, onNavigate }) => {
   return (
     <div className="min-h-screen bg-white font-mali">
-      <Header onLoginClick={() => {}} isMenuOpen={false} setIsMenuOpen={() => {}} />
+      <Header onLoginClick={() => {}} isMenuOpen={false} setIsMenuOpen={() => {}} onNavigate={onNavigate} />
       
       {/* Hero Section */}
       <section className="pt-32 pb-20 px-4 bg-gradient-to-br from-brand-blue via-brand-green to-brand-pink">
@@ -244,7 +245,7 @@ export const PrivacyPage: React.FC<PrivacyPageProps> = ({ onBack }) => {
         </div>
       </section>
 
-      <Footer />
+      <Footer onNavigate={onNavigate} />
     </div>
   );
 };
