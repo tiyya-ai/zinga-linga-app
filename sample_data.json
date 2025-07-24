@@ -1,0 +1,1082 @@
+{
+  "users": [
+    {
+      "id": "admin-001",
+      "email": "admin@zingalinga.com",
+      "name": "System Administrator",
+      "role": "admin",
+      "purchasedModules": [],
+      "createdAt": "2024-07-21T17:31:54.193Z",
+      "lastLogin": "2025-07-21T17:31:54.193Z",
+      "totalSpent": 0
+    },
+    {
+      "id": "user_1753119114192_0",
+      "email": "jessica.clark705@outlook.com",
+      "name": "Jessica Clark",
+      "role": "user",
+      "purchasedModules": [],
+      "createdAt": "2025-05-31T17:31:54.192Z",
+      "lastLogin": "2025-07-09T06:44:33.132Z",
+      "totalSpent": 0
+    },
+    {
+      "id": "user_1753119114192_1",
+      "email": "brandon.hall66@gmail.com",
+      "name": "Brandon Hall",
+      "role": "user",
+      "purchasedModules": [],
+      "createdAt": "2025-06-29T17:31:54.192Z",
+      "lastLogin": "2025-07-01T16:02:54.018Z",
+      "totalSpent": 0
+    },
+    {
+      "id": "user_1753119114192_2",
+      "email": "lisa.garcia419@yahoo.com",
+      "name": "Lisa Garcia",
+      "role": "user",
+      "purchasedModules": [
+        "module-003",
+        "module-002"
+      ],
+      "createdAt": "2025-06-09T17:31:54.192Z",
+      "lastLogin": "2025-06-18T17:56:40.643Z",
+      "totalSpent": 16.98
+    },
+    {
+      "id": "user_1753119114192_3",
+      "email": "ashley.miller771@gmail.com",
+      "name": "Ashley Miller",
+      "role": "user",
+      "purchasedModules": [
+        "module-001",
+        "module-002"
+      ],
+      "createdAt": "2025-07-02T17:31:54.192Z",
+      "lastLogin": "2025-07-11T22:07:34.877Z",
+      "totalSpent": 17.990000000000002
+    },
+    {
+      "id": "user_1753119114192_4",
+      "email": "maria.rodriguez994@gmail.com",
+      "name": "Maria Rodriguez",
+      "role": "user",
+      "purchasedModules": [],
+      "createdAt": "2025-07-10T17:31:54.192Z",
+      "lastLogin": "2025-07-13T10:41:44.601Z",
+      "totalSpent": 0
+    },
+    {
+      "id": "user_1753119114192_5",
+      "email": "rachel.king250@outlook.com",
+      "name": "Rachel King",
+      "role": "user",
+      "purchasedModules": [
+        "module-002"
+      ],
+      "createdAt": "2025-07-15T17:31:54.192Z",
+      "lastLogin": "2025-07-20T19:01:15.474Z",
+      "totalSpent": 6.99
+    },
+    {
+      "id": "user_1753119114192_6",
+      "email": "ryan.lewis8@gmail.com",
+      "name": "Ryan Lewis",
+      "role": "user",
+      "purchasedModules": [
+        "module-003"
+      ],
+      "createdAt": "2025-07-03T17:31:54.192Z",
+      "lastLogin": "2025-07-05T05:47:11.958Z",
+      "totalSpent": 9.99
+    },
+    {
+      "id": "user_1753119114192_7",
+      "email": "chris.lee392@outlook.com",
+      "name": "Chris Lee",
+      "role": "user",
+      "purchasedModules": [
+        "module-001"
+      ],
+      "createdAt": "2025-06-29T17:31:54.192Z",
+      "lastLogin": "2025-06-30T17:47:31.737Z",
+      "totalSpent": 11
+    },
+    {
+      "id": "user_1753119114192_8",
+      "email": "amanda.white895@gmail.com",
+      "name": "Amanda White",
+      "role": "user",
+      "purchasedModules": [],
+      "createdAt": "2025-06-05T17:31:54.192Z",
+      "lastLogin": "2025-07-12T04:15:01.072Z",
+      "totalSpent": 0
+    },
+    {
+      "id": "user_1753119114192_9",
+      "email": "matthew.nelson411@hotmail.com",
+      "name": "Matthew Nelson",
+      "role": "user",
+      "purchasedModules": [],
+      "createdAt": "2025-06-05T17:31:54.192Z",
+      "lastLogin": "2025-07-06T02:36:13.374Z",
+      "totalSpent": 0
+    },
+    {
+      "id": "user_1753119114192_10",
+      "email": "amanda.white797@outlook.com",
+      "name": "Amanda White",
+      "role": "user",
+      "purchasedModules": [
+        "module-001"
+      ],
+      "createdAt": "2025-07-03T17:31:54.192Z",
+      "lastLogin": "2025-07-18T01:10:19.752Z",
+      "totalSpent": 11
+    },
+    {
+      "id": "user_1753119114192_11",
+      "email": "john.smith107@icloud.com",
+      "name": "John Smith",
+      "role": "user",
+      "purchasedModules": [
+        "module-003",
+        "module-002"
+      ],
+      "createdAt": "2025-05-27T17:31:54.192Z",
+      "lastLogin": "2025-06-04T00:45:42.512Z",
+      "totalSpent": 16.98
+    },
+    {
+      "id": "user_1753119114192_12",
+      "email": "john.smith615@hotmail.com",
+      "name": "John Smith",
+      "role": "user",
+      "purchasedModules": [
+        "module-003"
+      ],
+      "createdAt": "2025-05-02T17:31:54.192Z",
+      "lastLogin": "2025-05-27T12:56:09.496Z",
+      "totalSpent": 9.99
+    },
+    {
+      "id": "user_1753119114192_13",
+      "email": "tyler.wright422@yahoo.com",
+      "name": "Tyler Wright",
+      "role": "user",
+      "purchasedModules": [],
+      "createdAt": "2025-05-28T17:31:54.192Z",
+      "lastLogin": "2025-06-07T16:32:49.642Z",
+      "totalSpent": 0
+    },
+    {
+      "id": "user_1753119114192_14",
+      "email": "maria.rodriguez175@yahoo.com",
+      "name": "Maria Rodriguez",
+      "role": "user",
+      "purchasedModules": [
+        "module-003",
+        "module-002"
+      ],
+      "createdAt": "2025-05-18T17:31:54.192Z",
+      "lastLogin": "2025-06-28T12:09:18.788Z",
+      "totalSpent": 16.98
+    },
+    {
+      "id": "user_1753119114192_15",
+      "email": "maria.rodriguez312@outlook.com",
+      "name": "Maria Rodriguez",
+      "role": "user",
+      "purchasedModules": [
+        "module-003"
+      ],
+      "createdAt": "2025-04-27T17:31:54.192Z",
+      "lastLogin": "2025-07-05T22:13:59.688Z",
+      "totalSpent": 9.99
+    },
+    {
+      "id": "user_1753119114192_16",
+      "email": "michelle.thomas486@outlook.com",
+      "name": "Michelle Thomas",
+      "role": "user",
+      "purchasedModules": [
+        "module-003"
+      ],
+      "createdAt": "2025-06-17T17:31:54.192Z",
+      "lastLogin": "2025-07-10T21:31:44.109Z",
+      "totalSpent": 9.99
+    },
+    {
+      "id": "user_1753119114192_17",
+      "email": "jessica.clark129@gmail.com",
+      "name": "Jessica Clark",
+      "role": "user",
+      "purchasedModules": [
+        "module-003"
+      ],
+      "createdAt": "2025-07-03T17:31:54.192Z",
+      "lastLogin": "2025-07-06T03:36:29.854Z",
+      "totalSpent": 9.99
+    },
+    {
+      "id": "user_1753119114192_18",
+      "email": "michelle.thomas900@yahoo.com",
+      "name": "Michelle Thomas",
+      "role": "user",
+      "purchasedModules": [],
+      "createdAt": "2025-07-09T17:31:54.192Z",
+      "lastLogin": "2025-07-18T17:13:13.500Z",
+      "totalSpent": 0
+    },
+    {
+      "id": "user_1753119114192_19",
+      "email": "matthew.nelson946@icloud.com",
+      "name": "Matthew Nelson",
+      "role": "user",
+      "purchasedModules": [],
+      "createdAt": "2025-07-12T17:31:54.192Z",
+      "lastLogin": "2025-07-21T02:04:10.395Z",
+      "totalSpent": 0
+    },
+    {
+      "id": "user_1753119114192_20",
+      "email": "chris.lee240@icloud.com",
+      "name": "Chris Lee",
+      "role": "user",
+      "purchasedModules": [
+        "module-003"
+      ],
+      "createdAt": "2025-05-29T17:31:54.192Z",
+      "lastLogin": "2025-06-07T20:29:06.772Z",
+      "totalSpent": 9.99
+    },
+    {
+      "id": "user_1753119114192_21",
+      "email": "justin.allen381@outlook.com",
+      "name": "Justin Allen",
+      "role": "user",
+      "purchasedModules": [],
+      "createdAt": "2025-05-27T17:31:54.192Z",
+      "lastLogin": "2025-07-16T01:49:59.967Z",
+      "totalSpent": 0
+    },
+    {
+      "id": "user_1753119114192_22",
+      "email": "justin.allen477@outlook.com",
+      "name": "Justin Allen",
+      "role": "user",
+      "purchasedModules": [],
+      "createdAt": "2025-06-10T17:31:54.192Z",
+      "lastLogin": "2025-06-19T05:10:28.867Z",
+      "totalSpent": 0
+    },
+    {
+      "id": "user_1753119114192_23",
+      "email": "jessica.clark623@outlook.com",
+      "name": "Jessica Clark",
+      "role": "user",
+      "purchasedModules": [
+        "module-003"
+      ],
+      "createdAt": "2025-05-06T17:31:54.192Z",
+      "lastLogin": "2025-06-01T06:53:20.545Z",
+      "totalSpent": 9.99
+    },
+    {
+      "id": "user_1753119114192_24",
+      "email": "chris.lee696@yahoo.com",
+      "name": "Chris Lee",
+      "role": "user",
+      "purchasedModules": [
+        "module-003",
+        "module-002"
+      ],
+      "createdAt": "2025-05-10T17:31:54.192Z",
+      "lastLogin": "2025-05-27T04:58:27.781Z",
+      "totalSpent": 16.98
+    },
+    {
+      "id": "user_1753119114192_25",
+      "email": "ryan.lewis920@hotmail.com",
+      "name": "Ryan Lewis",
+      "role": "user",
+      "purchasedModules": [],
+      "createdAt": "2025-06-18T17:31:54.192Z",
+      "lastLogin": "2025-07-01T19:50:58.681Z",
+      "totalSpent": 0
+    },
+    {
+      "id": "user_1753119114192_26",
+      "email": "james.wilson645@hotmail.com",
+      "name": "James Wilson",
+      "role": "user",
+      "purchasedModules": [
+        "module-001",
+        "module-002"
+      ],
+      "createdAt": "2025-07-06T17:31:54.192Z",
+      "lastLogin": "2025-07-19T11:52:57.435Z",
+      "totalSpent": 17.990000000000002
+    },
+    {
+      "id": "user_1753119114192_27",
+      "email": "amanda.white687@icloud.com",
+      "name": "Amanda White",
+      "role": "user",
+      "purchasedModules": [
+        "module-003"
+      ],
+      "createdAt": "2025-05-27T17:31:54.192Z",
+      "lastLogin": "2025-07-18T01:27:34.841Z",
+      "totalSpent": 9.99
+    },
+    {
+      "id": "user_1753119114192_28",
+      "email": "jessica.clark721@hotmail.com",
+      "name": "Jessica Clark",
+      "role": "user",
+      "purchasedModules": [
+        "module-003"
+      ],
+      "createdAt": "2025-07-17T17:31:54.192Z",
+      "lastLogin": "2025-07-18T15:54:51.298Z",
+      "totalSpent": 9.99
+    },
+    {
+      "id": "user_1753119114192_29",
+      "email": "amanda.white178@gmail.com",
+      "name": "Amanda White",
+      "role": "user",
+      "purchasedModules": [],
+      "createdAt": "2025-06-01T17:31:54.192Z",
+      "lastLogin": "2025-07-17T10:32:30.499Z",
+      "totalSpent": 0
+    },
+    {
+      "id": "user_1753119114192_30",
+      "email": "rachel.king430@gmail.com",
+      "name": "Rachel King",
+      "role": "user",
+      "purchasedModules": [
+        "module-003"
+      ],
+      "createdAt": "2025-05-10T17:31:54.192Z",
+      "lastLogin": "2025-05-24T14:34:28.648Z",
+      "totalSpent": 9.99
+    },
+    {
+      "id": "user_1753119114192_31",
+      "email": "andrew.adams449@yahoo.com",
+      "name": "Andrew Adams",
+      "role": "user",
+      "purchasedModules": [
+        "module-003",
+        "module-001"
+      ],
+      "createdAt": "2025-04-23T17:31:54.192Z",
+      "lastLogin": "2025-05-13T18:09:17.769Z",
+      "totalSpent": 20.990000000000002
+    },
+    {
+      "id": "user_1753119114192_32",
+      "email": "daniel.harris110@gmail.com",
+      "name": "Daniel Harris",
+      "role": "user",
+      "purchasedModules": [
+        "module-003",
+        "module-001"
+      ],
+      "createdAt": "2025-06-17T17:31:54.192Z",
+      "lastLogin": "2025-06-29T11:50:27.726Z",
+      "totalSpent": 20.990000000000002
+    },
+    {
+      "id": "user_1753119114192_33",
+      "email": "david.brown974@hotmail.com",
+      "name": "David Brown",
+      "role": "user",
+      "purchasedModules": [
+        "module-001",
+        "module-002"
+      ],
+      "createdAt": "2025-06-27T17:31:54.192Z",
+      "lastLogin": "2025-07-08T00:38:38.871Z",
+      "totalSpent": 17.990000000000002
+    },
+    {
+      "id": "user_1753119114192_34",
+      "email": "lisa.garcia172@gmail.com",
+      "name": "Lisa Garcia",
+      "role": "user",
+      "purchasedModules": [],
+      "createdAt": "2025-05-07T17:31:54.192Z",
+      "lastLogin": "2025-06-29T08:40:40.154Z",
+      "totalSpent": 0
+    },
+    {
+      "id": "user_1753119114192_35",
+      "email": "sarah.johnson793@yahoo.com",
+      "name": "Sarah Johnson",
+      "role": "user",
+      "purchasedModules": [],
+      "createdAt": "2025-05-01T17:31:54.192Z",
+      "lastLogin": "2025-06-10T08:51:48.315Z",
+      "totalSpent": 0
+    },
+    {
+      "id": "user_1753119114192_36",
+      "email": "samantha.green582@outlook.com",
+      "name": "Samantha Green",
+      "role": "user",
+      "purchasedModules": [],
+      "createdAt": "2025-06-05T17:31:54.192Z",
+      "lastLogin": "2025-06-15T06:57:59.666Z",
+      "totalSpent": 0
+    },
+    {
+      "id": "user_1753119114192_37",
+      "email": "james.wilson60@yahoo.com",
+      "name": "James Wilson",
+      "role": "user",
+      "purchasedModules": [],
+      "createdAt": "2025-05-22T17:31:54.192Z",
+      "lastLogin": "2025-06-15T19:21:00.650Z",
+      "totalSpent": 0
+    },
+    {
+      "id": "user_1753119114192_38",
+      "email": "john.smith679@yahoo.com",
+      "name": "John Smith",
+      "role": "user",
+      "purchasedModules": [
+        "module-002",
+        "module-003"
+      ],
+      "createdAt": "2025-06-01T17:31:54.192Z",
+      "lastLogin": "2025-07-11T17:20:02.341Z",
+      "totalSpent": 16.98
+    },
+    {
+      "id": "user_1753119114193_39",
+      "email": "jessica.clark142@gmail.com",
+      "name": "Jessica Clark",
+      "role": "user",
+      "purchasedModules": [
+        "module-001"
+      ],
+      "createdAt": "2025-05-30T17:31:54.193Z",
+      "lastLogin": "2025-07-15T14:37:55.506Z",
+      "totalSpent": 11
+    },
+    {
+      "id": "user_1753119114193_40",
+      "email": "tyler.wright155@outlook.com",
+      "name": "Tyler Wright",
+      "role": "user",
+      "purchasedModules": [],
+      "createdAt": "2025-06-27T17:31:54.193Z",
+      "lastLogin": "2025-07-20T14:53:53.221Z",
+      "totalSpent": 0
+    },
+    {
+      "id": "user_1753119114193_41",
+      "email": "jessica.clark273@hotmail.com",
+      "name": "Jessica Clark",
+      "role": "user",
+      "purchasedModules": [
+        "module-002"
+      ],
+      "createdAt": "2025-06-15T17:31:54.193Z",
+      "lastLogin": "2025-07-15T22:26:57.557Z",
+      "totalSpent": 6.99
+    },
+    {
+      "id": "user_1753119114193_42",
+      "email": "brandon.hall827@outlook.com",
+      "name": "Brandon Hall",
+      "role": "user",
+      "purchasedModules": [
+        "module-002",
+        "module-001"
+      ],
+      "createdAt": "2025-06-02T17:31:54.193Z",
+      "lastLogin": "2025-06-24T12:56:01.853Z",
+      "totalSpent": 17.990000000000002
+    },
+    {
+      "id": "user_1753119114193_43",
+      "email": "mike.chen774@hotmail.com",
+      "name": "Mike Chen",
+      "role": "user",
+      "purchasedModules": [
+        "module-001"
+      ],
+      "createdAt": "2025-05-03T17:31:54.193Z",
+      "lastLogin": "2025-06-24T19:15:26.915Z",
+      "totalSpent": 11
+    },
+    {
+      "id": "user_1753119114193_44",
+      "email": "ashley.miller76@gmail.com",
+      "name": "Ashley Miller",
+      "role": "user",
+      "purchasedModules": [
+        "module-003",
+        "module-001"
+      ],
+      "createdAt": "2025-05-12T17:31:54.193Z",
+      "lastLogin": "2025-05-27T02:43:05.002Z",
+      "totalSpent": 20.990000000000002
+    },
+    {
+      "id": "user_1753119114193_45",
+      "email": "brittany.baker63@outlook.com",
+      "name": "Brittany Baker",
+      "role": "user",
+      "purchasedModules": [],
+      "createdAt": "2025-06-23T17:31:54.193Z",
+      "lastLogin": "2025-07-19T06:14:55.260Z",
+      "totalSpent": 0
+    },
+    {
+      "id": "user_1753119114193_46",
+      "email": "rachel.king43@icloud.com",
+      "name": "Rachel King",
+      "role": "user",
+      "purchasedModules": [],
+      "createdAt": "2025-07-18T17:31:54.193Z",
+      "lastLogin": "2025-07-20T06:56:50.571Z",
+      "totalSpent": 0
+    },
+    {
+      "id": "user_1753119114193_47",
+      "email": "andrew.adams730@gmail.com",
+      "name": "Andrew Adams",
+      "role": "user",
+      "purchasedModules": [
+        "module-002"
+      ],
+      "createdAt": "2025-06-11T17:31:54.193Z",
+      "lastLogin": "2025-07-07T14:25:57.078Z",
+      "totalSpent": 6.99
+    },
+    {
+      "id": "user_1753119114193_48",
+      "email": "mike.chen813@yahoo.com",
+      "name": "Mike Chen",
+      "role": "user",
+      "purchasedModules": [],
+      "createdAt": "2025-07-07T17:31:54.193Z",
+      "lastLogin": "2025-07-17T04:21:58.253Z",
+      "totalSpent": 0
+    },
+    {
+      "id": "user_1753119114193_49",
+      "email": "brandon.hall846@gmail.com",
+      "name": "Brandon Hall",
+      "role": "user",
+      "purchasedModules": [],
+      "createdAt": "2025-05-13T17:31:54.193Z",
+      "lastLogin": "2025-05-23T23:54:34.405Z",
+      "totalSpent": 0
+    },
+    {
+      "id": "demo-parent-001",
+      "email": "parent@demo.com",
+      "name": "Demo Parent",
+      "role": "user",
+      "purchasedModules": [
+        "module-001"
+      ],
+      "createdAt": "2025-06-21T17:31:54.193Z",
+      "lastLogin": "2025-07-21T17:31:54.193Z",
+      "totalSpent": 11
+    }
+  ],
+  "modules": [
+    {
+      "id": "module-002",
+      "title": "Tano's Jungle Songs",
+      "description": "Sing along with Tano in the African jungle!",
+      "character": "tano",
+      "price": 6.99,
+      "ageRange": "2-6 years",
+      "rating": 4.8,
+      "totalRatings": 892,
+      "isActive": true,
+      "createdAt": "2025-06-06T17:31:54.192Z",
+      "updatedAt": "2025-07-21T17:31:54.192Z",
+      "features": [
+        "Musical adventures",
+        "Sing-along songs",
+        "Cultural stories"
+      ],
+      "demoVideo": "/demo/tano-songs.mp4",
+      "fullContent": []
+    },
+    {
+      "id": "module-001",
+      "title": "Kiki's African Animal Alphabet",
+      "description": "Learn the alphabet with amazing African animals!",
+      "character": "kiki",
+      "price": 11,
+      "ageRange": "1-3 years",
+      "rating": 4.9,
+      "totalRatings": 1247,
+      "isActive": true,
+      "createdAt": "2025-05-22T17:31:54.190Z",
+      "updatedAt": "2025-07-21T17:31:54.192Z",
+      "features": [
+        "Interactive games",
+        "Audio narration",
+        "Colorful animations"
+      ],
+      "demoVideo": "/demo/kiki-alphabet.mp4",
+      "fullContent": []
+    },
+    {
+      "id": "module-003",
+      "title": "Kiki's Counting Safari",
+      "description": "Count with Kiki on an exciting African safari!",
+      "character": "kiki",
+      "price": 9.99,
+      "ageRange": "2-5 years",
+      "rating": 4.7,
+      "totalRatings": 634,
+      "isActive": true,
+      "createdAt": "2025-06-21T17:31:54.192Z",
+      "updatedAt": "2025-07-21T17:31:54.192Z",
+      "features": [
+        "Number recognition",
+        "Counting games",
+        "Safari adventure"
+      ],
+      "demoVideo": "/demo/kiki-counting.mp4",
+      "fullContent": []
+    }
+  ],
+  "purchases": [
+    {
+      "id": "purchase_1753119114192_2",
+      "userId": "user_1753119114192_2",
+      "moduleIds": [
+        "module-003",
+        "module-002"
+      ],
+      "amount": 16.98,
+      "status": "completed",
+      "paymentMethod": "Credit Card",
+      "createdAt": "2025-07-09T04:48:31.166Z",
+      "completedAt": "2025-07-09T04:48:31.166Z"
+    },
+    {
+      "id": "purchase_1753119114192_3",
+      "userId": "user_1753119114192_3",
+      "moduleIds": [
+        "module-001",
+        "module-002"
+      ],
+      "amount": 17.990000000000002,
+      "status": "completed",
+      "paymentMethod": "Credit Card",
+      "createdAt": "2025-07-31T18:10:05.938Z",
+      "completedAt": "2025-07-31T18:10:05.938Z"
+    },
+    {
+      "id": "purchase_1753119114192_4",
+      "userId": "user_1753119114192_4",
+      "moduleIds": [
+        "module-001",
+        "module-002"
+      ],
+      "amount": 17.990000000000002,
+      "status": "pending",
+      "paymentMethod": "Credit Card",
+      "createdAt": "2025-07-26T10:32:14.666Z",
+      "completedAt": "2025-07-26T10:32:14.666Z"
+    },
+    {
+      "id": "purchase_1753119114192_5",
+      "userId": "user_1753119114192_5",
+      "moduleIds": [
+        "module-002"
+      ],
+      "amount": 6.99,
+      "status": "completed",
+      "paymentMethod": "Credit Card",
+      "createdAt": "2025-07-25T19:28:20.575Z",
+      "completedAt": "2025-07-25T19:28:20.575Z"
+    },
+    {
+      "id": "purchase_1753119114192_6",
+      "userId": "user_1753119114192_6",
+      "moduleIds": [
+        "module-003"
+      ],
+      "amount": 9.99,
+      "status": "completed",
+      "paymentMethod": "Credit Card",
+      "createdAt": "2025-07-08T11:12:01.133Z",
+      "completedAt": "2025-07-08T11:12:01.133Z"
+    },
+    {
+      "id": "purchase_1753119114192_7",
+      "userId": "user_1753119114192_7",
+      "moduleIds": [
+        "module-001"
+      ],
+      "amount": 11,
+      "status": "completed",
+      "paymentMethod": "Credit Card",
+      "createdAt": "2025-07-06T09:47:54.137Z",
+      "completedAt": "2025-07-06T09:47:54.137Z"
+    },
+    {
+      "id": "purchase_1753119114192_8",
+      "userId": "user_1753119114192_8",
+      "moduleIds": [
+        "module-003"
+      ],
+      "amount": 9.99,
+      "status": "pending",
+      "paymentMethod": "Credit Card",
+      "createdAt": "2025-07-05T14:15:02.592Z",
+      "completedAt": "2025-07-05T14:15:02.592Z"
+    },
+    {
+      "id": "purchase_1753119114192_9",
+      "userId": "user_1753119114192_9",
+      "moduleIds": [
+        "module-003"
+      ],
+      "amount": 9.99,
+      "status": "pending",
+      "paymentMethod": "Credit Card",
+      "createdAt": "2025-06-06T20:27:41.617Z",
+      "completedAt": "2025-06-06T20:27:41.617Z"
+    },
+    {
+      "id": "purchase_1753119114192_10",
+      "userId": "user_1753119114192_10",
+      "moduleIds": [
+        "module-001"
+      ],
+      "amount": 11,
+      "status": "completed",
+      "paymentMethod": "Credit Card",
+      "createdAt": "2025-07-25T12:44:26.635Z",
+      "completedAt": "2025-07-25T12:44:26.635Z"
+    },
+    {
+      "id": "purchase_1753119114192_11",
+      "userId": "user_1753119114192_11",
+      "moduleIds": [
+        "module-003",
+        "module-002"
+      ],
+      "amount": 16.98,
+      "status": "completed",
+      "paymentMethod": "Credit Card",
+      "createdAt": "2025-06-04T16:41:47.682Z",
+      "completedAt": "2025-06-04T16:41:47.682Z"
+    },
+    {
+      "id": "purchase_1753119114192_12",
+      "userId": "user_1753119114192_12",
+      "moduleIds": [
+        "module-003"
+      ],
+      "amount": 9.99,
+      "status": "completed",
+      "paymentMethod": "Credit Card",
+      "createdAt": "2025-05-18T05:22:56.081Z",
+      "completedAt": "2025-05-18T05:22:56.081Z"
+    },
+    {
+      "id": "purchase_1753119114192_14",
+      "userId": "user_1753119114192_14",
+      "moduleIds": [
+        "module-003",
+        "module-002"
+      ],
+      "amount": 16.98,
+      "status": "completed",
+      "paymentMethod": "Credit Card",
+      "createdAt": "2025-06-14T22:05:04.757Z",
+      "completedAt": "2025-06-14T22:05:04.757Z"
+    },
+    {
+      "id": "purchase_1753119114192_15",
+      "userId": "user_1753119114192_15",
+      "moduleIds": [
+        "module-003"
+      ],
+      "amount": 9.99,
+      "status": "completed",
+      "paymentMethod": "Credit Card",
+      "createdAt": "2025-05-07T06:13:55.291Z",
+      "completedAt": "2025-05-07T06:13:55.291Z"
+    },
+    {
+      "id": "purchase_1753119114192_16",
+      "userId": "user_1753119114192_16",
+      "moduleIds": [
+        "module-003"
+      ],
+      "amount": 9.99,
+      "status": "completed",
+      "paymentMethod": "Credit Card",
+      "createdAt": "2025-07-15T07:17:03.744Z",
+      "completedAt": "2025-07-15T07:17:03.744Z"
+    },
+    {
+      "id": "purchase_1753119114192_17",
+      "userId": "user_1753119114192_17",
+      "moduleIds": [
+        "module-003"
+      ],
+      "amount": 9.99,
+      "status": "completed",
+      "paymentMethod": "Credit Card",
+      "createdAt": "2025-07-06T23:56:55.202Z",
+      "completedAt": "2025-07-06T23:56:55.202Z"
+    },
+    {
+      "id": "purchase_1753119114192_20",
+      "userId": "user_1753119114192_20",
+      "moduleIds": [
+        "module-003"
+      ],
+      "amount": 9.99,
+      "status": "completed",
+      "paymentMethod": "Credit Card",
+      "createdAt": "2025-06-13T08:11:05.559Z",
+      "completedAt": "2025-06-13T08:11:05.559Z"
+    },
+    {
+      "id": "purchase_1753119114192_23",
+      "userId": "user_1753119114192_23",
+      "moduleIds": [
+        "module-003"
+      ],
+      "amount": 9.99,
+      "status": "completed",
+      "paymentMethod": "Credit Card",
+      "createdAt": "2025-06-01T10:01:58.454Z",
+      "completedAt": "2025-06-01T10:01:58.454Z"
+    },
+    {
+      "id": "purchase_1753119114192_24",
+      "userId": "user_1753119114192_24",
+      "moduleIds": [
+        "module-003",
+        "module-002"
+      ],
+      "amount": 16.98,
+      "status": "completed",
+      "paymentMethod": "Credit Card",
+      "createdAt": "2025-05-18T14:13:01.588Z",
+      "completedAt": "2025-05-18T14:13:01.588Z"
+    },
+    {
+      "id": "purchase_1753119114192_25",
+      "userId": "user_1753119114192_25",
+      "moduleIds": [
+        "module-003"
+      ],
+      "amount": 9.99,
+      "status": "pending",
+      "paymentMethod": "Credit Card",
+      "createdAt": "2025-06-28T06:30:11.626Z",
+      "completedAt": "2025-06-28T06:30:11.626Z"
+    },
+    {
+      "id": "purchase_1753119114192_26",
+      "userId": "user_1753119114192_26",
+      "moduleIds": [
+        "module-001",
+        "module-002"
+      ],
+      "amount": 17.990000000000002,
+      "status": "completed",
+      "paymentMethod": "Credit Card",
+      "createdAt": "2025-07-12T21:57:13.241Z",
+      "completedAt": "2025-07-12T21:57:13.241Z"
+    },
+    {
+      "id": "purchase_1753119114192_27",
+      "userId": "user_1753119114192_27",
+      "moduleIds": [
+        "module-003"
+      ],
+      "amount": 9.99,
+      "status": "completed",
+      "paymentMethod": "Credit Card",
+      "createdAt": "2025-06-07T12:18:26.605Z",
+      "completedAt": "2025-06-07T12:18:26.605Z"
+    },
+    {
+      "id": "purchase_1753119114192_28",
+      "userId": "user_1753119114192_28",
+      "moduleIds": [
+        "module-003"
+      ],
+      "amount": 9.99,
+      "status": "completed",
+      "paymentMethod": "Credit Card",
+      "createdAt": "2025-07-29T14:38:22.095Z",
+      "completedAt": "2025-07-29T14:38:22.095Z"
+    },
+    {
+      "id": "purchase_1753119114192_30",
+      "userId": "user_1753119114192_30",
+      "moduleIds": [
+        "module-003"
+      ],
+      "amount": 9.99,
+      "status": "completed",
+      "paymentMethod": "Credit Card",
+      "createdAt": "2025-05-19T15:17:54.542Z",
+      "completedAt": "2025-05-19T15:17:54.542Z"
+    },
+    {
+      "id": "purchase_1753119114192_31",
+      "userId": "user_1753119114192_31",
+      "moduleIds": [
+        "module-003",
+        "module-001"
+      ],
+      "amount": 20.990000000000002,
+      "status": "completed",
+      "paymentMethod": "Credit Card",
+      "createdAt": "2025-05-14T15:57:28.221Z",
+      "completedAt": "2025-05-14T15:57:28.221Z"
+    },
+    {
+      "id": "purchase_1753119114192_32",
+      "userId": "user_1753119114192_32",
+      "moduleIds": [
+        "module-003",
+        "module-001"
+      ],
+      "amount": 20.990000000000002,
+      "status": "completed",
+      "paymentMethod": "Credit Card",
+      "createdAt": "2025-07-01T04:47:11.764Z",
+      "completedAt": "2025-07-01T04:47:11.764Z"
+    },
+    {
+      "id": "purchase_1753119114192_33",
+      "userId": "user_1753119114192_33",
+      "moduleIds": [
+        "module-001",
+        "module-002"
+      ],
+      "amount": 17.990000000000002,
+      "status": "completed",
+      "paymentMethod": "Credit Card",
+      "createdAt": "2025-07-11T22:45:15.607Z",
+      "completedAt": "2025-07-11T22:45:15.607Z"
+    },
+    {
+      "id": "purchase_1753119114192_37",
+      "userId": "user_1753119114192_37",
+      "moduleIds": [
+        "module-003"
+      ],
+      "amount": 9.99,
+      "status": "pending",
+      "paymentMethod": "Credit Card",
+      "createdAt": "2025-05-25T10:51:10.837Z",
+      "completedAt": "2025-05-25T10:51:10.837Z"
+    },
+    {
+      "id": "purchase_1753119114192_38",
+      "userId": "user_1753119114192_38",
+      "moduleIds": [
+        "module-002",
+        "module-003"
+      ],
+      "amount": 16.98,
+      "status": "completed",
+      "paymentMethod": "Credit Card",
+      "createdAt": "2025-06-28T13:17:40.355Z",
+      "completedAt": "2025-06-28T13:17:40.355Z"
+    },
+    {
+      "id": "purchase_1753119114193_39",
+      "userId": "user_1753119114193_39",
+      "moduleIds": [
+        "module-001"
+      ],
+      "amount": 11,
+      "status": "completed",
+      "paymentMethod": "Credit Card",
+      "createdAt": "2025-06-14T09:49:11.480Z",
+      "completedAt": "2025-06-14T09:49:11.480Z"
+    },
+    {
+      "id": "purchase_1753119114193_41",
+      "userId": "user_1753119114193_41",
+      "moduleIds": [
+        "module-002"
+      ],
+      "amount": 6.99,
+      "status": "completed",
+      "paymentMethod": "Credit Card",
+      "createdAt": "2025-07-03T10:45:09.560Z",
+      "completedAt": "2025-07-03T10:45:09.560Z"
+    },
+    {
+      "id": "purchase_1753119114193_42",
+      "userId": "user_1753119114193_42",
+      "moduleIds": [
+        "module-002",
+        "module-001"
+      ],
+      "amount": 17.990000000000002,
+      "status": "completed",
+      "paymentMethod": "Credit Card",
+      "createdAt": "2025-06-28T18:05:52.172Z",
+      "completedAt": "2025-06-28T18:05:52.172Z"
+    },
+    {
+      "id": "purchase_1753119114193_43",
+      "userId": "user_1753119114193_43",
+      "moduleIds": [
+        "module-001"
+      ],
+      "amount": 11,
+      "status": "completed",
+      "paymentMethod": "Credit Card",
+      "createdAt": "2025-05-25T06:55:10.896Z",
+      "completedAt": "2025-05-25T06:55:10.896Z"
+    },
+    {
+      "id": "purchase_1753119114193_44",
+      "userId": "user_1753119114193_44",
+      "moduleIds": [
+        "module-003",
+        "module-001"
+      ],
+      "amount": 20.990000000000002,
+      "status": "completed",
+      "paymentMethod": "Credit Card",
+      "createdAt": "2025-06-11T06:27:11.818Z",
+      "completedAt": "2025-06-11T06:27:11.818Z"
+    },
+    {
+      "id": "purchase_1753119114193_47",
+      "userId": "user_1753119114193_47",
+      "moduleIds": [
+        "module-002"
+      ],
+      "amount": 6.99,
+      "status": "completed",
+      "paymentMethod": "Credit Card",
+      "createdAt": "2025-07-01T17:18:02.901Z",
+      "completedAt": "2025-07-01T17:18:02.901Z"
+    }
+  ],
+  "contentFiles": []
+}

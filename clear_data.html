@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Clear Zinga Linga Data</title>
+</head>
+<body>
+    <h1>Clear Zinga Linga Data</h1>
+    <button onclick="clearData()">Clear All Data</button>
+    <p id="result"></p>
+
+    <script>
+        function clearData() {
+            localStorage.removeItem('zinga-linga-data');
+            document.getElementById('result').innerHTML = 'Data cleared! Refresh your app to see sample data.';
+        }
+    </script>
+</body>
+</html>
