@@ -158,9 +158,60 @@ function App() {
 
   const handlePurchase = (moduleIds: string[]) => {
     if (user) {
-      setUser({
+      // Update user with purchased modules
+      const updatedUser = {
         ...user,
         purchasedModules: [...user.purchasedModules, ...moduleIds.filter(id => !user.purchasedModules.includes(id))]
+      };
+      setUser(updatedUser);
+
+      // Load current data and modules to get purchase details
+      const currentData = dataStore.loadData();
+      const modules = currentData.modules;
+      
+      // Calculate total purchase amount
+      const purchasedModules = modules.filter(module => moduleIds.includes(module.id));
+      const totalAmount = purchasedModules.reduce((sum, module) => sum + module.price, 0);
+      
+      // Update user's total spent
+      updatedUser.totalSpent = (updatedUser.totalSpent || 0) + totalAmount;
+      
+      // Create purchase record
+      const purchase = {
+        id: `purchase-${Date.now()}`,
+        userId: user.id,
+        moduleIds: moduleIds,
+        amount: totalAmount,
+        status: 'completed' as const,
+        createdAt: new Date().toISOString(),
+        paymentMethod: 'stripe'
+      };
+
+      // Update data store
+      const updatedData = {
+        ...currentData,
+        users: currentData.users.map(u => u.id === user.id ? updatedUser : u),
+        purchases: [...currentData.purchases, purchase]
+      };
+      dataStore.saveData(updatedData);
+
+      // Create real purchase notification for admin
+      import('./utils/notificationService').then(({ notificationService }) => {
+        const moduleNames = purchasedModules.map(m => m.title).join(', ');
+        notificationService.createNotification(
+          'purchase',
+          '🛒 New Purchase!',
+          `${user.name} purchased ${moduleNames} for ${totalAmount.toFixed(2)}`,
+          'high',
+          user.id,
+          purchase.id,
+          { 
+            amount: totalAmount, 
+            customer: user.name,
+            modules: moduleNames,
+            timestamp: new Date().toISOString()
+          }
+        );
       });
     }
   };

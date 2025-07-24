@@ -154,13 +154,13 @@ export const Dashboard: React.FC<DashboardProps> = ({ user, onLogout, onPurchase
     const isPurchased = user.purchasedModules.includes(moduleId);
 
     return (
-      <div className="fixed inset-0 bg-black bg-opacity-75 flex items-center justify-center z-50 p-4">
-        <div className="bg-white rounded-3xl p-8 max-w-6xl w-full max-h-[90vh] overflow-y-auto">
-          <div className="flex justify-between items-center mb-6">
-            <h3 className="text-2xl font-mali font-bold text-gray-800">{content.title}</h3>
+      <div className="fixed inset-0 bg-black bg-opacity-75 flex items-center justify-center z-50 p-2 sm:p-4">
+        <div className="bg-white rounded-2xl sm:rounded-3xl p-4 sm:p-6 lg:p-8 max-w-6xl w-full max-h-[95vh] sm:max-h-[90vh] overflow-y-auto">
+          <div className="flex justify-between items-center mb-4 sm:mb-6">
+            <h3 className="text-lg sm:text-xl lg:text-2xl font-mali font-bold text-gray-800 truncate pr-4">{content.title}</h3>
             <button 
               onClick={() => setPlayingContent(null)}
-              className="p-2 hover:bg-gray-100 rounded-lg transition-colors"
+              className="p-2 hover:bg-gray-100 rounded-lg transition-colors flex-shrink-0"
             >
               <X className="w-5 h-5" />
             </button>
@@ -183,12 +183,12 @@ export const Dashboard: React.FC<DashboardProps> = ({ user, onLogout, onPurchase
               }}
             />
           ) : (
-            <div className="aspect-video bg-gradient-to-br from-brand-blue to-brand-pink rounded-2xl flex items-center justify-center mb-6">
-              <div className="text-center text-white">
-                <div className="w-20 h-20 bg-white/20 rounded-full flex items-center justify-center mx-auto mb-4">
+            <div className="aspect-video bg-gradient-to-br from-brand-blue to-brand-pink rounded-xl sm:rounded-2xl flex items-center justify-center mb-4 sm:mb-6">
+              <div className="text-center text-white px-4">
+                <div className="w-16 h-16 sm:w-20 sm:h-20 bg-white/20 rounded-full flex items-center justify-center mx-auto mb-4">
                   {getContentIcon(content.type)}
                 </div>
-                <p className="font-mali text-lg">
+                <p className="font-mali text-base sm:text-lg">
                   {content.isDemo ? 'Demo Content' : 'Full Content'} - {content.duration}
                 </p>
                 <p className="font-mali text-sm opacity-80 mt-2">
@@ -200,8 +200,8 @@ export const Dashboard: React.FC<DashboardProps> = ({ user, onLogout, onPurchase
           )}
           
           {content.isDemo && (
-            <div className="bg-brand-yellow/10 border border-brand-yellow/30 rounded-2xl p-4 text-center mt-6">
-              <p className="font-mali text-brand-yellow font-bold">
+            <div className="bg-brand-yellow/10 border border-brand-yellow/30 rounded-xl sm:rounded-2xl p-3 sm:p-4 text-center mt-4 sm:mt-6">
+              <p className="font-mali text-brand-yellow font-bold text-sm sm:text-base">
                 🎉 This is a free demo! Purchase the full module to unlock all content.
               </p>
             </div>
@@ -237,79 +237,88 @@ export const Dashboard: React.FC<DashboardProps> = ({ user, onLogout, onPurchase
     <div className="min-h-screen bg-gradient-to-br from-amber-50 to-orange-50">
       {/* Header */}
       <header className="bg-white shadow-lg border-b-4 border-brand-yellow">
-        <div className="max-w-7xl mx-auto px-4 py-4">
-          <div className="flex justify-between items-center">
-            <div className="flex items-center gap-4">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 py-4">
+          <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+            <div className="flex items-center gap-3 sm:gap-4">
               <img 
                 src="/zinga linga logo.png" 
                 alt="Zinga Linga" 
-                className="h-12 w-auto"
+                className="h-10 sm:h-12 w-auto"
               />
               <div>
-                <h1 className="text-2xl font-mali font-bold text-brand-green">
+                <h1 className="text-lg sm:text-xl lg:text-2xl font-mali font-bold text-brand-green">
                   Welcome back, {user.name}!
                 </h1>
-                <p className="font-mali text-gray-600">Ready for more jungle adventures?</p>
+                <p className="font-mali text-gray-600 text-sm sm:text-base">Ready for more jungle adventures?</p>
               </div>
             </div>
             
-            <div className="flex items-center gap-4">
+            <div className="flex items-center gap-2 sm:gap-4 w-full sm:w-auto justify-between sm:justify-end">
               {/* Cart Button */}
               <button
                 onClick={() => setShowCart(true)}
-                className="relative flex items-center gap-2 bg-brand-blue/10 px-4 py-2 rounded-full hover:bg-brand-blue/20 transition-colors"
+                className="relative flex items-center gap-2 bg-brand-blue/10 px-3 sm:px-4 py-2 rounded-full hover:bg-brand-blue/20 transition-colors"
               >
                 <ShoppingCart className="w-4 h-4 text-brand-blue" />
-                <span className="font-mali text-brand-blue font-bold">Cart</span>
+                <span className="font-mali text-brand-blue font-bold text-sm sm:text-base">Cart</span>
                 {cart.items.length > 0 && (
-                  <span className="absolute -top-2 -right-2 bg-brand-red text-white text-xs font-mali font-bold rounded-full w-6 h-6 flex items-center justify-center">
+                  <span className="absolute -top-2 -right-2 bg-brand-red text-white text-xs font-mali font-bold rounded-full w-5 h-5 sm:w-6 sm:h-6 flex items-center justify-center">
                     {cart.items.length}
                   </span>
                 )}
               </button>
 
-              <div className="flex items-center gap-2 bg-brand-green/10 px-4 py-2 rounded-full">
+              <div className="hidden sm:flex items-center gap-2 bg-brand-green/10 px-4 py-2 rounded-full">
                 <UserIcon className="w-4 h-4 text-brand-green" />
                 <span className="font-mali text-brand-green font-bold">
                   {user.purchasedModules.length} Module{user.purchasedModules.length !== 1 ? 's' : ''}
                 </span>
               </div>
+              
               <button 
                 onClick={onLogout}
-                className="flex items-center gap-2 bg-gray-100 hover:bg-gray-200 px-4 py-2 rounded-full transition-colors"
+                className="flex items-center gap-2 bg-gray-100 hover:bg-gray-200 px-3 sm:px-4 py-2 rounded-full transition-colors"
               >
                 <LogOut className="w-4 h-4" />
-                <span className="font-mali">Logout</span>
+                <span className="font-mali text-sm sm:text-base">Logout</span>
               </button>
             </div>
+          </div>
+          
+          {/* Mobile Module Count */}
+          <div className="sm:hidden mt-3 flex items-center gap-2 bg-brand-green/10 px-4 py-2 rounded-full w-fit">
+            <UserIcon className="w-4 h-4 text-brand-green" />
+            <span className="font-mali text-brand-green font-bold text-sm">
+              {user.purchasedModules.length} Module{user.purchasedModules.length !== 1 ? 's' : ''}
+            </span>
           </div>
         </div>
       </header>
 
       {/* Navigation Tabs */}
-      <div className="max-w-7xl mx-auto px-4 py-6">
-        <div className="flex gap-4 mb-8">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 py-4 sm:py-6">
+        <div className="flex gap-2 sm:gap-4 mb-6 sm:mb-8 overflow-x-auto">
           <button
             onClick={() => setActiveTab('my-content')}
-            className={`flex items-center gap-2 px-6 py-3 rounded-full font-mali font-bold transition-all ${
+            className={`flex items-center gap-2 px-4 sm:px-6 py-3 rounded-full font-mali font-bold transition-all whitespace-nowrap ${
               activeTab === 'my-content'
                 ? 'bg-brand-green text-white shadow-lg'
                 : 'bg-white text-brand-green hover:bg-brand-green/10'
             }`}
           >
-            <BookOpen className="w-5 h-5" />
-            My Content
+            <BookOpen className="w-4 h-4 sm:w-5 sm:h-5" />
+            <span className="text-sm sm:text-base">My Content</span>
           </button>
           <button
             onClick={() => setActiveTab('store')}
-            className={`flex items-center gap-2 px-6 py-3 rounded-full font-mali font-bold transition-all ${
+            className={`flex items-center gap-2 px-4 sm:px-6 py-3 rounded-full font-mali font-bold transition-all whitespace-nowrap ${
               activeTab === 'store'
                 ? 'bg-brand-blue text-white shadow-lg'
                 : 'bg-white text-brand-blue hover:bg-brand-blue/10'
             }`}
           >
-            <ShoppingCart className="w-5 h-5" />
-            Store
+            <ShoppingCart className="w-4 h-4 sm:w-5 sm:h-5" />
+            <span className="text-sm sm:text-base">Store</span>
           </button>
         </div>
 
