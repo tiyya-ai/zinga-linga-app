@@ -138,50 +138,50 @@ export const OrdersPage: React.FC<OrdersPageProps> = ({ purchases, users, module
         </div>
       </div>
 
-      {/* Statistics Cards */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 lg:gap-6">
+      {/* Statistics Cards - 2 columns on mobile */}
+      <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4 lg:gap-6">
         <div className="bg-gradient-to-br from-green-500 to-green-600 rounded-xl lg:rounded-2xl p-4 lg:p-6 text-white shadow-lg">
-          <div className="flex items-center justify-between mb-3 lg:mb-4">
-            <div className="p-2 lg:p-3 bg-white/20 rounded-full">
-              <DollarSign className="w-5 h-5 lg:w-6 lg:h-6" />
+          <div className="flex items-center justify-between mb-2 lg:mb-4">
+            <div className="p-2 sm:p-3 bg-white/20 rounded-full">
+              <DollarSign className="w-4 h-4 sm:w-5 sm:h-5 lg:w-6 lg:h-6" />
             </div>
-            <TrendingUp className="w-4 h-4 lg:w-5 lg:h-5 opacity-80" />
+            <TrendingUp className="w-3 h-3 sm:w-4 sm:h-4 lg:w-5 lg:h-5 opacity-80" />
           </div>
-          <h3 className="text-2xl lg:text-3xl font-mali font-bold mb-1">${totalRevenue.toLocaleString()}</h3>
-          <p className="font-mali opacity-90 text-sm lg:text-base">Total Revenue</p>
+          <h3 className="text-lg sm:text-2xl lg:text-3xl font-mali font-bold mb-1">${totalRevenue.toLocaleString()}</h3>
+          <p className="font-mali opacity-90 text-xs sm:text-sm lg:text-base">Total Revenue</p>
         </div>
 
         <div className="bg-gradient-to-br from-blue-500 to-blue-600 rounded-xl lg:rounded-2xl p-4 lg:p-6 text-white shadow-lg">
-          <div className="flex items-center justify-between mb-3 lg:mb-4">
-            <div className="p-2 lg:p-3 bg-white/20 rounded-full">
-              <ShoppingCart className="w-5 h-5 lg:w-6 lg:h-6" />
+          <div className="flex items-center justify-between mb-2 lg:mb-4">
+            <div className="p-2 sm:p-3 bg-white/20 rounded-full">
+              <ShoppingCart className="w-4 h-4 sm:w-5 sm:h-5 lg:w-6 lg:h-6" />
             </div>
-            <CheckCircle className="w-4 h-4 lg:w-5 lg:h-5 opacity-80" />
+            <CheckCircle className="w-3 h-3 sm:w-4 sm:h-4 lg:w-5 lg:h-5 opacity-80" />
           </div>
-          <h3 className="text-2xl lg:text-3xl font-mali font-bold mb-1">{completedOrders}</h3>
-          <p className="font-mali opacity-90 text-sm lg:text-base">Completed Orders</p>
+          <h3 className="text-lg sm:text-2xl lg:text-3xl font-mali font-bold mb-1">{completedOrders}</h3>
+          <p className="font-mali opacity-90 text-xs sm:text-sm lg:text-base">Completed Orders</p>
         </div>
 
         <div className="bg-gradient-to-br from-yellow-500 to-orange-500 rounded-xl lg:rounded-2xl p-4 lg:p-6 text-white shadow-lg">
-          <div className="flex items-center justify-between mb-3 lg:mb-4">
-            <div className="p-2 lg:p-3 bg-white/20 rounded-full">
-              <Clock className="w-5 h-5 lg:w-6 lg:h-6" />
+          <div className="flex items-center justify-between mb-2 lg:mb-4">
+            <div className="p-2 sm:p-3 bg-white/20 rounded-full">
+              <Clock className="w-4 h-4 sm:w-5 sm:h-5 lg:w-6 lg:h-6" />
             </div>
-            <Clock className="w-4 h-4 lg:w-5 lg:h-5 opacity-80" />
+            <Clock className="w-3 h-3 sm:w-4 sm:h-4 lg:w-5 lg:h-5 opacity-80" />
           </div>
-          <h3 className="text-2xl lg:text-3xl font-mali font-bold mb-1">{pendingOrders}</h3>
-          <p className="font-mali opacity-90 text-sm lg:text-base">Pending Orders</p>
+          <h3 className="text-lg sm:text-2xl lg:text-3xl font-mali font-bold mb-1">{pendingOrders}</h3>
+          <p className="font-mali opacity-90 text-xs sm:text-sm lg:text-base">Pending Orders</p>
         </div>
 
         <div className="bg-gradient-to-br from-red-500 to-red-600 rounded-xl lg:rounded-2xl p-4 lg:p-6 text-white shadow-lg">
-          <div className="flex items-center justify-between mb-3 lg:mb-4">
-            <div className="p-2 lg:p-3 bg-white/20 rounded-full">
-              <XCircle className="w-5 h-5 lg:w-6 lg:h-6" />
+          <div className="flex items-center justify-between mb-2 lg:mb-4">
+            <div className="p-2 sm:p-3 bg-white/20 rounded-full">
+              <XCircle className="w-4 h-4 sm:w-5 sm:h-5 lg:w-6 lg:h-6" />
             </div>
-            <TrendingDown className="w-4 h-4 lg:w-5 lg:h-5 opacity-80" />
+            <TrendingDown className="w-3 h-3 sm:w-4 sm:h-4 lg:w-5 lg:h-5 opacity-80" />
           </div>
-          <h3 className="text-2xl lg:text-3xl font-mali font-bold mb-1">{failedOrders}</h3>
-          <p className="font-mali opacity-90 text-sm lg:text-base">Failed Orders</p>
+          <h3 className="text-lg sm:text-2xl lg:text-3xl font-mali font-bold mb-1">{failedOrders}</h3>
+          <p className="font-mali opacity-90 text-xs sm:text-sm lg:text-base">Failed Orders</p>
         </div>
       </div>
 

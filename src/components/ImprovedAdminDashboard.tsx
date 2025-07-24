@@ -565,80 +565,163 @@ export const ImprovedAdminDashboard: React.FC<ImprovedAdminDashboardProps> = ({ 
         <main className="p-4 sm:p-6">
           {/* Dashboard Overview */}
           {activeTab === 'dashboard' && (
-            <div className="space-y-8">
-              {/* Stats Grid */}
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-                <div className="bg-white rounded-2xl p-6 shadow-lg border border-gray-100">
-                  <div className="flex items-center justify-between mb-4">
-                    <div className="p-3 rounded-full bg-gradient-to-br from-brand-blue to-blue-600">
-                      <Users className="w-6 h-6 text-white" />
-                    </div>
-                  </div>
-                  <h3 className="text-3xl font-mali font-bold text-gray-800 mb-1">{users.length}</h3>
-                  <p className="font-mali text-gray-600 text-lg">Total Users</p>
-                </div>
-
-                <div className="bg-white rounded-2xl p-6 shadow-lg border border-gray-100">
-                  <div className="flex items-center justify-between mb-4">
-                    <div className="p-3 rounded-full bg-gradient-to-br from-brand-green to-green-600">
-                      <DollarSign className="w-6 h-6 text-white" />
-                    </div>
-                  </div>
-                  <h3 className="text-3xl font-mali font-bold text-gray-800 mb-1">
-                    ${purchases.filter(p => p.status === 'completed').reduce((sum, p) => sum + p.amount, 0).toLocaleString()}
-                  </h3>
-                  <p className="font-mali text-gray-600 text-lg">Total Revenue</p>
-                </div>
-
-                <div className="bg-white rounded-2xl p-6 shadow-lg border border-gray-100">
-                  <div className="flex items-center justify-between mb-4">
-                    <div className="p-3 rounded-full bg-gradient-to-br from-brand-pink to-pink-600">
-                      <Package className="w-6 h-6 text-white" />
-                    </div>
-                  </div>
-                  <h3 className="text-3xl font-mali font-bold text-gray-800 mb-1">{modules.filter(m => m.isActive).length}</h3>
-                  <p className="font-mali text-gray-600 text-lg">Active Modules</p>
-                </div>
-
-                <div className="bg-white rounded-2xl p-6 shadow-lg border border-gray-100">
-                  <div className="flex items-center justify-between mb-4">
-                    <div className="p-3 rounded-full bg-gradient-to-br from-brand-yellow to-yellow-600">
-                      <Clock className="w-6 h-6 text-white" />
-                    </div>
-                  </div>
-                  <h3 className="text-3xl font-mali font-bold text-gray-800 mb-1">{purchases.filter(p => p.status === 'pending').length}</h3>
-                  <p className="font-mali text-gray-600 text-lg">Pending Orders</p>
-                </div>
-              </div>
-
+            <div className="space-y-6">
               {/* Welcome Message */}
-              <div className="bg-white rounded-2xl p-8 shadow-lg border border-gray-100">
+              <div className="bg-gradient-to-br from-brand-blue/10 via-brand-pink/10 to-brand-green/10 rounded-xl lg:rounded-2xl p-6 lg:p-8 shadow-lg border border-gray-100">
                 <div className="text-center">
-                  <h2 className="text-3xl font-mali font-bold text-gray-800 mb-4">
-                    Welcome to the Admin Dashboard, {user.name}!
-                  </h2>
-                  <p className="font-mali text-gray-600 text-lg mb-6">
-                    Manage your Zinga Linga Trae platform with ease. Monitor users, modules, orders, and system performance.
+                  <div className="w-20 h-20 lg:w-24 lg:h-24 bg-gradient-to-br from-brand-blue to-brand-pink rounded-full flex items-center justify-center mx-auto mb-6 shadow-lg">
+                    <Shield className="w-10 h-10 lg:w-12 lg:h-12 text-white" />
+                  </div>
+                  <h1 className="text-2xl sm:text-3xl lg:text-4xl font-mali font-bold text-gray-800 mb-4">
+                    Welcome to the Admin Dashboard!
+                  </h1>
+                  <p className="font-mali text-gray-600 text-base sm:text-lg lg:text-xl mb-6 max-w-3xl mx-auto">
+                    Hello <span className="font-bold text-brand-blue">{user.name}</span>! 
+                    Manage your Zinga Linga Trae platform with ease. Monitor users, modules, orders, and system performance all in one place.
                   </p>
-                  <div className="flex flex-wrap justify-center gap-4">
+                  <div className="flex flex-col sm:flex-row flex-wrap justify-center gap-3 sm:gap-4">
                     <button
                       onClick={() => setActiveTab('users')}
-                      className="bg-gradient-to-r from-brand-blue to-brand-pink text-white px-6 py-3 rounded-xl hover:shadow-lg transition-all duration-300 font-mali font-bold"
+                      className="bg-gradient-to-r from-brand-blue to-brand-pink text-white px-6 py-3 rounded-xl hover:shadow-lg transition-all duration-300 font-mali font-bold flex items-center justify-center gap-2"
                     >
+                      <Users className="w-5 h-5" />
                       Manage Users
                     </button>
                     <button
                       onClick={() => setActiveTab('modules')}
-                      className="bg-gradient-to-r from-brand-green to-brand-blue text-white px-6 py-3 rounded-xl hover:shadow-lg transition-all duration-300 font-mali font-bold"
+                      className="bg-gradient-to-r from-brand-green to-brand-blue text-white px-6 py-3 rounded-xl hover:shadow-lg transition-all duration-300 font-mali font-bold flex items-center justify-center gap-2"
                     >
+                      <Package className="w-5 h-5" />
                       Manage Modules
                     </button>
                     <button
                       onClick={() => setActiveTab('purchases')}
-                      className="bg-gradient-to-r from-brand-yellow to-orange-500 text-white px-6 py-3 rounded-xl hover:shadow-lg transition-all duration-300 font-mali font-bold"
+                      className="bg-gradient-to-r from-brand-yellow to-orange-500 text-white px-6 py-3 rounded-xl hover:shadow-lg transition-all duration-300 font-mali font-bold flex items-center justify-center gap-2"
                     >
+                      <ShoppingCart className="w-5 h-5" />
                       View Orders
                     </button>
+                  </div>
+                </div>
+              </div>
+
+              {/* Quick Stats - 2 columns on mobile */}
+              <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4 lg:gap-6">
+                <div className="bg-gradient-to-br from-blue-500 to-blue-600 rounded-xl lg:rounded-2xl p-4 lg:p-6 text-white shadow-lg">
+                  <div className="flex items-center justify-between mb-2 lg:mb-4">
+                    <div className="p-2 sm:p-3 bg-white/20 rounded-full">
+                      <Users className="w-4 h-4 sm:w-5 sm:h-5 lg:w-6 lg:h-6" />
+                    </div>
+                    <TrendingUp className="w-3 h-3 sm:w-4 sm:h-4 lg:w-5 lg:h-5 opacity-80" />
+                  </div>
+                  <h3 className="text-lg sm:text-2xl lg:text-3xl font-mali font-bold mb-1">{users.length}</h3>
+                  <p className="font-mali opacity-90 text-xs sm:text-sm lg:text-base">Total Users</p>
+                </div>
+
+                <div className="bg-gradient-to-br from-green-500 to-green-600 rounded-xl lg:rounded-2xl p-4 lg:p-6 text-white shadow-lg">
+                  <div className="flex items-center justify-between mb-2 lg:mb-4">
+                    <div className="p-2 sm:p-3 bg-white/20 rounded-full">
+                      <DollarSign className="w-4 h-4 sm:w-5 sm:h-5 lg:w-6 lg:h-6" />
+                    </div>
+                    <TrendingUp className="w-3 h-3 sm:w-4 sm:h-4 lg:w-5 lg:h-5 opacity-80" />
+                  </div>
+                  <h3 className="text-lg sm:text-2xl lg:text-3xl font-mali font-bold mb-1">
+                    ${purchases.filter(p => p.status === 'completed').reduce((sum, p) => sum + p.amount, 0).toLocaleString()}
+                  </h3>
+                  <p className="font-mali opacity-90 text-xs sm:text-sm lg:text-base">Total Revenue</p>
+                </div>
+
+                <div className="bg-gradient-to-br from-purple-500 to-purple-600 rounded-xl lg:rounded-2xl p-4 lg:p-6 text-white shadow-lg">
+                  <div className="flex items-center justify-between mb-2 lg:mb-4">
+                    <div className="p-2 sm:p-3 bg-white/20 rounded-full">
+                      <Package className="w-4 h-4 sm:w-5 sm:h-5 lg:w-6 lg:h-6" />
+                    </div>
+                    <CheckCircle className="w-3 h-3 sm:w-4 sm:h-4 lg:w-5 lg:h-5 opacity-80" />
+                  </div>
+                  <h3 className="text-lg sm:text-2xl lg:text-3xl font-mali font-bold mb-1">{modules.filter(m => m.isActive).length}</h3>
+                  <p className="font-mali opacity-90 text-xs sm:text-sm lg:text-base">Active Modules</p>
+                </div>
+
+                <div className="bg-gradient-to-br from-orange-500 to-red-500 rounded-xl lg:rounded-2xl p-4 lg:p-6 text-white shadow-lg">
+                  <div className="flex items-center justify-between mb-2 lg:mb-4">
+                    <div className="p-2 sm:p-3 bg-white/20 rounded-full">
+                      <Clock className="w-4 h-4 sm:w-5 sm:h-5 lg:w-6 lg:h-6" />
+                    </div>
+                    <AlertCircle className="w-3 h-3 sm:w-4 sm:h-4 lg:w-5 lg:h-5 opacity-80" />
+                  </div>
+                  <h3 className="text-lg sm:text-2xl lg:text-3xl font-mali font-bold mb-1">{purchases.filter(p => p.status === 'pending').length}</h3>
+                  <p className="font-mali opacity-90 text-xs sm:text-sm lg:text-base">Pending Orders</p>
+                </div>
+              </div>
+
+              {/* Recent Activity Section */}
+              <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                {/* Recent Users */}
+                <div className="bg-white rounded-xl lg:rounded-2xl p-6 shadow-lg border border-gray-100">
+                  <div className="flex items-center justify-between mb-6">
+                    <h3 className="text-xl font-mali font-bold text-gray-800">Recent Users</h3>
+                    <button
+                      onClick={() => setActiveTab('users')}
+                      className="text-brand-blue hover:text-blue-600 font-mali font-bold text-sm"
+                    >
+                      View All
+                    </button>
+                  </div>
+                  <div className="space-y-4">
+                    {users.slice(0, 5).map((user) => (
+                      <div key={user.id} className="flex items-center gap-3 p-3 hover:bg-gray-50 rounded-lg transition-colors">
+                        <div className="w-10 h-10 bg-gradient-to-br from-brand-blue to-brand-pink rounded-full flex items-center justify-center">
+                          <span className="text-white font-mali font-bold text-sm">{user.name.charAt(0)}</span>
+                        </div>
+                        <div className="flex-1">
+                          <p className="font-mali font-bold text-gray-800">{user.name}</p>
+                          <p className="font-mali text-gray-600 text-sm">{user.email}</p>
+                        </div>
+                        <span className={`px-2 py-1 rounded-full text-xs font-mali font-bold ${
+                          user.role === 'admin' ? 'bg-purple-100 text-purple-800' : 'bg-blue-100 text-blue-800'
+                        }`}>
+                          {user.role}
+                        </span>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+
+                {/* Recent Orders */}
+                <div className="bg-white rounded-xl lg:rounded-2xl p-6 shadow-lg border border-gray-100">
+                  <div className="flex items-center justify-between mb-6">
+                    <h3 className="text-xl font-mali font-bold text-gray-800">Recent Orders</h3>
+                    <button
+                      onClick={() => setActiveTab('purchases')}
+                      className="text-brand-blue hover:text-blue-600 font-mali font-bold text-sm"
+                    >
+                      View All
+                    </button>
+                  </div>
+                  <div className="space-y-4">
+                    {purchases.slice(0, 5).map((purchase) => {
+                      const purchaseUser = users.find(u => u.id === purchase.userId);
+                      return (
+                        <div key={purchase.id} className="flex items-center gap-3 p-3 hover:bg-gray-50 rounded-lg transition-colors">
+                          <div className="w-10 h-10 bg-gradient-to-br from-green-500 to-green-600 rounded-full flex items-center justify-center">
+                            <DollarSign className="w-5 h-5 text-white" />
+                          </div>
+                          <div className="flex-1">
+                            <p className="font-mali font-bold text-gray-800">{purchaseUser?.name || 'Unknown User'}</p>
+                            <p className="font-mali text-gray-600 text-sm">${purchase.amount.toFixed(2)}</p>
+                          </div>
+                          <span className={`px-2 py-1 rounded-full text-xs font-mali font-bold ${
+                            purchase.status === 'completed' 
+                              ? 'bg-green-100 text-green-800' 
+                              : purchase.status === 'pending'
+                              ? 'bg-yellow-100 text-yellow-800'
+                              : 'bg-red-100 text-red-800'
+                          }`}>
+                            {purchase.status}
+                          </span>
+                        </div>
+                      );
+                    })}
                   </div>
                 </div>
               </div>

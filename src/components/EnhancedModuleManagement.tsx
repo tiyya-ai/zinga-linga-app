@@ -432,50 +432,50 @@ export const EnhancedModuleManagement: React.FC<EnhancedModuleManagementProps> =
         </button>
       </div>
 
-      {/* Statistics Cards */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-        <div className="bg-gradient-to-br from-blue-500 to-blue-600 rounded-2xl p-6 text-white shadow-lg">
-          <div className="flex items-center justify-between mb-4">
-            <div className="p-3 bg-white/20 rounded-full">
-              <Package className="w-6 h-6" />
+      {/* Statistics Cards - 2 columns on mobile */}
+      <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4 lg:gap-6">
+        <div className="bg-gradient-to-br from-blue-500 to-blue-600 rounded-xl lg:rounded-2xl p-4 lg:p-6 text-white shadow-lg">
+          <div className="flex items-center justify-between mb-2 lg:mb-4">
+            <div className="p-2 sm:p-3 bg-white/20 rounded-full">
+              <Package className="w-4 h-4 sm:w-5 sm:h-5 lg:w-6 lg:h-6" />
             </div>
-            <TrendingUp className="w-5 h-5 opacity-80" />
+            <TrendingUp className="w-3 h-3 sm:w-4 sm:h-4 lg:w-5 lg:h-5 opacity-80" />
           </div>
-          <h3 className="text-3xl font-mali font-bold mb-1">{stats.total}</h3>
-          <p className="font-mali opacity-90">Total Modules</p>
+          <h3 className="text-lg sm:text-2xl lg:text-3xl font-mali font-bold mb-1">{stats.total}</h3>
+          <p className="font-mali opacity-90 text-xs sm:text-sm lg:text-base">Total Modules</p>
         </div>
 
-        <div className="bg-gradient-to-br from-green-500 to-green-600 rounded-2xl p-6 text-white shadow-lg">
-          <div className="flex items-center justify-between mb-4">
-            <div className="p-3 bg-white/20 rounded-full">
-              <CheckCircle className="w-6 h-6" />
+        <div className="bg-gradient-to-br from-green-500 to-green-600 rounded-xl lg:rounded-2xl p-4 lg:p-6 text-white shadow-lg">
+          <div className="flex items-center justify-between mb-2 lg:mb-4">
+            <div className="p-2 sm:p-3 bg-white/20 rounded-full">
+              <CheckCircle className="w-4 h-4 sm:w-5 sm:h-5 lg:w-6 lg:h-6" />
             </div>
-            <Target className="w-5 h-5 opacity-80" />
+            <Target className="w-3 h-3 sm:w-4 sm:h-4 lg:w-5 lg:h-5 opacity-80" />
           </div>
-          <h3 className="text-3xl font-mali font-bold mb-1">{stats.active}</h3>
-          <p className="font-mali opacity-90">Active Modules</p>
+          <h3 className="text-lg sm:text-2xl lg:text-3xl font-mali font-bold mb-1">{stats.active}</h3>
+          <p className="font-mali opacity-90 text-xs sm:text-sm lg:text-base">Active Modules</p>
         </div>
 
-        <div className="bg-gradient-to-br from-purple-500 to-purple-600 rounded-2xl p-6 text-white shadow-lg">
-          <div className="flex items-center justify-between mb-4">
-            <div className="p-3 bg-white/20 rounded-full">
-              <Eye className="w-6 h-6" />
+        <div className="bg-gradient-to-br from-purple-500 to-purple-600 rounded-xl lg:rounded-2xl p-4 lg:p-6 text-white shadow-lg">
+          <div className="flex items-center justify-between mb-2 lg:mb-4">
+            <div className="p-2 sm:p-3 bg-white/20 rounded-full">
+              <Eye className="w-4 h-4 sm:w-5 sm:h-5 lg:w-6 lg:h-6" />
             </div>
-            <Globe className="w-5 h-5 opacity-80" />
+            <Globe className="w-3 h-3 sm:w-4 sm:h-4 lg:w-5 lg:h-5 opacity-80" />
           </div>
-          <h3 className="text-3xl font-mali font-bold mb-1">{stats.visible}</h3>
-          <p className="font-mali opacity-90">Visible to Users</p>
+          <h3 className="text-lg sm:text-2xl lg:text-3xl font-mali font-bold mb-1">{stats.visible}</h3>
+          <p className="font-mali opacity-90 text-xs sm:text-sm lg:text-base">Visible to Users</p>
         </div>
 
-        <div className="bg-gradient-to-br from-orange-500 to-red-500 rounded-2xl p-6 text-white shadow-lg">
-          <div className="flex items-center justify-between mb-4">
-            <div className="p-3 bg-white/20 rounded-full">
-              <DollarSign className="w-6 h-6" />
+        <div className="bg-gradient-to-br from-orange-500 to-red-500 rounded-xl lg:rounded-2xl p-4 lg:p-6 text-white shadow-lg">
+          <div className="flex items-center justify-between mb-2 lg:mb-4">
+            <div className="p-2 sm:p-3 bg-white/20 rounded-full">
+              <DollarSign className="w-4 h-4 sm:w-5 sm:h-5 lg:w-6 lg:h-6" />
             </div>
-            <BarChart3 className="w-5 h-5 opacity-80" />
+            <BarChart3 className="w-3 h-3 sm:w-4 sm:h-4 lg:w-5 lg:h-5 opacity-80" />
           </div>
-          <h3 className="text-3xl font-mali font-bold mb-1">${stats.totalRevenue.toFixed(0)}</h3>
-          <p className="font-mali opacity-90">Total Revenue</p>
+          <h3 className="text-lg sm:text-2xl lg:text-3xl font-mali font-bold mb-1">${stats.totalRevenue.toFixed(0)}</h3>
+          <p className="font-mali opacity-90 text-xs sm:text-sm lg:text-base">Total Revenue</p>
         </div>
       </div>
 

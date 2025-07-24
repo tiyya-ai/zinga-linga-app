@@ -203,50 +203,50 @@ export const UsersPage: React.FC<UsersPageProps> = ({
         </div>
       </div>
 
-      {/* Statistics Cards */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 lg:gap-6">
+      {/* Statistics Cards - 2 columns on mobile */}
+      <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4 lg:gap-6">
         <div className="bg-gradient-to-br from-blue-500 to-blue-600 rounded-xl lg:rounded-2xl p-4 lg:p-6 text-white shadow-lg">
-          <div className="flex items-center justify-between mb-3 lg:mb-4">
-            <div className="p-2 lg:p-3 bg-white/20 rounded-full">
-              <Users className="w-5 h-5 lg:w-6 lg:h-6" />
+          <div className="flex items-center justify-between mb-2 lg:mb-4">
+            <div className="p-2 sm:p-3 bg-white/20 rounded-full">
+              <Users className="w-4 h-4 sm:w-5 sm:h-5 lg:w-6 lg:h-6" />
             </div>
-            <TrendingUp className="w-4 h-4 lg:w-5 lg:h-5 opacity-80" />
+            <TrendingUp className="w-3 h-3 sm:w-4 sm:h-4 lg:w-5 lg:h-5 opacity-80" />
           </div>
-          <h3 className="text-2xl lg:text-3xl font-mali font-bold mb-1">{totalUsers}</h3>
-          <p className="font-mali opacity-90 text-sm lg:text-base">Total Users</p>
+          <h3 className="text-lg sm:text-2xl lg:text-3xl font-mali font-bold mb-1">{totalUsers}</h3>
+          <p className="font-mali opacity-90 text-xs sm:text-sm lg:text-base">Total Users</p>
         </div>
 
         <div className="bg-gradient-to-br from-green-500 to-green-600 rounded-xl lg:rounded-2xl p-4 lg:p-6 text-white shadow-lg">
-          <div className="flex items-center justify-between mb-3 lg:mb-4">
-            <div className="p-2 lg:p-3 bg-white/20 rounded-full">
-              <UserCheck className="w-5 h-5 lg:w-6 lg:h-6" />
+          <div className="flex items-center justify-between mb-2 lg:mb-4">
+            <div className="p-2 sm:p-3 bg-white/20 rounded-full">
+              <UserCheck className="w-4 h-4 sm:w-5 sm:h-5 lg:w-6 lg:h-6" />
             </div>
-            <Activity className="w-4 h-4 lg:w-5 lg:h-5 opacity-80" />
+            <Activity className="w-3 h-3 sm:w-4 sm:h-4 lg:w-5 lg:h-5 opacity-80" />
           </div>
-          <h3 className="text-2xl lg:text-3xl font-mali font-bold mb-1">{regularUsers}</h3>
-          <p className="font-mali opacity-90 text-sm lg:text-base">Regular Users</p>
+          <h3 className="text-lg sm:text-2xl lg:text-3xl font-mali font-bold mb-1">{regularUsers}</h3>
+          <p className="font-mali opacity-90 text-xs sm:text-sm lg:text-base">Regular Users</p>
         </div>
 
         <div className="bg-gradient-to-br from-purple-500 to-purple-600 rounded-xl lg:rounded-2xl p-4 lg:p-6 text-white shadow-lg">
-          <div className="flex items-center justify-between mb-3 lg:mb-4">
-            <div className="p-2 lg:p-3 bg-white/20 rounded-full">
-              <Shield className="w-5 h-5 lg:w-6 lg:h-6" />
+          <div className="flex items-center justify-between mb-2 lg:mb-4">
+            <div className="p-2 sm:p-3 bg-white/20 rounded-full">
+              <Shield className="w-4 h-4 sm:w-5 sm:h-5 lg:w-6 lg:h-6" />
             </div>
-            <Star className="w-4 h-4 lg:w-5 lg:h-5 opacity-80" />
+            <Star className="w-3 h-3 sm:w-4 sm:h-4 lg:w-5 lg:h-5 opacity-80" />
           </div>
-          <h3 className="text-2xl lg:text-3xl font-mali font-bold mb-1">{adminUsers}</h3>
-          <p className="font-mali opacity-90 text-sm lg:text-base">Administrators</p>
+          <h3 className="text-lg sm:text-2xl lg:text-3xl font-mali font-bold mb-1">{adminUsers}</h3>
+          <p className="font-mali opacity-90 text-xs sm:text-sm lg:text-base">Administrators</p>
         </div>
 
         <div className="bg-gradient-to-br from-orange-500 to-red-500 rounded-xl lg:rounded-2xl p-4 lg:p-6 text-white shadow-lg">
-          <div className="flex items-center justify-between mb-3 lg:mb-4">
-            <div className="p-2 lg:p-3 bg-white/20 rounded-full">
-              <DollarSign className="w-5 h-5 lg:w-6 lg:h-6" />
+          <div className="flex items-center justify-between mb-2 lg:mb-4">
+            <div className="p-2 sm:p-3 bg-white/20 rounded-full">
+              <DollarSign className="w-4 h-4 sm:w-5 sm:h-5 lg:w-6 lg:h-6" />
             </div>
-            <TrendingUp className="w-4 h-4 lg:w-5 lg:h-5 opacity-80" />
+            <TrendingUp className="w-3 h-3 sm:w-4 sm:h-4 lg:w-5 lg:h-5 opacity-80" />
           </div>
-          <h3 className="text-2xl lg:text-3xl font-mali font-bold mb-1">${totalSpent.toFixed(0)}</h3>
-          <p className="font-mali opacity-90 text-sm lg:text-base">Total Spent</p>
+          <h3 className="text-lg sm:text-2xl lg:text-3xl font-mali font-bold mb-1">${totalSpent.toFixed(0)}</h3>
+          <p className="font-mali opacity-90 text-xs sm:text-sm lg:text-base">Total Spent</p>
         </div>
       </div>
 
