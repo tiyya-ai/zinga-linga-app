@@ -134,23 +134,23 @@ export const SystemPage: React.FC<SystemPageProps> = ({
     color: string;
     trend?: 'up' | 'down' | 'stable';
   }) => (
-    <div className="bg-white rounded-2xl p-6 shadow-lg border border-gray-100">
-      <div className="flex items-center justify-between mb-4">
-        <div className={`p-3 rounded-full ${color}`}>
-          <Icon className="w-6 h-6 text-white" />
+    <div className="bg-white rounded-xl lg:rounded-2xl p-4 lg:p-6 shadow-lg border border-gray-100">
+      <div className="flex items-center justify-between mb-2 lg:mb-4">
+        <div className={`p-2 sm:p-3 rounded-full ${color}`}>
+          <Icon className="w-4 h-4 sm:w-5 sm:h-5 lg:w-6 lg:h-6 text-white" />
         </div>
         {trend && (
           <div className={`flex items-center gap-1 ${
             trend === 'up' ? 'text-green-600' : trend === 'down' ? 'text-red-600' : 'text-gray-600'
           }`}>
-            {trend === 'up' && <TrendingUp className="w-4 h-4" />}
-            {trend === 'down' && <TrendingDown className="w-4 h-4" />}
-            {trend === 'stable' && <Activity className="w-4 h-4" />}
+            {trend === 'up' && <TrendingUp className="w-3 h-3 sm:w-4 sm:h-4" />}
+            {trend === 'down' && <TrendingDown className="w-3 h-3 sm:w-4 sm:h-4" />}
+            {trend === 'stable' && <Activity className="w-3 h-3 sm:w-4 sm:h-4" />}
           </div>
         )}
       </div>
-      <h3 className="text-3xl font-mali font-bold text-gray-800 mb-1">{value}</h3>
-      <p className="font-mali text-gray-600">{title}</p>
+      <h3 className="text-lg sm:text-2xl lg:text-3xl font-mali font-bold text-gray-800 mb-1">{value}</h3>
+      <p className="font-mali text-gray-600 text-xs sm:text-sm lg:text-base">{title}</p>
     </div>
   );
 
@@ -216,8 +216,8 @@ export const SystemPage: React.FC<SystemPageProps> = ({
       {/* Overview Tab */}
       {activeTab === 'overview' && (
         <div className="space-y-8">
-          {/* System Metrics */}
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+          {/* System Metrics - 2 columns on mobile */}
+          <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4 lg:gap-6">
             <MetricCard
               title="System Uptime"
               value={systemStats.uptime}

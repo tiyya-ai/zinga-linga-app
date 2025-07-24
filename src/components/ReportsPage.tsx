@@ -548,42 +548,42 @@ export const ReportsPage: React.FC<ReportsPageProps> = ({
         )}
       </div>
 
-      {/* Quick Stats */}
-      <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
-        <div className="bg-white rounded-2xl p-6 shadow-lg border border-gray-100 text-center">
-          <div className="p-3 bg-green-100 rounded-full w-fit mx-auto mb-3">
-            <DollarSign className="w-6 h-6 text-green-600" />
+      {/* Quick Stats - 2 columns on mobile */}
+      <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4 lg:gap-6">
+        <div className="bg-white rounded-xl lg:rounded-2xl p-4 lg:p-6 shadow-lg border border-gray-100 text-center">
+          <div className="p-2 sm:p-3 bg-green-100 rounded-full w-fit mx-auto mb-2 lg:mb-3">
+            <DollarSign className="w-4 h-4 sm:w-5 sm:h-5 lg:w-6 lg:h-6 text-green-600" />
           </div>
-          <h5 className="text-2xl font-mali font-bold text-gray-800 mb-1">
+          <h5 className="text-lg sm:text-xl lg:text-2xl font-mali font-bold text-gray-800 mb-1">
             {formatCurrency(reportData.totalRevenue)}
           </h5>
-          <p className="font-mali text-gray-600">Period Revenue</p>
+          <p className="font-mali text-gray-600 text-xs sm:text-sm lg:text-base">Period Revenue</p>
         </div>
 
-        <div className="bg-white rounded-2xl p-6 shadow-lg border border-gray-100 text-center">
-          <div className="p-3 bg-blue-100 rounded-full w-fit mx-auto mb-3">
-            <Users className="w-6 h-6 text-blue-600" />
+        <div className="bg-white rounded-xl lg:rounded-2xl p-4 lg:p-6 shadow-lg border border-gray-100 text-center">
+          <div className="p-2 sm:p-3 bg-blue-100 rounded-full w-fit mx-auto mb-2 lg:mb-3">
+            <Users className="w-4 h-4 sm:w-5 sm:h-5 lg:w-6 lg:h-6 text-blue-600" />
           </div>
-          <h5 className="text-2xl font-mali font-bold text-gray-800 mb-1">{reportData.newUsers}</h5>
-          <p className="font-mali text-gray-600">New Users</p>
+          <h5 className="text-lg sm:text-xl lg:text-2xl font-mali font-bold text-gray-800 mb-1">{reportData.newUsers}</h5>
+          <p className="font-mali text-gray-600 text-xs sm:text-sm lg:text-base">New Users</p>
         </div>
 
-        <div className="bg-white rounded-2xl p-6 shadow-lg border border-gray-100 text-center">
-          <div className="p-3 bg-purple-100 rounded-full w-fit mx-auto mb-3">
-            <ShoppingCart className="w-6 h-6 text-purple-600" />
+        <div className="bg-white rounded-xl lg:rounded-2xl p-4 lg:p-6 shadow-lg border border-gray-100 text-center">
+          <div className="p-2 sm:p-3 bg-purple-100 rounded-full w-fit mx-auto mb-2 lg:mb-3">
+            <ShoppingCart className="w-4 h-4 sm:w-5 sm:h-5 lg:w-6 lg:h-6 text-purple-600" />
           </div>
-          <h5 className="text-2xl font-mali font-bold text-gray-800 mb-1">{reportData.totalOrders}</h5>
-          <p className="font-mali text-gray-600">Total Orders</p>
+          <h5 className="text-lg sm:text-xl lg:text-2xl font-mali font-bold text-gray-800 mb-1">{reportData.totalOrders}</h5>
+          <p className="font-mali text-gray-600 text-xs sm:text-sm lg:text-base">Total Orders</p>
         </div>
 
-        <div className="bg-white rounded-2xl p-6 shadow-lg border border-gray-100 text-center">
-          <div className="p-3 bg-orange-100 rounded-full w-fit mx-auto mb-3">
-            <Target className="w-6 h-6 text-orange-600" />
+        <div className="bg-white rounded-xl lg:rounded-2xl p-4 lg:p-6 shadow-lg border border-gray-100 text-center">
+          <div className="p-2 sm:p-3 bg-orange-100 rounded-full w-fit mx-auto mb-2 lg:mb-3">
+            <Target className="w-4 h-4 sm:w-5 sm:h-5 lg:w-6 lg:h-6 text-orange-600" />
           </div>
-          <h5 className="text-2xl font-mali font-bold text-gray-800 mb-1">
+          <h5 className="text-lg sm:text-xl lg:text-2xl font-mali font-bold text-gray-800 mb-1">
             {reportData.conversionRate.toFixed(1)}%
           </h5>
-          <p className="font-mali text-gray-600">Conversion Rate</p>
+          <p className="font-mali text-gray-600 text-xs sm:text-sm lg:text-base">Conversion Rate</p>
         </div>
       </div>
     </div>

@@ -247,40 +247,82 @@ export const AnalyticsPage: React.FC<AnalyticsPageProps> = ({
         </div>
       </div>
 
-      {/* Key Metrics */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 lg:gap-6">
-        <MetricCard
-          title="Total Users"
-          value={analyticsData.totalUsers}
-          change={analyticsData.userGrowth}
-          icon={Users}
-          color="bg-gradient-to-br from-blue-500 to-blue-600"
-        />
-        
-        <MetricCard
-          title="Total Revenue"
-          value={formatCurrency(analyticsData.totalRevenue)}
-          change={analyticsData.revenueGrowth}
-          icon={DollarSign}
-          color="bg-gradient-to-br from-green-500 to-green-600"
-        />
-        
-        <MetricCard
-          title="Total Orders"
-          value={analyticsData.totalOrders}
-          change={analyticsData.orderGrowth}
-          icon={ShoppingCart}
-          color="bg-gradient-to-br from-purple-500 to-purple-600"
-        />
-        
-        <MetricCard
-          title="Conversion Rate"
-          value={analyticsData.conversionRate.toFixed(1)}
-          change={2.1}
-          icon={Target}
-          color="bg-gradient-to-br from-orange-500 to-red-500"
-          suffix="%"
-        />
+      {/* Key Metrics - Mobile: 2 columns for Users & Revenue, then 2 columns for Orders & Conversion */}
+      <div className="space-y-4 lg:space-y-0">
+        {/* Primary Metrics - Total Users & Total Revenue (2 columns on mobile) */}
+        <div className="grid grid-cols-2 gap-3 sm:gap-4 lg:hidden">
+          <MetricCard
+            title="Total Users"
+            value={analyticsData.totalUsers}
+            change={analyticsData.userGrowth}
+            icon={Users}
+            color="bg-gradient-to-br from-blue-500 to-blue-600"
+          />
+          
+          <MetricCard
+            title="Total Revenue"
+            value={formatCurrency(analyticsData.totalRevenue)}
+            change={analyticsData.revenueGrowth}
+            icon={DollarSign}
+            color="bg-gradient-to-br from-green-500 to-green-600"
+          />
+        </div>
+
+        {/* Secondary Metrics - Orders & Conversion Rate (2 columns on mobile) */}
+        <div className="grid grid-cols-2 gap-3 sm:gap-4 lg:hidden">
+          <MetricCard
+            title="Total Orders"
+            value={analyticsData.totalOrders}
+            change={analyticsData.orderGrowth}
+            icon={ShoppingCart}
+            color="bg-gradient-to-br from-purple-500 to-purple-600"
+          />
+          
+          <MetricCard
+            title="Conversion Rate"
+            value={analyticsData.conversionRate.toFixed(1)}
+            change={2.1}
+            icon={Target}
+            color="bg-gradient-to-br from-orange-500 to-red-500"
+            suffix="%"
+          />
+        </div>
+
+        {/* Desktop Layout - All 4 metrics in one row */}
+        <div className="hidden lg:grid lg:grid-cols-4 gap-6">
+          <MetricCard
+            title="Total Users"
+            value={analyticsData.totalUsers}
+            change={analyticsData.userGrowth}
+            icon={Users}
+            color="bg-gradient-to-br from-blue-500 to-blue-600"
+          />
+          
+          <MetricCard
+            title="Total Revenue"
+            value={formatCurrency(analyticsData.totalRevenue)}
+            change={analyticsData.revenueGrowth}
+            icon={DollarSign}
+            color="bg-gradient-to-br from-green-500 to-green-600"
+          />
+          
+          <MetricCard
+            title="Total Orders"
+            value={analyticsData.totalOrders}
+            change={analyticsData.orderGrowth}
+            icon={ShoppingCart}
+            color="bg-gradient-to-br from-purple-500 to-purple-600"
+          />
+          
+          <MetricCard
+            title="Conversion Rate"
+            value={analyticsData.conversionRate.toFixed(1)}
+            change={2.1}
+            icon={Target}
+            color="bg-gradient-to-br from-orange-500 to-red-500"
+            suffix="%"
+          />
+        </div>
       </div>
 
       {/* Charts Section */}
