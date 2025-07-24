@@ -2,8 +2,6 @@ import React, { useState, useEffect } from 'react';
 import { User, Module, Purchase, Analytics, BundleOffer, ContentItem, ContentFile, ContentStats } from '../types';
 import { dataStore } from '../utils/dataStore';
 import { ProfessionalOrderManagement } from './ProfessionalOrderManagement';
-import { OrdersPage } from './OrdersPage';
-import { UsersPage } from './UsersPage';
 import { AnalyticsPage } from './AnalyticsPage';
 import { ReportsPageEnhanced } from './ReportsPageEnhanced';
 import { SystemPage } from './SystemPage';
@@ -12,7 +10,6 @@ import { NotificationsPage } from './NotificationsPage';
 import { EmailNotificationSettings } from './EmailNotificationSettings';
 import { CouponManagement } from './CouponManagement';
 import { AdminSettings } from './AdminSettings';
-import { EnhancedModuleManagement } from './EnhancedModuleManagement';
 import { notificationService } from '../utils/notificationService';
 import { 
   Users, 
@@ -645,28 +642,353 @@ export const ImprovedAdminDashboard: React.FC<ImprovedAdminDashboardProps> = ({ 
             </div>
           )}
 
-          {/* Orders Management */}
+          {/* Professional Order Management */}
           {activeTab === 'purchases' && (
-            <OrdersPage
+            <ProfessionalOrderManagement
               purchases={purchases}
               users={users}
               modules={modules}
+              searchTerm={searchTerm}
+              setSearchTerm={setSearchTerm}
+              filterStatus={filterStatus}
+              setFilterStatus={setFilterStatus}
+              sortBy={sortBy}
+              setSortBy={setSortBy}
+              sortOrder={sortOrder}
+              setSortOrder={setSortOrder}
               onRefresh={loadData}
             />
           )}
 
           {/* Users Management */}
           {activeTab === 'users' && (
-            <UsersPage
-              users={users}
-              modules={modules}
-              purchases={purchases}
-              onUsersUpdate={(updatedUsers) => {
-                setUsers(updatedUsers);
-                saveData();
-              }}
-              onRefresh={loadData}
-            />
+            <div className="space-y-6">
+              <div className="flex flex-col lg:flex-row justify-between items-start lg:items-center gap-4">
+                <div>
+                  <h3 className="text-3xl font-mali font-bold text-gray-800">User Management</h3>
+                  <p className="font-mali text-gray-600">Manage user accounts and permissions</p>
+                </div>
+              </div>
+
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                <div className="bg-gradient-to-br from-blue-500 to-blue-600 rounded-2xl p-6 text-white shadow-lg">
+                  <div className="flex items-center justify-between mb-4">
+                    <div className="p-3 bg-white/20 rounded-full">
+                      <Users className="w-6 h-6" />
+                    </div>
+                    <TrendingUp className="w-5 h-5 opacity-80" />
+                  </div>
+                  <h3 className="text-3xl font-mali font-bold mb-1">{users.length}</h3>
+                  <p className="font-mali opacity-90">Total Users</p>
+                </div>
+
+                <div className="bg-gradient-to-br from-green-500 to-green-600 rounded-2xl p-6 text-white shadow-lg">
+                  <div className="flex items-center justify-between mb-4">
+                    <div className="p-3 bg-white/20 rounded-full">
+                      <UserCheck className="w-6 h-6" />
+                    </div>
+                    <CheckCircle className="w-5 h-5 opacity-80" />
+                  </div>
+                  <h3 className="text-3xl font-mali font-bold mb-1">{users.filter(u => u.role === 'user').length}</h3>
+                  <p className="font-mali opacity-90">Regular Users</p>
+                </div>
+
+                <div className="bg-gradient-to-br from-purple-500 to-purple-600 rounded-2xl p-6 text-white shadow-lg">
+                  <div className="flex items-center justify-between mb-4">
+                    <div className="p-3 bg-white/20 rounded-full">
+                      <Shield className="w-6 h-6" />
+                    </div>
+                    <Star className="w-5 h-5 opacity-80" />
+                  </div>
+                  <h3 className="text-3xl font-mali font-bold mb-1">{users.filter(u => u.role === 'admin').length}</h3>
+                  <p className="font-mali opacity-90">Administrators</p>
+                </div>
+
+                <div className="bg-gradient-to-br from-orange-500 to-red-500 rounded-2xl p-6 text-white shadow-lg">
+                  <div className="flex items-center justify-between mb-4">
+                    <div className="p-3 bg-white/20 rounded-full">
+                      <DollarSign className="w-6 h-6" />
+                    </div>
+                    <TrendingUp className="w-5 h-5 opacity-80" />
+                  </div>
+                  <h3 className="text-3xl font-mali font-bold mb-1">
+                    ${users.reduce((sum, u) => sum + (u.totalSpent || 0), 0).toFixed(0)}
+                  </h3>
+                  <p className="font-mali opacity-90">Total Spent</p>
+                </div>
+              </div>
+
+              <div className="bg-white rounded-2xl shadow-lg border border-gray-100 overflow-hidden">
+                <div className="overflow-x-auto">
+                  <table className="w-full">
+                    <thead className="bg-gradient-to-r from-gray-50 to-gray-100 border-b border-gray-200">
+                      <tr>
+                        <th className="px-6 py-4 text-left font-mali font-bold text-gray-800">User</th>
+                        <th className="px-6 py-4 text-left font-mali font-bold text-gray-800">Role</th>
+                        <th className="px-6 py-4 text-left font-mali font-bold text-gray-800">Modules</th>
+                        <th className="px-6 py-4 text-left font-mali font-bold text-gray-800">Total Spent</th>
+                        <th className="px-6 py-4 text-left font-mali font-bold text-gray-800">Join Date</th>
+                        <th className="px-6 py-4 text-left font-mali font-bold text-gray-800">Actions</th>
+                      </tr>
+                    </thead>
+                    <tbody className="divide-y divide-gray-200">
+                      {users.map((user) => (
+                        <tr key={user.id} className="hover:bg-gray-50 transition-colors group">
+                          <td className="px-6 py-4">
+                            <div className="flex items-center gap-3">
+                              <div className="w-12 h-12 bg-gradient-to-br from-brand-blue to-brand-pink rounded-full flex items-center justify-center">
+                                <span className="text-white font-mali font-bold text-lg">
+                                  {user.name.charAt(0)}
+                                </span>
+                              </div>
+                              <div>
+                                <p className="font-mali font-bold text-gray-800">{user.name}</p>
+                                <p className="font-mali text-gray-600 text-sm">{user.email}</p>
+                              </div>
+                            </div>
+                          </td>
+                          <td className="px-6 py-4">
+                            <span className={`px-3 py-1 rounded-full text-sm font-mali font-bold ${
+                              user.role === 'admin' 
+                                ? 'bg-purple-100 text-purple-800' 
+                                : 'bg-blue-100 text-blue-800'
+                            }`}>
+                              {user.role === 'admin' ? 'Administrator' : 'User'}
+                            </span>
+                          </td>
+                          <td className="px-6 py-4">
+                            <div className="flex items-center gap-2">
+                              <Package className="w-4 h-4 text-gray-500" />
+                              <span className="font-mali font-bold text-gray-800">
+                                {user.purchasedModules?.length || 0}
+                              </span>
+                              <span className="font-mali text-gray-600 text-sm">modules</span>
+                            </div>
+                          </td>
+                          <td className="px-6 py-4">
+                            <div className="flex items-center gap-2">
+                              <DollarSign className="w-4 h-4 text-green-500" />
+                              <span className="font-mali font-bold text-gray-800 text-lg">
+                                ${(user.totalSpent || 0).toFixed(2)}
+                              </span>
+                            </div>
+                          </td>
+                          <td className="px-6 py-4">
+                            <p className="font-mali text-gray-800 font-medium">
+                              {new Date(user.createdAt).toLocaleDateString()}
+                            </p>
+                          </td>
+                          <td className="px-6 py-4">
+                            <div className="flex items-center gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
+                              <button 
+                                onClick={() => {
+                                  setSelectedUser(user);
+                                  setShowUserModal(true);
+                                }}
+                                className="p-2 text-blue-600 hover:bg-blue-50 rounded-lg transition-colors"
+                                title="View Details"
+                              >
+                                <Eye className="w-4 h-4" />
+                              </button>
+                              <button 
+                                onClick={() => handleEditUser(user)}
+                                className="p-2 text-green-600 hover:bg-green-50 rounded-lg transition-colors"
+                                title="Edit User"
+                              >
+                                <Edit className="w-4 h-4" />
+                              </button>
+                              {user.role !== 'admin' && (
+                                <button 
+                                  onClick={() => handleDeleteUser(user.id)}
+                                  className="p-2 text-red-600 hover:bg-red-50 rounded-lg transition-colors"
+                                  title="Delete User"
+                                >
+                                  <Trash2 className="w-4 h-4" />
+                                </button>
+                              )}
+                            </div>
+                          </td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+
+              {showUserModal && selectedUser && (
+                <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
+                  <div className="bg-white rounded-2xl max-w-2xl w-full max-h-[90vh] overflow-y-auto">
+                    <div className="p-6 border-b border-gray-200">
+                      <div className="flex items-center justify-between">
+                        <h3 className="text-2xl font-mali font-bold text-gray-800">
+                          User Details: {selectedUser.name}
+                        </h3>
+                        <button 
+                          onClick={() => setShowUserModal(false)}
+                          className="p-2 hover:bg-gray-100 rounded-lg transition-colors"
+                        >
+                          <X className="w-5 h-5" />
+                        </button>
+                      </div>
+                    </div>
+                    
+                    <div className="p-6 space-y-6">
+                      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div className="space-y-4">
+                          <h4 className="text-lg font-mali font-bold text-gray-800">User Information</h4>
+                          <div className="space-y-2">
+                            <div className="flex justify-between">
+                              <span className="font-mali text-gray-600">Name:</span>
+                              <span className="font-mali font-bold">{selectedUser.name}</span>
+                            </div>
+                            <div className="flex justify-between">
+                              <span className="font-mali text-gray-600">Email:</span>
+                              <span className="font-mali font-bold">{selectedUser.email}</span>
+                            </div>
+                            <div className="flex justify-between">
+                              <span className="font-mali text-gray-600">Role:</span>
+                              <span className="font-mali font-bold">{selectedUser.role}</span>
+                            </div>
+                            <div className="flex justify-between">
+                              <span className="font-mali text-gray-600">Join Date:</span>
+                              <span className="font-mali font-bold">{new Date(selectedUser.createdAt).toLocaleDateString()}</span>
+                            </div>
+                          </div>
+                        </div>
+
+                        <div className="space-y-4">
+                          <h4 className="text-lg font-mali font-bold text-gray-800">Purchase Summary</h4>
+                          <div className="space-y-2">
+                            <div className="flex justify-between">
+                              <span className="font-mali text-gray-600">Total Spent:</span>
+                              <span className="font-mali font-bold text-lg text-green-600">
+                                ${(selectedUser.totalSpent || 0).toFixed(2)}
+                              </span>
+                            </div>
+                            <div className="flex justify-between">
+                              <span className="font-mali text-gray-600">Modules Owned:</span>
+                              <span className="font-mali font-bold">{selectedUser.purchasedModules?.length || 0}</span>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+
+                      <div className="flex justify-end gap-3 pt-4 border-t border-gray-200">
+                        <button 
+                          onClick={() => setShowUserModal(false)}
+                          className="px-4 py-2 bg-gray-600 text-white rounded-lg hover:bg-gray-700 transition-colors font-mali font-bold"
+                        >
+                          Close
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              )}
+
+              {/* Edit User Modal */}
+              {showEditUserModal && editingUser && (
+                <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
+                  <div className="bg-white rounded-2xl max-w-lg w-full max-h-[90vh] overflow-y-auto">
+                    <div className="p-6 border-b border-gray-200">
+                      <div className="flex items-center justify-between">
+                        <h3 className="text-2xl font-mali font-bold text-gray-800">
+                          Edit User: {editingUser.name}
+                        </h3>
+                        <button 
+                          onClick={() => setShowEditUserModal(false)}
+                          className="p-2 hover:bg-gray-100 rounded-lg transition-colors"
+                        >
+                          <X className="w-5 h-5" />
+                        </button>
+                      </div>
+                    </div>
+                    
+                    <form onSubmit={handleUserFormSubmit} className="p-6 space-y-6">
+                      <div className="space-y-4">
+                        <div>
+                          <label htmlFor="edit-name" className="block text-sm font-mali font-bold text-gray-700 mb-2">
+                            Full Name
+                          </label>
+                          <input
+                            type="text"
+                            id="edit-name"
+                            value={userFormData.name}
+                            onChange={(e) => setUserFormData({ ...userFormData, name: e.target.value })}
+                            className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-brand-blue font-mali"
+                            placeholder="Enter full name"
+                            required
+                          />
+                        </div>
+
+                        <div>
+                          <label htmlFor="edit-email" className="block text-sm font-mali font-bold text-gray-700 mb-2">
+                            Email Address
+                          </label>
+                          <input
+                            type="email"
+                            id="edit-email"
+                            value={userFormData.email}
+                            onChange={(e) => setUserFormData({ ...userFormData, email: e.target.value })}
+                            className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-brand-blue font-mali"
+                            placeholder="Enter email address"
+                            required
+                          />
+                        </div>
+
+                        <div>
+                          <label htmlFor="edit-role" className="block text-sm font-mali font-bold text-gray-700 mb-2">
+                            User Role
+                          </label>
+                          <select
+                            id="edit-role"
+                            value={userFormData.role}
+                            onChange={(e) => setUserFormData({ ...userFormData, role: e.target.value as 'user' | 'admin' })}
+                            className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-brand-blue font-mali"
+                          >
+                            <option value="user">Regular User</option>
+                            <option value="admin">Administrator</option>
+                          </select>
+                        </div>
+
+                        <div>
+                          <label htmlFor="edit-totalSpent" className="block text-sm font-mali font-bold text-gray-700 mb-2">
+                            Total Spent ($)
+                          </label>
+                          <input
+                            type="number"
+                            id="edit-totalSpent"
+                            step="0.01"
+                            min="0"
+                            value={userFormData.totalSpent}
+                            onChange={(e) => setUserFormData({ ...userFormData, totalSpent: parseFloat(e.target.value) || 0 })}
+                            className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-brand-blue font-mali"
+                            placeholder="0.00"
+                          />
+                        </div>
+                      </div>
+
+                      <div className="flex justify-end gap-3 pt-4 border-t border-gray-200">
+                        <button 
+                          type="button"
+                          onClick={() => setShowEditUserModal(false)}
+                          className="px-6 py-3 bg-gray-500 text-white rounded-lg hover:bg-gray-600 transition-colors font-mali font-bold"
+                        >
+                          Cancel
+                        </button>
+                        <button 
+                          type="submit"
+                          className="px-6 py-3 bg-gradient-to-r from-brand-green to-brand-blue text-white rounded-lg hover:shadow-lg transition-all duration-300 font-mali font-bold flex items-center gap-2"
+                        >
+                          <Save className="w-4 h-4" />
+                          Save Changes
+                        </button>
+                      </div>
+                    </form>
+                  </div>
+                </div>
+              )}
+            </div>
           )}
 
           {/* Analytics Tab */}
@@ -779,17 +1101,45 @@ export const ImprovedAdminDashboard: React.FC<ImprovedAdminDashboardProps> = ({ 
             </div>
           )}
 
-          {/* Enhanced Modules Management */}
+          {/* Modules Tab */}
           {activeTab === 'modules' && (
-            <EnhancedModuleManagement
-              modules={modules}
-              users={users}
-              onModulesUpdate={(updatedModules) => {
-                setModules(updatedModules);
-                saveData();
-              }}
-              onRefresh={loadData}
-            />
+            <div className="space-y-8">
+              <div className="bg-white rounded-2xl p-8 shadow-lg border border-gray-100">
+                <h3 className="text-2xl font-mali font-bold text-gray-800 mb-6">Module Management</h3>
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                  {modules.map((module) => (
+                    <div key={module.id} className="border border-gray-200 rounded-xl p-6 hover:shadow-lg transition-shadow">
+                      <div className="flex items-center justify-between mb-4">
+                        <h4 className="text-lg font-mali font-bold text-gray-800">{module.title}</h4>
+                        <span className={`px-2 py-1 rounded-full text-xs font-mali font-bold ${
+                          module.isActive ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'
+                        }`}>
+                          {module.isActive ? 'Active' : 'Inactive'}
+                        </span>
+                      </div>
+                      <p className="font-mali text-gray-600 text-sm mb-4">{module.description}</p>
+                      <div className="space-y-2">
+                        <div className="flex justify-between">
+                          <span className="font-mali text-gray-600">Price:</span>
+                          <span className="font-mali font-bold">${module.price}</span>
+                        </div>
+                        <div className="flex justify-between">
+                          <span className="font-mali text-gray-600">Rating:</span>
+                          <div className="flex items-center gap-1">
+                            <Star className="w-4 h-4 text-yellow-500 fill-current" />
+                            <span className="font-mali font-bold">{module.rating}</span>
+                          </div>
+                        </div>
+                        <div className="flex justify-between">
+                          <span className="font-mali text-gray-600">Age Range:</span>
+                          <span className="font-mali font-bold">{module.ageRange}</span>
+                        </div>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </div>
           )}
 
           {/* Content Tab */}

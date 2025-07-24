@@ -15,12 +15,48 @@ import {
   AlertTriangle 
 } from 'lucide-react';
 import { formatDistanceToNow } from 'date-fns';
-import { Notification } from '../types';
-import { notificationService } from '../services/notificationService';
+
+// Define the Notification interface
+interface Notification {
+  id: string;
+  title: string;
+  message: string;
+  type: 'purchase' | 'user_registration' | 'system' | 'payment_failed' | string;
+  priority: 'low' | 'medium' | 'high' | 'urgent';
+  read: boolean;
+  timestamp: string;
+}
+
+type NotificationType = Notification['type'];
+type PriorityType = Notification['priority'];
+type SortByType = 'date' | 'priority' | 'type';
+type SortOrderType = 'asc' | 'desc';
+
+interface NotificationsPageProps {
+  onRefresh?: () => void;
+}
 
 const ITEMS_PER_PAGE = 10;
 
-type SortByType = 'date' | 'priority' | 'type';
+// Mock notification service
+const notificationService = {
+  getNotifications: async (): Promise<Notification[]> => {
+    // Mock data - replace with actual API call
+    return [];
+  },
+  markAsRead: async (id: string): Promise<void> => {
+    // Mock implementation
+  },
+  deleteNotification: async (id: string): Promise<void> => {
+    // Mock implementation
+  },
+  markAllAsRead: async (): Promise<void> => {
+    // Mock implementation
+  },
+  refresh: async (): Promise<void> => {
+    // Mock implementation
+  }
+};
 type SortOrderType = 'asc' | 'desc';
 
 interface NotificationsPageProps {
