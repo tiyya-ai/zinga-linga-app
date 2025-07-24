@@ -131,6 +131,14 @@ export const ImprovedAdminDashboard: React.FC<ImprovedAdminDashboardProps> = ({ 
   const [showFilters, setShowFilters] = useState(false);
   const [showNotificationCenter, setShowNotificationCenter] = useState(false);
   const [unreadNotifications, setUnreadNotifications] = useState(0);
+  const [editingUser, setEditingUser] = useState<User | null>(null);
+  const [showEditUserModal, setShowEditUserModal] = useState(false);
+  const [userFormData, setUserFormData] = useState({
+    name: '',
+    email: '',
+    role: 'user' as 'user' | 'admin',
+    totalSpent: 0
+  });
 
   // Load real data on component mount
   useEffect(() => {
@@ -235,6 +243,75 @@ export const ImprovedAdminDashboard: React.FC<ImprovedAdminDashboardProps> = ({ 
     // Update notifications
     const pendingCount = purchases.filter(p => p.status === 'pending').length;
     setNotifications(pendingCount);
+  };
+
+  // Handle user editing
+  const handleEditUser = (user: User) => {
+    setEditingUser(user);
+    setUserFormData({
+      name: user.name,
+      email: user.email,
+      role: user.role,
+      totalSpent: user.totalSpent || 0
+    });
+    setShowEditUserModal(true);
+  };
+
+  // Handle user form submission
+  const handleUserFormSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!editingUser) return;
+
+    const updatedUsers = users.map(user => 
+      user.id === editingUser.id 
+        ? {
+            ...user,
+            name: userFormData.name,
+            email: userFormData.email,
+            role: userFormData.role,
+            totalSpent: userFormData.totalSpent
+          }
+        : user
+    );
+
+    setUsers(updatedUsers);
+    saveData();
+    setShowEditUserModal(false);
+    setEditingUser(null);
+    
+    // Create notification for user update
+    notificationService.createNotification(
+      'system',
+      '👤 User Updated',
+      `User ${userFormData.name} has been updated successfully`,
+      'medium',
+      editingUser.id,
+      undefined,
+      { user: userFormData }
+    );
+  };
+
+  // Handle user deletion
+  const handleDeleteUser = (userId: string) => {
+    if (window.confirm('Are you sure you want to delete this user? This action cannot be undone.')) {
+      const userToDelete = users.find(u => u.id === userId);
+      const updatedUsers = users.filter(user => user.id !== userId);
+      setUsers(updatedUsers);
+      saveData();
+      
+      // Create notification for user deletion
+      if (userToDelete) {
+        notificationService.createNotification(
+          'system',
+          '🗑️ User Deleted',
+          `User ${userToDelete.name} has been deleted`,
+          'high',
+          userId,
+          undefined,
+          { user: userToDelete }
+        );
+      }
+    }
   };
 
   // Enhanced sidebar menu items with better organization
@@ -707,6 +784,7 @@ export const ImprovedAdminDashboard: React.FC<ImprovedAdminDashboardProps> = ({ 
                                 <Eye className="w-4 h-4" />
                               </button>
                               <button 
+                                onClick={() => handleEditUser(user)}
                                 className="p-2 text-green-600 hover:bg-green-50 rounded-lg transition-colors"
                                 title="Edit User"
                               >
@@ -714,6 +792,7 @@ export const ImprovedAdminDashboard: React.FC<ImprovedAdminDashboardProps> = ({ 
                               </button>
                               {user.role !== 'admin' && (
                                 <button 
+                                  onClick={() => handleDeleteUser(user.id)}
                                   className="p-2 text-red-600 hover:bg-red-50 rounded-lg transition-colors"
                                   title="Delete User"
                                 >
@@ -796,6 +875,109 @@ export const ImprovedAdminDashboard: React.FC<ImprovedAdminDashboardProps> = ({ 
                         </button>
                       </div>
                     </div>
+                  </div>
+                </div>
+              )}
+
+              {/* Edit User Modal */}
+              {showEditUserModal && editingUser && (
+                <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
+                  <div className="bg-white rounded-2xl max-w-lg w-full max-h-[90vh] overflow-y-auto">
+                    <div className="p-6 border-b border-gray-200">
+                      <div className="flex items-center justify-between">
+                        <h3 className="text-2xl font-mali font-bold text-gray-800">
+                          Edit User: {editingUser.name}
+                        </h3>
+                        <button 
+                          onClick={() => setShowEditUserModal(false)}
+                          className="p-2 hover:bg-gray-100 rounded-lg transition-colors"
+                        >
+                          <X className="w-5 h-5" />
+                        </button>
+                      </div>
+                    </div>
+                    
+                    <form onSubmit={handleUserFormSubmit} className="p-6 space-y-6">
+                      <div className="space-y-4">
+                        <div>
+                          <label htmlFor="edit-name" className="block text-sm font-mali font-bold text-gray-700 mb-2">
+                            Full Name
+                          </label>
+                          <input
+                            type="text"
+                            id="edit-name"
+                            value={userFormData.name}
+                            onChange={(e) => setUserFormData({ ...userFormData, name: e.target.value })}
+                            className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-brand-blue font-mali"
+                            placeholder="Enter full name"
+                            required
+                          />
+                        </div>
+
+                        <div>
+                          <label htmlFor="edit-email" className="block text-sm font-mali font-bold text-gray-700 mb-2">
+                            Email Address
+                          </label>
+                          <input
+                            type="email"
+                            id="edit-email"
+                            value={userFormData.email}
+                            onChange={(e) => setUserFormData({ ...userFormData, email: e.target.value })}
+                            className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-brand-blue font-mali"
+                            placeholder="Enter email address"
+                            required
+                          />
+                        </div>
+
+                        <div>
+                          <label htmlFor="edit-role" className="block text-sm font-mali font-bold text-gray-700 mb-2">
+                            User Role
+                          </label>
+                          <select
+                            id="edit-role"
+                            value={userFormData.role}
+                            onChange={(e) => setUserFormData({ ...userFormData, role: e.target.value as 'user' | 'admin' })}
+                            className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-brand-blue font-mali"
+                          >
+                            <option value="user">Regular User</option>
+                            <option value="admin">Administrator</option>
+                          </select>
+                        </div>
+
+                        <div>
+                          <label htmlFor="edit-totalSpent" className="block text-sm font-mali font-bold text-gray-700 mb-2">
+                            Total Spent ($)
+                          </label>
+                          <input
+                            type="number"
+                            id="edit-totalSpent"
+                            step="0.01"
+                            min="0"
+                            value={userFormData.totalSpent}
+                            onChange={(e) => setUserFormData({ ...userFormData, totalSpent: parseFloat(e.target.value) || 0 })}
+                            className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-brand-blue font-mali"
+                            placeholder="0.00"
+                          />
+                        </div>
+                      </div>
+
+                      <div className="flex justify-end gap-3 pt-4 border-t border-gray-200">
+                        <button 
+                          type="button"
+                          onClick={() => setShowEditUserModal(false)}
+                          className="px-6 py-3 bg-gray-500 text-white rounded-lg hover:bg-gray-600 transition-colors font-mali font-bold"
+                        >
+                          Cancel
+                        </button>
+                        <button 
+                          type="submit"
+                          className="px-6 py-3 bg-gradient-to-r from-brand-green to-brand-blue text-white rounded-lg hover:shadow-lg transition-all duration-300 font-mali font-bold flex items-center gap-2"
+                        >
+                          <Save className="w-4 h-4" />
+                          Save Changes
+                        </button>
+                      </div>
+                    </form>
                   </div>
                 </div>
               )}
