@@ -4,6 +4,7 @@ import { modules, bundleOffers } from '../data/modules';
 import { Kiki, Tano } from './Characters';
 import { Cart } from './Cart';
 import { Checkout } from './Checkout';
+import SecureVideoPlayer from './SecureVideoPlayer';
 import { 
   Play, 
   Lock, 
@@ -18,7 +19,8 @@ import {
   BookOpen,
   Gift,
   Crown,
-  Sparkles
+  Sparkles,
+  X
 } from 'lucide-react';
 
 interface DashboardProps {
@@ -145,45 +147,69 @@ export const Dashboard: React.FC<DashboardProps> = ({ user, onLogout, onPurchase
     return module.fullContent.find(content => content.type === 'video');
   };
 
-  const ContentPlayer = ({ content }: { content: ContentItem }) => (
-    <div className="fixed inset-0 bg-black bg-opacity-75 flex items-center justify-center z-50 p-4">
-      <div className="bg-white rounded-3xl p-8 max-w-4xl w-full max-h-[90vh] overflow-y-auto">
-        <div className="flex justify-between items-center mb-6">
-          <h3 className="text-2xl font-mali font-bold text-gray-800">{content.title}</h3>
-          <button 
-            onClick={() => setPlayingContent(null)}
-            className="text-gray-500 hover:text-gray-700"
-          >
-            ✕
-          </button>
-        </div>
-        
-        <div className="aspect-video bg-gradient-to-br from-brand-blue to-brand-pink rounded-2xl flex items-center justify-center mb-6">
-          <div className="text-center text-white">
-            <div className="w-20 h-20 bg-white/20 rounded-full flex items-center justify-center mx-auto mb-4">
-              {getContentIcon(content.type)}
+  const ContentPlayer = ({ content }: { content: ContentItem }) => {
+    const moduleId = modules.find(module => 
+      module.fullContent.some(c => c.id === content.id)
+    )?.id || '';
+    const isPurchased = user.purchasedModules.includes(moduleId);
+
+    return (
+      <div className="fixed inset-0 bg-black bg-opacity-75 flex items-center justify-center z-50 p-4">
+        <div className="bg-white rounded-3xl p-8 max-w-6xl w-full max-h-[90vh] overflow-y-auto">
+          <div className="flex justify-between items-center mb-6">
+            <h3 className="text-2xl font-mali font-bold text-gray-800">{content.title}</h3>
+            <button 
+              onClick={() => setPlayingContent(null)}
+              className="p-2 hover:bg-gray-100 rounded-lg transition-colors"
+            >
+              <X className="w-5 h-5" />
+            </button>
+          </div>
+          
+          {content.type === 'video' ? (
+            <SecureVideoPlayer
+              contentId={content.id}
+              userId={user.id}
+              moduleId={moduleId}
+              title={content.title}
+              duration={parseInt(content.duration) || 0}
+              isPurchased={isPurchased}
+              isDemo={content.isDemo}
+              onProgress={(progress) => {
+                console.log(`Video progress: ${progress}%`);
+              }}
+              onComplete={() => {
+                console.log('Video completed');
+              }}
+            />
+          ) : (
+            <div className="aspect-video bg-gradient-to-br from-brand-blue to-brand-pink rounded-2xl flex items-center justify-center mb-6">
+              <div className="text-center text-white">
+                <div className="w-20 h-20 bg-white/20 rounded-full flex items-center justify-center mx-auto mb-4">
+                  {getContentIcon(content.type)}
+                </div>
+                <p className="font-mali text-lg">
+                  {content.isDemo ? 'Demo Content' : 'Full Content'} - {content.duration}
+                </p>
+                <p className="font-mali text-sm opacity-80 mt-2">
+                  {content.type === 'audio' && 'Musical learning adventure'}
+                  {content.type === 'game' && 'Interactive learning game'}
+                </p>
+              </div>
             </div>
-            <p className="font-mali text-lg">
-              {content.isDemo ? 'Demo Content' : 'Full Content'} - {content.duration}
-            </p>
-            <p className="font-mali text-sm opacity-80 mt-2">
-              {content.type === 'video' && 'Interactive video experience'}
-              {content.type === 'audio' && 'Musical learning adventure'}
-              {content.type === 'game' && 'Interactive learning game'}
-            </p>
-          </div>
+          )}
+          
+          {content.isDemo && (
+            <div className="bg-brand-yellow/10 border border-brand-yellow/30 rounded-2xl p-4 text-center mt-6">
+              <p className="font-mali text-brand-yellow font-bold">
+                🎉 This is a free demo! Purchase the full module to unlock all content.
+              </p>
+            </div>
+          )}
         </div>
-        
-        {content.isDemo && (
-          <div className="bg-brand-yellow/10 border border-brand-yellow/30 rounded-2xl p-4 text-center">
-            <p className="font-mali text-brand-yellow font-bold">
-              🎉 This is a free demo! Purchase the full module to unlock all content.
-            </p>
-          </div>
-        )}
       </div>
-    </div>
-  );
+    );
+  };
 
   const LockedContentItem = ({ content, moduleId }: { content: ContentItem; moduleId: string }) => (
     <div className="flex items-center justify-between p-3 bg-gray-100 rounded-xl border-2 border-dashed border-gray-300 opacity-75">
