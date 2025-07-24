@@ -9,6 +9,7 @@ interface ContactPageProps {
 }
 
 export const ContactPage: React.FC<ContactPageProps> = ({ onBack, onNavigate }) => {
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [formData, setFormData] = useState({
     name: '',
     email: '',
@@ -39,7 +40,7 @@ export const ContactPage: React.FC<ContactPageProps> = ({ onBack, onNavigate }) 
 
   return (
     <div className="min-h-screen bg-white font-mali">
-      <Header onLoginClick={() => {}} isMenuOpen={false} setIsMenuOpen={() => {}} onNavigate={onNavigate} />
+      <Header onLoginClick={() => {}} isMenuOpen={isMenuOpen} setIsMenuOpen={setIsMenuOpen} onNavigate={onNavigate} />
       
       {/* Hero Section */}
       <section className="pt-32 pb-20 px-4 bg-gradient-to-br from-brand-pink via-brand-blue to-brand-green">

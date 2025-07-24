@@ -9,6 +9,7 @@ interface TechnicalSupportPageProps {
 }
 
 export const TechnicalSupportPage: React.FC<TechnicalSupportPageProps> = ({ onBack, onNavigate }) => {
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [selectedIssue, setSelectedIssue] = useState('');
 
   const commonIssues = [
@@ -114,7 +115,7 @@ export const TechnicalSupportPage: React.FC<TechnicalSupportPageProps> = ({ onBa
 
   return (
     <div className="min-h-screen bg-white font-mali">
-      <Header onLoginClick={() => {}} isMenuOpen={false} setIsMenuOpen={() => {}} />
+      <Header onLoginClick={() => {}} isMenuOpen={isMenuOpen} setIsMenuOpen={setIsMenuOpen} />
       
       {/* Hero Section */}
       <section className="pt-32 pb-20 px-4 bg-gradient-to-br from-brand-blue via-brand-green to-brand-pink">

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { ArrowLeft, Play, Volume2, Gamepad2, Star, Heart, Download } from 'lucide-react';
 import { Header } from '../components/Header';
 import { Footer } from '../components/Footer';
@@ -9,9 +9,11 @@ interface DemoPageProps {
 }
 
 export const DemoPage: React.FC<DemoPageProps> = ({ onBack, onNavigate }) => {
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-brand-yellow/20 via-white to-brand-blue/20">
-      <Header onLoginClick={() => {}} isMenuOpen={false} setIsMenuOpen={() => {}} onNavigate={onNavigate} />
+      <Header onLoginClick={() => {}} isMenuOpen={isMenuOpen} setIsMenuOpen={setIsMenuOpen} onNavigate={onNavigate} />
       
       {/* Hero Section */}
       <section className="pt-32 pb-20 px-4">

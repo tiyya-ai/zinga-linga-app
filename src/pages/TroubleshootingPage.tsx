@@ -9,6 +9,7 @@ interface TroubleshootingPageProps {
 }
 
 export const TroubleshootingPage: React.FC<TroubleshootingPageProps> = ({ onBack, onNavigate }) => {
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedCategory, setSelectedCategory] = useState('all');
 
@@ -358,7 +359,7 @@ export const TroubleshootingPage: React.FC<TroubleshootingPageProps> = ({ onBack
 
   return (
     <div className="min-h-screen bg-white font-mali">
-      <Header onLoginClick={() => {}} isMenuOpen={false} setIsMenuOpen={() => {}} />
+      <Header onLoginClick={() => {}} isMenuOpen={isMenuOpen} setIsMenuOpen={setIsMenuOpen} />
       
       {/* Hero Section */}
       <section className="pt-32 pb-20 px-4 bg-gradient-to-br from-brand-red via-brand-pink to-brand-blue">
