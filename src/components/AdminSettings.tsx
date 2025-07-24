@@ -35,7 +35,8 @@ import {
   Building,
   Banknote,
   QrCode,
-  Coins
+  Coins,
+  MessageSquare
 } from 'lucide-react';
 import { EmailNotificationSettings } from './EmailNotificationSettings';
 import { CouponManagement } from './CouponManagement';
@@ -289,19 +290,57 @@ export const AdminSettings: React.FC<AdminSettingsProps> = ({ user }) => {
 
       switch (type) {
         case 'email':
-          alert('📧 Test email sent! Check your inbox.');
+          // Create a test notification in the system
+          notificationService.createNotification(
+            'system',
+            '📧 Test Email Notification',
+            'This is a test email notification to verify your email settings are working correctly.',
+            'medium',
+            undefined,
+            undefined,
+            { type: 'email_test', timestamp: new Date().toISOString() }
+          );
+          alert('📧 Test email notification created! Check your notifications panel.');
           break;
         case 'sms':
-          alert('📱 Test SMS sent to configured number.');
+          notificationService.createNotification(
+            'system',
+            '📱 Test SMS Notification',
+            `Test SMS would be sent to: ${notificationSettings.smsNotifications.phoneNumber || 'No phone number configured'}`,
+            'medium',
+            undefined,
+            undefined,
+            { type: 'sms_test', phoneNumber: notificationSettings.smsNotifications.phoneNumber }
+          );
+          alert('📱 Test SMS notification created! Check your notifications panel.');
           break;
         case 'push':
-          alert('🔔 Test push notification sent.');
+          notificationService.createNotification(
+            'system',
+            '🔔 Test Push Notification',
+            'This is a test push notification to verify your browser notifications are working.',
+            'high',
+            undefined,
+            undefined,
+            { type: 'push_test' }
+          );
+          alert('🔔 Test push notification created! Check your notifications panel.');
           break;
         case 'slack':
-          alert('💬 Test Slack message sent to configured channel.');
+          notificationService.createNotification(
+            'system',
+            '💬 Test Slack Notification',
+            `Test Slack message would be sent to: ${notificationSettings.slackIntegration.channel || 'No channel configured'}`,
+            'medium',
+            undefined,
+            undefined,
+            { type: 'slack_test', channel: notificationSettings.slackIntegration.channel }
+          );
+          alert('💬 Test Slack notification created! Check your notifications panel.');
           break;
       }
     } catch (error) {
+      console.error('Error sending test notification:', error);
       alert('❌ Error sending test notification.');
     }
   };
@@ -345,19 +384,20 @@ export const AdminSettings: React.FC<AdminSettingsProps> = ({ user }) => {
       {/* Tabs */}
       <div className="bg-white rounded-2xl shadow-lg border border-gray-100 overflow-hidden">
         <div className="border-b border-gray-200">
-          <nav className="flex overflow-x-auto">
-            {tabs.map((tab) => (
+          <nav className="flex overflow-x-auto scrollbar-hide">
+            {tabs.map((tab, index) => (
               <button
                 key={tab.id}
                 onClick={() => setActiveTab(tab.id as any)}
-                className={`flex items-center gap-2 px-6 py-4 font-mali font-bold transition-colors whitespace-nowrap ${
+                className={`flex items-center gap-2 px-4 md:px-6 py-4 font-mali font-bold transition-all duration-200 whitespace-nowrap min-w-fit border-r border-gray-100 last:border-r-0 ${
                   activeTab === tab.id
-                    ? 'bg-brand-blue text-white border-b-2 border-brand-blue'
+                    ? 'bg-brand-blue text-white shadow-sm'
                     : 'text-gray-600 hover:text-gray-800 hover:bg-gray-50'
                 }`}
               >
-                <tab.icon className="w-4 h-4" />
-                {tab.label}
+                <tab.icon className="w-4 h-4 flex-shrink-0" />
+                <span className="hidden sm:inline">{tab.label}</span>
+                <span className="sm:hidden text-xs">{tab.label.split(' ')[0]}</span>
               </button>
             ))}
           </nav>
@@ -508,7 +548,216 @@ export const AdminSettings: React.FC<AdminSettingsProps> = ({ user }) => {
 
           {/* Email Settings */}
           {activeTab === 'email' && (
-            <EmailNotificationSettings />
+            <div className="space-y-8">
+              <div>
+                <h3 className="text-xl font-mali font-bold text-gray-800 mb-6">Email & Notification Settings</h3>
+                <p className="font-mali text-gray-600 mb-6">Configure email notifications and templates</p>
+              </div>
+
+              {/* General Email Settings */}
+              <div className="bg-blue-50 rounded-2xl p-6 border border-blue-200">
+                <h4 className="text-lg font-mali font-bold text-gray-800 mb-4 flex items-center gap-2">
+                  <Mail className="w-5 h-5 text-blue-600" />
+                  General Email Settings
+                </h4>
+                
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                  <div>
+                    <label className="block font-mali font-bold text-gray-700 mb-2">Admin Email Address</label>
+                    <input
+                      type="email"
+                      defaultValue="admin@zingalinga.com"
+                      placeholder="admin@zingalinga.com"
+                      className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-brand-blue font-mali"
+                    />
+                    <p className="font-mali text-gray-500 text-sm mt-1">
+                      This email will receive all admin notifications
+                    </p>
+                  </div>
+
+                  <div>
+                    <label className="block font-mali font-bold text-gray-700 mb-2">Support Email Address</label>
+                    <input
+                      type="email"
+                      defaultValue="support@zingalinga.com"
+                      placeholder="support@zingalinga.com"
+                      className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-brand-blue font-mali"
+                    />
+                    <p className="font-mali text-gray-500 text-sm mt-1">
+                      Customer support email address
+                    </p>
+                  </div>
+                </div>
+              </div>
+
+              {/* Email Notification Preferences */}
+              <div className="bg-green-50 rounded-2xl p-6 border border-green-200">
+                <h4 className="text-lg font-mali font-bold text-gray-800 mb-4 flex items-center gap-2">
+                  <Bell className="w-5 h-5 text-green-600" />
+                  Email Notification Preferences
+                </h4>
+                
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  {[
+                    { key: 'newPurchases', label: 'New Purchases', description: 'Get notified when customers make purchases' },
+                    { key: 'newUsers', label: 'New User Registrations', description: 'Get notified when new users register' },
+                    { key: 'paymentFailures', label: 'Payment Failures', description: 'Get notified when payments fail' },
+                    { key: 'systemAlerts', label: 'System Alerts', description: 'Get notified about system issues' },
+                    { key: 'weeklyReports', label: 'Weekly Reports', description: 'Receive weekly summary reports' },
+                    { key: 'monthlyReports', label: 'Monthly Reports', description: 'Receive monthly analytics reports' }
+                  ].map((item) => (
+                    <label key={item.key} className="flex items-start gap-3">
+                      <input
+                        type="checkbox"
+                        defaultChecked={true}
+                        className="w-4 h-4 text-brand-blue focus:ring-brand-blue border-gray-300 rounded mt-1"
+                      />
+                      <div>
+                        <span className="font-mali font-bold text-gray-800">{item.label}</span>
+                        <p className="font-mali text-gray-600 text-sm">{item.description}</p>
+                      </div>
+                    </label>
+                  ))}
+                </div>
+              </div>
+
+              {/* SMTP Settings */}
+              <div className="bg-purple-50 rounded-2xl p-6 border border-purple-200">
+                <h4 className="text-lg font-mali font-bold text-gray-800 mb-4 flex items-center gap-2">
+                  <Globe className="w-5 h-5 text-purple-600" />
+                  SMTP Configuration
+                </h4>
+                
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                  <div>
+                    <label className="block font-mali font-bold text-gray-700 mb-2">SMTP Host</label>
+                    <input
+                      type="text"
+                      defaultValue="smtp.gmail.com"
+                      placeholder="smtp.gmail.com"
+                      className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-brand-blue font-mali"
+                    />
+                  </div>
+
+                  <div>
+                    <label className="block font-mali font-bold text-gray-700 mb-2">Port</label>
+                    <input
+                      type="number"
+                      defaultValue="587"
+                      placeholder="587"
+                      className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-brand-blue font-mali"
+                    />
+                  </div>
+
+                  <div>
+                    <label className="block font-mali font-bold text-gray-700 mb-2">Username</label>
+                    <input
+                      type="text"
+                      placeholder="your-email@gmail.com"
+                      className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-brand-blue font-mali"
+                    />
+                  </div>
+
+                  <div>
+                    <label className="block font-mali font-bold text-gray-700 mb-2">Password</label>
+                    <input
+                      type="password"
+                      placeholder="your-app-password"
+                      className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-brand-blue font-mali"
+                    />
+                  </div>
+                </div>
+
+                <div className="mt-6">
+                  <label className="flex items-center gap-3">
+                    <input
+                      type="checkbox"
+                      defaultChecked={false}
+                      className="w-4 h-4 text-brand-blue focus:ring-brand-blue border-gray-300 rounded"
+                    />
+                    <div>
+                      <span className="font-mali font-bold text-gray-800">Use SSL/TLS</span>
+                      <p className="font-mali text-gray-600 text-sm">Enable secure connection (recommended)</p>
+                    </div>
+                  </label>
+                </div>
+              </div>
+
+              {/* Test Email */}
+              <div className="bg-yellow-50 rounded-2xl p-6 border border-yellow-200">
+                <h4 className="text-lg font-mali font-bold text-gray-800 mb-4 flex items-center gap-2">
+                  <TestTube className="w-5 h-5 text-yellow-600" />
+                  Test Email Delivery
+                </h4>
+                
+                <div className="max-w-md">
+                  <label className="block font-mali font-bold text-gray-700 mb-2">Test Email Address</label>
+                  <div className="flex gap-3">
+                    <input
+                      type="email"
+                      placeholder="test@example.com"
+                      className="flex-1 px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-brand-blue font-mali"
+                    />
+                    <button
+                      onClick={() => {
+                        notificationService.createNotification(
+                          'system',
+                          '📧 Test Email Sent',
+                          'Test email functionality is working correctly.',
+                          'medium',
+                          undefined,
+                          undefined,
+                          { type: 'email_test' }
+                        );
+                        alert('✅ Test email sent! Check your notifications panel.');
+                      }}
+                      className="flex items-center gap-2 px-6 py-3 bg-brand-blue text-white rounded-lg hover:bg-brand-blue/90 transition-colors font-mali font-bold"
+                    >
+                      <Send className="w-4 h-4" />
+                      Send Test
+                    </button>
+                  </div>
+                </div>
+              </div>
+
+              {/* Email Templates */}
+              <div className="bg-gray-50 rounded-2xl p-6 border border-gray-200">
+                <h4 className="text-lg font-mali font-bold text-gray-800 mb-4 flex items-center gap-2">
+                  <Mail className="w-5 h-5 text-gray-600" />
+                  Email Templates
+                </h4>
+                
+                <div className="space-y-4">
+                  {[
+                    { name: 'Purchase Confirmation', description: 'Email sent to customers after successful purchase' },
+                    { name: 'Welcome Email', description: 'Email sent to new users after registration' },
+                    { name: 'Admin Alert', description: 'Email sent to admin for important notifications' },
+                    { name: 'Payment Failed', description: 'Email sent when payment processing fails' }
+                  ].map((template) => (
+                    <div key={template.name} className="flex items-center justify-between p-4 bg-white rounded-lg border border-gray-200">
+                      <div>
+                        <h5 className="font-mali font-bold text-gray-800">{template.name}</h5>
+                        <p className="font-mali text-gray-600 text-sm">{template.description}</p>
+                      </div>
+                      <div className="flex items-center gap-2">
+                        <label className="flex items-center gap-2">
+                          <input
+                            type="checkbox"
+                            defaultChecked={true}
+                            className="w-4 h-4 text-brand-blue focus:ring-brand-blue border-gray-300 rounded"
+                          />
+                          <span className="font-mali text-gray-700 text-sm">Enabled</span>
+                        </label>
+                        <button className="flex items-center gap-1 px-3 py-1 bg-gray-100 text-gray-700 rounded hover:bg-gray-200 transition-colors font-mali text-sm">
+                          <Edit className="w-3 h-3" />
+                          Edit
+                        </button>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </div>
           )}
 
           {/* Coupon Management */}
@@ -742,7 +991,49 @@ export const AdminSettings: React.FC<AdminSettingsProps> = ({ user }) => {
           {/* Notifications */}
           {activeTab === 'notifications' && (
             <div className="space-y-8">
-              <h3 className="text-xl font-mali font-bold text-gray-800">Notification Settings</h3>
+              <div className="flex justify-between items-center">
+                <h3 className="text-xl font-mali font-bold text-gray-800">Notification Settings</h3>
+                <button
+                  onClick={() => {
+                    // Create some demo notifications
+                    notificationService.createNotification(
+                      'purchase',
+                      '🛒 New Purchase Alert',
+                      'John Doe purchased Kiki\'s African Animal Alphabet for $11.00',
+                      'high',
+                      'user_123',
+                      'purchase_456',
+                      { amount: 11.00, customer: 'John Doe' }
+                    );
+                    
+                    notificationService.createNotification(
+                      'user_registration',
+                      '👤 New User Registration',
+                      'Sarah Smith just joined the platform',
+                      'medium',
+                      'user_789',
+                      undefined,
+                      { email: 'sarah@example.com' }
+                    );
+                    
+                    notificationService.createNotification(
+                      'system',
+                      '⚙️ System Update',
+                      'System maintenance completed successfully',
+                      'low',
+                      undefined,
+                      undefined,
+                      { type: 'maintenance' }
+                    );
+                    
+                    alert('✅ Demo notifications created! Check your notification center.');
+                  }}
+                  className="flex items-center gap-2 bg-brand-green text-white px-4 py-2 rounded-lg hover:bg-brand-green/90 transition-colors font-mali font-bold"
+                >
+                  <Plus className="w-4 h-4" />
+                  Create Demo Notifications
+                </button>
+              </div>
 
               {/* Email Notifications */}
               <div className="bg-blue-50 rounded-2xl p-6 border border-blue-200">

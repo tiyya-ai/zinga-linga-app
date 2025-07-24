@@ -19,85 +19,144 @@ class DataStore {
       },
       {
         id: 'user-001',
-        email: 'parent1@example.com',
+        email: 'sarah.johnson@gmail.com',
         name: 'Sarah Johnson',
         role: 'user' as const,
-        purchasedModules: ['module-001', 'module-002'],
-        createdAt: new Date(Date.now() - 7 * 24 * 60 * 60 * 1000).toISOString(),
+        purchasedModules: ['module-001', 'module-002', 'module-003'],
+        createdAt: new Date(Date.now() - 45 * 24 * 60 * 60 * 1000).toISOString(),
         lastLogin: new Date().toISOString(),
-        totalSpent: 49.98
+        totalSpent: 27.98
       },
       {
         id: 'user-002',
-        email: 'parent2@example.com',
+        email: 'mike.chen@outlook.com',
         name: 'Mike Chen',
         role: 'user' as const,
-        purchasedModules: ['module-001'],
-        createdAt: new Date(Date.now() - 14 * 24 * 60 * 60 * 1000).toISOString(),
+        purchasedModules: ['module-001', 'module-002'],
+        createdAt: new Date(Date.now() - 30 * 24 * 60 * 60 * 1000).toISOString(),
         lastLogin: new Date(Date.now() - 2 * 24 * 60 * 60 * 1000).toISOString(),
-        totalSpent: 24.99
+        totalSpent: 17.99
       },
       {
         id: 'user-003',
-        email: 'parent3@example.com',
+        email: 'emma.davis@yahoo.com',
         name: 'Emma Davis',
         role: 'user' as const,
         purchasedModules: ['module-002', 'module-003'],
-        createdAt: new Date(Date.now() - 21 * 24 * 60 * 60 * 1000).toISOString(),
+        createdAt: new Date(Date.now() - 60 * 24 * 60 * 60 * 1000).toISOString(),
         lastLogin: new Date(Date.now() - 1 * 24 * 60 * 60 * 1000).toISOString(),
-        totalSpent: 49.98
+        totalSpent: 16.98
+      },
+      {
+        id: 'user-004',
+        email: 'james.wilson@gmail.com',
+        name: 'James Wilson',
+        role: 'user' as const,
+        purchasedModules: ['module-001'],
+        createdAt: new Date(Date.now() - 15 * 24 * 60 * 60 * 1000).toISOString(),
+        lastLogin: new Date(Date.now() - 5 * 24 * 60 * 60 * 1000).toISOString(),
+        totalSpent: 11.00
+      },
+      {
+        id: 'user-005',
+        email: 'maria.garcia@hotmail.com',
+        name: 'Maria Garcia',
+        role: 'user' as const,
+        purchasedModules: ['module-003'],
+        createdAt: new Date(Date.now() - 8 * 24 * 60 * 60 * 1000).toISOString(),
+        lastLogin: new Date(Date.now() - 3 * 24 * 60 * 60 * 1000).toISOString(),
+        totalSpent: 9.99
       }
     ] as User[],
     modules: [
       {
         id: 'module-001',
-        title: "Kiki's Creative Adventures",
-        description: "Join Kiki on exciting creative journeys filled with art, music, and imagination!",
+        title: "Kiki's African Animal Alphabet",
+        description: "Learn the alphabet with amazing African animals! Join Kiki on an exciting journey through the African savanna, discovering letters A-Z with beautiful animals like Antelope, Baboon, Cheetah, and more!",
         character: 'kiki' as const,
-        price: 24.99,
-        ageRange: '3-6 years',
+        price: 11.00,
+        ageRange: '1-3 years',
         isActive: true,
-        rating: 4.8,
-        totalRatings: 156,
-        createdAt: new Date(Date.now() - 30 * 24 * 60 * 60 * 1000).toISOString(),
+        rating: 4.9,
+        totalRatings: 1247,
+        createdAt: new Date(Date.now() - 180 * 24 * 60 * 60 * 1000).toISOString(),
+        updatedAt: new Date().toISOString(),
+        features: [
+          "26 Interactive alphabet lessons",
+          "Beautiful African animal illustrations", 
+          "Native pronunciation audio",
+          "Fun animal sounds and facts",
+          "Progress tracking for parents",
+          "Offline mode available"
+        ],
+        demoVideo: "/demo/kiki-alphabet.mp4",
         fullContent: [
-          { id: 'content-001', type: 'video', title: 'Welcome to Kiki\'s World', duration: 180 },
-          { id: 'content-002', type: 'game', title: 'Color Mixing Fun', duration: 300 },
-          { id: 'content-003', type: 'audio', title: 'Kiki\'s Song Time', duration: 240 }
+          { id: 'content-001', type: 'video', title: 'Welcome to Kiki\'s Animal World', duration: 180 },
+          { id: 'content-002', type: 'game', title: 'Letter A - Antelope Adventure', duration: 300 },
+          { id: 'content-003', type: 'audio', title: 'Animal Alphabet Song', duration: 240 },
+          { id: 'content-004', type: 'game', title: 'Letter B - Baboon Bounce', duration: 280 },
+          { id: 'content-005', type: 'video', title: 'African Safari Tour', duration: 320 },
+          { id: 'content-006', type: 'game', title: 'Complete Alphabet Quiz', duration: 600 }
         ]
       },
       {
         id: 'module-002',
-        title: "Trae's Logic Puzzles",
-        description: "Help Trae solve amazing puzzles and learn problem-solving skills!",
-        character: 'trae' as const,
-        price: 24.99,
-        ageRange: '4-8 years',
+        title: "Tano's Jungle Songs",
+        description: "Sing along with Tano in the African jungle! Discover traditional African music, rhythms, and cultural stories through interactive songs and musical adventures.",
+        character: 'tano' as const,
+        price: 6.99,
+        ageRange: '2-6 years',
         isActive: true,
-        rating: 4.6,
-        totalRatings: 89,
-        createdAt: new Date(Date.now() - 25 * 24 * 60 * 60 * 1000).toISOString(),
+        rating: 4.8,
+        totalRatings: 892,
+        createdAt: new Date(Date.now() - 150 * 24 * 60 * 60 * 1000).toISOString(),
+        updatedAt: new Date().toISOString(),
+        features: [
+          "15 Traditional African songs",
+          "Interactive rhythm games",
+          "Cultural storytelling",
+          "Musical instrument sounds",
+          "Sing-along lyrics display",
+          "Dance movement guides"
+        ],
+        demoVideo: "/demo/tano-songs.mp4",
         fullContent: [
-          { id: 'content-004', type: 'video', title: 'Trae\'s Puzzle Palace', duration: 200 },
-          { id: 'content-005', type: 'game', title: 'Shape Sorter Challenge', duration: 400 },
-          { id: 'content-006', type: 'audio', title: 'Think Along with Trae', duration: 180 }
+          { id: 'content-007', type: 'video', title: 'Welcome to Tano\'s Jungle', duration: 200 },
+          { id: 'content-008', type: 'audio', title: 'African Drum Circle', duration: 180 },
+          { id: 'content-009', type: 'game', title: 'Rhythm Matching Game', duration: 350 },
+          { id: 'content-010', type: 'audio', title: 'Jungle Animal Sounds', duration: 240 },
+          { id: 'content-011', type: 'video', title: 'Traditional Dance Moves', duration: 280 },
+          { id: 'content-012', type: 'game', title: 'Musical Memory Challenge', duration: 400 }
         ]
       },
       {
         id: 'module-003',
-        title: "Kiki & Trae's Friendship Stories",
-        description: "Learn about friendship, sharing, and caring with Kiki and Trae!",
+        title: "Kiki's Counting Safari",
+        description: "Count with Kiki on an exciting African safari! Learn numbers 1-20 while exploring the beautiful African landscape and meeting amazing wildlife friends.",
         character: 'kiki' as const,
-        price: 24.99,
-        ageRange: '3-7 years',
+        price: 9.99,
+        ageRange: '2-5 years',
         isActive: true,
-        rating: 4.9,
-        totalRatings: 203,
-        createdAt: new Date(Date.now() - 20 * 24 * 60 * 60 * 1000).toISOString(),
+        rating: 4.7,
+        totalRatings: 634,
+        createdAt: new Date(Date.now() - 120 * 24 * 60 * 60 * 1000).toISOString(),
+        updatedAt: new Date().toISOString(),
+        features: [
+          "Numbers 1-20 interactive lessons",
+          "Safari animal counting games",
+          "Visual number recognition",
+          "Basic math concepts",
+          "Counting songs and rhymes",
+          "Achievement rewards system"
+        ],
+        demoVideo: "/demo/kiki-counting.mp4",
         fullContent: [
-          { id: 'content-007', type: 'video', title: 'Best Friends Forever', duration: 220 },
-          { id: 'content-008', type: 'game', title: 'Sharing is Caring Game', duration: 350 },
-          { id: 'content-009', type: 'audio', title: 'Friendship Songs', duration: 300 }
+          { id: 'content-013', type: 'video', title: 'Safari Counting Adventure', duration: 220 },
+          { id: 'content-014', type: 'game', title: 'Count the Elephants', duration: 300 },
+          { id: 'content-015', type: 'audio', title: 'Counting Songs Collection', duration: 360 },
+          { id: 'content-016', type: 'game', title: 'Number Matching Safari', duration: 280 },
+          { id: 'content-017', type: 'video', title: 'Big Numbers, Big Animals', duration: 250 },
+          { id: 'content-018', type: 'game', title: 'Safari Math Challenge', duration: 450 }
         ]
       }
     ] as Module[],
@@ -106,7 +165,7 @@ class DataStore {
         id: 'purchase-001',
         userId: 'user-001',
         moduleIds: ['module-001', 'module-002'],
-        amount: 49.98,
+        amount: 17.99,
         status: 'completed' as const,
         paymentMethod: 'Credit Card',
         createdAt: new Date(Date.now() - 7 * 24 * 60 * 60 * 1000).toISOString(),
@@ -116,7 +175,7 @@ class DataStore {
         id: 'purchase-002',
         userId: 'user-002',
         moduleIds: ['module-001'],
-        amount: 24.99,
+        amount: 11.00,
         status: 'completed' as const,
         paymentMethod: 'Credit Card',
         createdAt: new Date(Date.now() - 14 * 24 * 60 * 60 * 1000).toISOString(),
@@ -126,7 +185,7 @@ class DataStore {
         id: 'purchase-003',
         userId: 'user-003',
         moduleIds: ['module-002', 'module-003'],
-        amount: 49.98,
+        amount: 16.98,
         status: 'completed' as const,
         paymentMethod: 'Credit Card',
         createdAt: new Date(Date.now() - 21 * 24 * 60 * 60 * 1000).toISOString(),
@@ -136,19 +195,30 @@ class DataStore {
         id: 'purchase-004',
         userId: 'user-001',
         moduleIds: ['module-003'],
-        amount: 24.99,
-        status: 'pending' as const,
+        amount: 9.99,
+        status: 'completed' as const,
         paymentMethod: 'Credit Card',
-        createdAt: new Date(Date.now() - 2 * 24 * 60 * 60 * 1000).toISOString()
+        createdAt: new Date(Date.now() - 2 * 24 * 60 * 60 * 1000).toISOString(),
+        completedAt: new Date(Date.now() - 2 * 24 * 60 * 60 * 1000).toISOString()
       },
       {
         id: 'purchase-005',
         userId: 'user-002',
         moduleIds: ['module-002'],
-        amount: 24.99,
-        status: 'pending' as const,
+        amount: 6.99,
+        status: 'completed' as const,
         paymentMethod: 'Credit Card',
-        createdAt: new Date(Date.now() - 1 * 24 * 60 * 60 * 1000).toISOString()
+        createdAt: new Date(Date.now() - 1 * 24 * 60 * 60 * 1000).toISOString(),
+        completedAt: new Date(Date.now() - 1 * 24 * 60 * 60 * 1000).toISOString()
+      },
+      {
+        id: 'purchase-006',
+        userId: 'user-003',
+        moduleIds: ['module-001'],
+        amount: 11.00,
+        status: 'pending' as const,
+        paymentMethod: 'PayPal',
+        createdAt: new Date(Date.now() - 3 * 60 * 60 * 1000).toISOString()
       }
     ] as Purchase[],
     contentFiles: [
@@ -194,9 +264,9 @@ class DataStore {
       }
     ] as ContentFile[],
     analytics: {
-      totalUsers: 4,
-      totalRevenue: 124.95,
-      totalPurchases: 5,
+      totalUsers: 6,
+      totalRevenue: 83.95,
+      totalPurchases: 6,
       activeModules: 3,
       revenueByMonth: [],
       popularModules: [],

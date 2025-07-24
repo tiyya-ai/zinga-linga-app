@@ -17,6 +17,7 @@ import { TroubleshootingPage } from '../pages/TroubleshootingPage';
 import { CookiePolicyPage } from '../pages/CookiePolicyPage';
 import { RefundPolicyPage } from '../pages/RefundPolicyPage';
 import { COPPACompliancePage } from '../pages/COPPACompliancePage';
+import { DemoPage } from '../pages/DemoPage';
 import { authManager, AuthSession } from '../utils/auth';
 
 // Import the main landing page content
@@ -94,6 +95,8 @@ export const PageRouter: React.FC<PageRouterProps> = ({
         return <RefundPolicyPage onBack={() => handleNavigation('home')} />;
       case 'coppa':
         return <COPPACompliancePage onBack={() => handleNavigation('home')} />;
+      case 'demo':
+        return <DemoPage onBack={() => handleNavigation('home')} />;
       case 'home':
       default:
         return (

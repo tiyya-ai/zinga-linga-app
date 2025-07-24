@@ -311,33 +311,7 @@ export const ContactPage: React.FC<ContactPageProps> = ({ onBack }) => {
         </div>
       </section>
 
-      {/* Emergency Contact */}
-      <section className="py-12 px-4 bg-red-50 border-t-4 border-red-500">
-        <div className="max-w-6xl mx-auto text-center">
-          <h2 className="text-2xl font-bold text-red-800 mb-4">Emergency or Urgent Issues?</h2>
-          <p className="text-red-700 mb-6">
-            If you're experiencing a critical issue that affects your child's safety or account security, 
-            please contact us immediately.
-          </p>
-          <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <a 
-              href="tel:+15551234567"
-              className="bg-red-600 text-white px-6 py-3 rounded-lg font-bold hover:bg-red-700 transition-colors flex items-center justify-center gap-2"
-            >
-              <Phone className="w-5 h-5" />
-              Call Emergency Line
-            </a>
-            <a 
-              href="mailto:emergency@zingalinga.com"
-              className="bg-red-600 text-white px-6 py-3 rounded-lg font-bold hover:bg-red-700 transition-colors flex items-center justify-center gap-2"
-            >
-              <Mail className="w-5 h-5" />
-              Emergency Email
-            </a>
-          </div>
-        </div>
-      </section>
-
+      
       <Footer />
     </div>
   );

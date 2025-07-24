@@ -9,10 +9,24 @@ interface HeaderProps {
 }
 
 export const Header: React.FC<HeaderProps> = ({ onLoginClick, isMenuOpen, setIsMenuOpen, onNavigate }) => {
-  const scrollToSection = (sectionId: string) => {
-    if (onNavigate) {
+  const handleNavigation = (sectionId: string) => {
+    // Pages that should navigate to separate pages
+    const separatePages = ['about', 'demo', 'contact'];
+    
+    if (onNavigate && separatePages.includes(sectionId)) {
+      // Navigate to separate page
       onNavigate(sectionId);
+    } else if (onNavigate) {
+      // Navigate to home page first, then scroll to section
+      onNavigate('home');
+      setTimeout(() => {
+        const element = document.getElementById(sectionId);
+        if (element) {
+          element.scrollIntoView({ behavior: 'smooth' });
+        }
+      }, 100);
     } else {
+      // Fallback: scroll to section if on same page
       const element = document.getElementById(sectionId);
       if (element) {
         element.scrollIntoView({ behavior: 'smooth' });
@@ -30,45 +44,45 @@ export const Header: React.FC<HeaderProps> = ({ onLoginClick, isMenuOpen, setIsM
             <img 
               src="/zinga linga logo.png" 
               alt="Zinga Linga" 
-              className="h-12 w-auto cursor-pointer hover:scale-105 transition-transform"
-              onClick={() => scrollToSection('home')}
+              className="h-16 w-auto cursor-pointer hover:scale-105 transition-transform"
+              onClick={() => handleNavigation('home')}
             />
           </div>
 
           {/* Desktop Navigation */}
           <nav className="hidden lg:flex items-center space-x-8">
             <button
-              onClick={() => scrollToSection('home')}
+              onClick={() => handleNavigation('home')}
               className="font-mali text-gray-700 hover:text-brand-green transition-colors"
             >
               Home
             </button>
             <button
-              onClick={() => scrollToSection('about')}
+              onClick={() => handleNavigation('about')}
               className="font-mali text-gray-700 hover:text-brand-green transition-colors"
             >
               About
             </button>
             <button
-              onClick={() => scrollToSection('demo')}
+              onClick={() => handleNavigation('demo')}
               className="font-mali text-gray-700 hover:text-brand-green transition-colors"
             >
               Demo
             </button>
             <button
-              onClick={() => scrollToSection('features')}
+              onClick={() => handleNavigation('features')}
               className="font-mali text-gray-700 hover:text-brand-green transition-colors"
             >
               Features
             </button>
             <button
-              onClick={() => scrollToSection('modules')}
+              onClick={() => handleNavigation('modules')}
               className="font-mali text-gray-700 hover:text-brand-green transition-colors"
             >
               Modules
             </button>
             <button
-              onClick={() => scrollToSection('contact')}
+              onClick={() => handleNavigation('contact')}
               className="font-mali text-gray-700 hover:text-brand-green transition-colors"
             >
               Contact
@@ -91,7 +105,7 @@ export const Header: React.FC<HeaderProps> = ({ onLoginClick, isMenuOpen, setIsM
 
             {/* Demo Button */}
             <button
-              onClick={() => scrollToSection('demo')}
+              onClick={() => handleNavigation('demo')}
               className="hidden sm:flex items-center gap-2 bg-brand-blue/10 text-brand-blue px-4 py-2 rounded-full hover:bg-brand-blue/20 transition-colors font-mali font-bold"
             >
               <Play className="w-4 h-4" />
@@ -122,37 +136,37 @@ export const Header: React.FC<HeaderProps> = ({ onLoginClick, isMenuOpen, setIsM
           <div className="lg:hidden border-t border-gray-200 py-4">
             <nav className="flex flex-col space-y-4">
               <button
-                onClick={() => scrollToSection('home')}
+                onClick={() => handleNavigation('home')}
                 className="text-left font-mali text-gray-700 hover:text-brand-green transition-colors py-2"
               >
                 Home
               </button>
               <button
-                onClick={() => scrollToSection('about')}
+                onClick={() => handleNavigation('about')}
                 className="text-left font-mali text-gray-700 hover:text-brand-green transition-colors py-2"
               >
                 About
               </button>
               <button
-                onClick={() => scrollToSection('demo')}
+                onClick={() => handleNavigation('demo')}
                 className="text-left font-mali text-gray-700 hover:text-brand-green transition-colors py-2"
               >
                 Demo
               </button>
               <button
-                onClick={() => scrollToSection('features')}
+                onClick={() => handleNavigation('features')}
                 className="text-left font-mali text-gray-700 hover:text-brand-green transition-colors py-2"
               >
                 Features
               </button>
               <button
-                onClick={() => scrollToSection('modules')}
+                onClick={() => handleNavigation('modules')}
                 className="text-left font-mali text-gray-700 hover:text-brand-green transition-colors py-2"
               >
                 Modules
               </button>
               <button
-                onClick={() => scrollToSection('contact')}
+                onClick={() => handleNavigation('contact')}
                 className="text-left font-mali text-gray-700 hover:text-brand-green transition-colors py-2"
               >
                 Contact
@@ -161,7 +175,7 @@ export const Header: React.FC<HeaderProps> = ({ onLoginClick, isMenuOpen, setIsM
               {/* Mobile Action Buttons */}
               <div className="pt-4 border-t border-gray-200 space-y-3">
                 <button
-                  onClick={() => scrollToSection('demo')}
+                  onClick={() => handleNavigation('demo')}
                   className="w-full flex items-center justify-center gap-2 bg-brand-blue/10 text-brand-blue px-4 py-3 rounded-full hover:bg-brand-blue/20 transition-colors font-mali font-bold"
                 >
                   <Play className="w-4 h-4" />
@@ -189,9 +203,9 @@ export const Header: React.FC<HeaderProps> = ({ onLoginClick, isMenuOpen, setIsM
         <div className="max-w-7xl mx-auto flex items-center justify-center gap-2 text-sm font-mali">
           <Gift className="w-4 h-4" />
           <span className="font-bold">Limited Time:</span>
-          <span>Get both modules for just $14.99 (Save $3!)</span>
+          <span>Get Kiki's Alphabet + Tano's Songs for just $14.99 (Save $3!)</span>
           <button
-            onClick={() => scrollToSection('modules')}
+            onClick={() => handleNavigation('modules')}
             className="underline hover:no-underline ml-2"
           >
             Learn More

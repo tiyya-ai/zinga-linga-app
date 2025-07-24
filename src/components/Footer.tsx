@@ -77,7 +77,8 @@ export const Footer: React.FC<FooterProps> = ({ onNavigate }) => {
               <img 
                 src="/zinga linga logo.png" 
                 alt="Zinga Linga" 
-                className="h-16 w-auto"
+                className="h-20 w-auto cursor-pointer hover:scale-105 transition-transform"
+                onClick={() => handleNavigation('home')}
               />
             </div>
             
