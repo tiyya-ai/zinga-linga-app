@@ -206,15 +206,15 @@ export const AnalyticsPage: React.FC<AnalyticsPageProps> = ({
   );
 
   return (
-    <div className="space-y-8">
+    <div className="space-y-6 lg:space-y-8">
       {/* Header */}
       <div className="flex flex-col lg:flex-row justify-between items-start lg:items-center gap-4">
         <div>
-          <h3 className="text-3xl font-mali font-bold text-gray-800">Analytics Dashboard</h3>
+          <h3 className="text-2xl lg:text-3xl font-mali font-bold text-gray-800">Analytics Dashboard</h3>
           <p className="font-mali text-gray-600">Real-time insights and performance metrics</p>
         </div>
         
-        <div className="flex items-center gap-3">
+        <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 w-full lg:w-auto">
           {/* Time Range Selector */}
           <select 
             value={timeRange}
@@ -227,26 +227,28 @@ export const AnalyticsPage: React.FC<AnalyticsPageProps> = ({
             <option value="1y">Last year</option>
           </select>
 
-          {/* Export Button */}
-          <button className="flex items-center gap-2 px-4 py-2 bg-brand-green text-white rounded-lg hover:bg-green-600 transition-colors font-mali font-bold">
-            <Download className="w-4 h-4" />
-            Export
-          </button>
+          <div className="flex gap-3">
+            {/* Export Button */}
+            <button className="flex items-center justify-center gap-2 px-4 py-2 bg-brand-green text-white rounded-lg hover:bg-green-600 transition-colors font-mali font-bold flex-1 sm:flex-none">
+              <Download className="w-4 h-4" />
+              <span className="hidden sm:inline">Export</span>
+            </button>
 
-          {/* Refresh Button */}
-          <button 
-            onClick={handleRefresh}
-            disabled={isLoading}
-            className="flex items-center gap-2 px-4 py-2 bg-brand-blue text-white rounded-lg hover:bg-blue-600 transition-colors font-mali font-bold disabled:opacity-50"
-          >
-            <RefreshCw className={`w-4 h-4 ${isLoading ? 'animate-spin' : ''}`} />
-            Refresh
-          </button>
+            {/* Refresh Button */}
+            <button 
+              onClick={handleRefresh}
+              disabled={isLoading}
+              className="flex items-center justify-center gap-2 px-4 py-2 bg-brand-blue text-white rounded-lg hover:bg-blue-600 transition-colors font-mali font-bold disabled:opacity-50 flex-1 sm:flex-none"
+            >
+              <RefreshCw className={`w-4 h-4 ${isLoading ? 'animate-spin' : ''}`} />
+              <span className="hidden sm:inline">Refresh</span>
+            </button>
+          </div>
         </div>
       </div>
 
       {/* Key Metrics */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 lg:gap-6">
         <MetricCard
           title="Total Users"
           value={analyticsData.totalUsers}
@@ -282,44 +284,46 @@ export const AnalyticsPage: React.FC<AnalyticsPageProps> = ({
       </div>
 
       {/* Charts Section */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+      <div className="grid grid-cols-1 xl:grid-cols-2 gap-6 lg:gap-8">
         {/* Revenue Chart */}
-        <div className="bg-white rounded-2xl p-6 shadow-lg border border-gray-100">
-          <div className="flex items-center justify-between mb-6">
-            <h4 className="text-xl font-mali font-bold text-gray-800">Revenue Trend</h4>
+        <div className="bg-white rounded-xl lg:rounded-2xl p-4 lg:p-6 shadow-lg border border-gray-100">
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6">
+            <h4 className="text-lg lg:text-xl font-mali font-bold text-gray-800">Revenue Trend</h4>
             <select 
               value={selectedMetric}
               onChange={(e) => setSelectedMetric(e.target.value as any)}
-              className="px-3 py-1 border border-gray-300 rounded-lg font-mali text-sm focus:outline-none focus:ring-2 focus:ring-brand-blue"
+              className="px-3 py-1 border border-gray-300 rounded-lg font-mali text-sm focus:outline-none focus:ring-2 focus:ring-brand-blue w-full sm:w-auto"
             >
               <option value="revenue">Revenue</option>
               <option value="users">Users</option>
               <option value="orders">Orders</option>
             </select>
           </div>
-          <SimpleChart data={analyticsData.chartData} metric={selectedMetric} />
+          <div className="overflow-x-auto">
+            <SimpleChart data={analyticsData.chartData} metric={selectedMetric} />
+          </div>
         </div>
 
         {/* Top Modules */}
-        <div className="bg-white rounded-2xl p-6 shadow-lg border border-gray-100">
-          <h4 className="text-xl font-mali font-bold text-gray-800 mb-6">Top Performing Modules</h4>
-          <div className="space-y-4">
+        <div className="bg-white rounded-xl lg:rounded-2xl p-4 lg:p-6 shadow-lg border border-gray-100">
+          <h4 className="text-lg lg:text-xl font-mali font-bold text-gray-800 mb-6">Top Performing Modules</h4>
+          <div className="space-y-3 lg:space-y-4">
             {analyticsData.moduleStats.slice(0, 5).map((module, index) => (
-              <div key={module.id} className="flex items-center justify-between p-4 bg-gray-50 rounded-xl hover:bg-gray-100 transition-colors">
-                <div className="flex items-center gap-3">
-                  <div className="w-10 h-10 bg-gradient-to-br from-brand-blue to-brand-pink rounded-full flex items-center justify-center">
-                    <span className="text-white font-mali font-bold text-sm">#{index + 1}</span>
+              <div key={module.id} className="flex items-center justify-between p-3 lg:p-4 bg-gray-50 rounded-xl hover:bg-gray-100 transition-colors">
+                <div className="flex items-center gap-3 min-w-0 flex-1">
+                  <div className="w-8 h-8 lg:w-10 lg:h-10 bg-gradient-to-br from-brand-blue to-brand-pink rounded-full flex items-center justify-center flex-shrink-0">
+                    <span className="text-white font-mali font-bold text-xs lg:text-sm">#{index + 1}</span>
                   </div>
-                  <div>
-                    <p className="font-mali font-bold text-gray-800">{module.title}</p>
-                    <p className="font-mali text-gray-600 text-sm">{module.purchaseCount} purchases</p>
+                  <div className="min-w-0 flex-1">
+                    <p className="font-mali font-bold text-gray-800 text-sm lg:text-base truncate">{module.title}</p>
+                    <p className="font-mali text-gray-600 text-xs lg:text-sm">{module.purchaseCount} purchases</p>
                   </div>
                 </div>
-                <div className="text-right">
-                  <p className="font-mali font-bold text-gray-800">{formatCurrency(module.revenue)}</p>
-                  <div className="flex items-center gap-1">
-                    <Star className="w-4 h-4 text-yellow-500" />
-                    <span className="font-mali text-gray-600 text-sm">{module.rating}</span>
+                <div className="text-right flex-shrink-0 ml-2">
+                  <p className="font-mali font-bold text-gray-800 text-sm lg:text-base">{formatCurrency(module.revenue)}</p>
+                  <div className="flex items-center gap-1 justify-end">
+                    <Star className="w-3 h-3 lg:w-4 lg:h-4 text-yellow-500" />
+                    <span className="font-mali text-gray-600 text-xs lg:text-sm">{module.rating}</span>
                   </div>
                 </div>
               </div>
@@ -329,35 +333,35 @@ export const AnalyticsPage: React.FC<AnalyticsPageProps> = ({
       </div>
 
       {/* Additional Metrics */}
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 lg:gap-8">
         {/* User Demographics */}
-        <div className="bg-white rounded-2xl p-6 shadow-lg border border-gray-100">
-          <h4 className="text-xl font-mali font-bold text-gray-800 mb-6">User Breakdown</h4>
-          <div className="space-y-4">
+        <div className="bg-white rounded-xl lg:rounded-2xl p-4 lg:p-6 shadow-lg border border-gray-100">
+          <h4 className="text-lg lg:text-xl font-mali font-bold text-gray-800 mb-4 lg:mb-6">User Breakdown</h4>
+          <div className="space-y-3 lg:space-y-4">
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-3">
-                <div className="w-3 h-3 bg-blue-500 rounded-full"></div>
-                <span className="font-mali text-gray-600">Regular Users</span>
+                <div className="w-3 h-3 bg-blue-500 rounded-full flex-shrink-0"></div>
+                <span className="font-mali text-gray-600 text-sm lg:text-base">Regular Users</span>
               </div>
-              <span className="font-mali font-bold text-gray-800">
+              <span className="font-mali font-bold text-gray-800 text-sm lg:text-base">
                 {users.filter(u => u.role === 'user').length}
               </span>
             </div>
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-3">
-                <div className="w-3 h-3 bg-purple-500 rounded-full"></div>
-                <span className="font-mali text-gray-600">Administrators</span>
+                <div className="w-3 h-3 bg-purple-500 rounded-full flex-shrink-0"></div>
+                <span className="font-mali text-gray-600 text-sm lg:text-base">Administrators</span>
               </div>
-              <span className="font-mali font-bold text-gray-800">
+              <span className="font-mali font-bold text-gray-800 text-sm lg:text-base">
                 {users.filter(u => u.role === 'admin').length}
               </span>
             </div>
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-3">
-                <div className="w-3 h-3 bg-green-500 rounded-full"></div>
-                <span className="font-mali text-gray-600">Paying Customers</span>
+                <div className="w-3 h-3 bg-green-500 rounded-full flex-shrink-0"></div>
+                <span className="font-mali text-gray-600 text-sm lg:text-base">Paying Customers</span>
               </div>
-              <span className="font-mali font-bold text-gray-800">
+              <span className="font-mali font-bold text-gray-800 text-sm lg:text-base">
                 {users.filter(u => (u.totalSpent || 0) > 0).length}
               </span>
             </div>
@@ -365,24 +369,24 @@ export const AnalyticsPage: React.FC<AnalyticsPageProps> = ({
         </div>
 
         {/* Performance Metrics */}
-        <div className="bg-white rounded-2xl p-6 shadow-lg border border-gray-100">
-          <h4 className="text-xl font-mali font-bold text-gray-800 mb-6">Performance</h4>
-          <div className="space-y-4">
+        <div className="bg-white rounded-xl lg:rounded-2xl p-4 lg:p-6 shadow-lg border border-gray-100">
+          <h4 className="text-lg lg:text-xl font-mali font-bold text-gray-800 mb-4 lg:mb-6">Performance</h4>
+          <div className="space-y-3 lg:space-y-4">
             <div className="flex items-center justify-between">
-              <span className="font-mali text-gray-600">Average Order Value</span>
-              <span className="font-mali font-bold text-gray-800">
+              <span className="font-mali text-gray-600 text-sm lg:text-base">Average Order Value</span>
+              <span className="font-mali font-bold text-gray-800 text-sm lg:text-base">
                 {formatCurrency(analyticsData.averageOrderValue)}
               </span>
             </div>
             <div className="flex items-center justify-between">
-              <span className="font-mali text-gray-600">Customer Lifetime Value</span>
-              <span className="font-mali font-bold text-gray-800">
+              <span className="font-mali text-gray-600 text-sm lg:text-base">Customer Lifetime Value</span>
+              <span className="font-mali font-bold text-gray-800 text-sm lg:text-base">
                 {formatCurrency(analyticsData.totalRevenue / Math.max(users.filter(u => (u.totalSpent || 0) > 0).length, 1))}
               </span>
             </div>
             <div className="flex items-center justify-between">
-              <span className="font-mali text-gray-600">Active Modules</span>
-              <span className="font-mali font-bold text-gray-800">
+              <span className="font-mali text-gray-600 text-sm lg:text-base">Active Modules</span>
+              <span className="font-mali font-bold text-gray-800 text-sm lg:text-base">
                 {modules.filter(m => m.isActive).length}
               </span>
             </div>
@@ -390,21 +394,21 @@ export const AnalyticsPage: React.FC<AnalyticsPageProps> = ({
         </div>
 
         {/* Recent Activity */}
-        <div className="bg-white rounded-2xl p-6 shadow-lg border border-gray-100">
-          <h4 className="text-xl font-mali font-bold text-gray-800 mb-6">Recent Activity</h4>
-          <div className="space-y-3 max-h-64 overflow-y-auto">
+        <div className="bg-white rounded-xl lg:rounded-2xl p-4 lg:p-6 shadow-lg border border-gray-100">
+          <h4 className="text-lg lg:text-xl font-mali font-bold text-gray-800 mb-4 lg:mb-6">Recent Activity</h4>
+          <div className="space-y-2 lg:space-y-3 max-h-64 overflow-y-auto">
             {analyticsData.recentActivity.map((activity, index) => (
-              <div key={activity.id} className="flex items-center gap-3 p-3 hover:bg-gray-50 rounded-lg transition-colors">
-                <div className="w-8 h-8 bg-gradient-to-br from-brand-green to-green-600 rounded-full flex items-center justify-center">
-                  <ShoppingCart className="w-4 h-4 text-white" />
+              <div key={activity.id} className="flex items-center gap-3 p-2 lg:p-3 hover:bg-gray-50 rounded-lg transition-colors">
+                <div className="w-6 h-6 lg:w-8 lg:h-8 bg-gradient-to-br from-brand-green to-green-600 rounded-full flex items-center justify-center flex-shrink-0">
+                  <ShoppingCart className="w-3 h-3 lg:w-4 lg:h-4 text-white" />
                 </div>
-                <div className="flex-1">
-                  <p className="font-mali font-bold text-gray-800 text-sm">{activity.user}</p>
+                <div className="flex-1 min-w-0">
+                  <p className="font-mali font-bold text-gray-800 text-xs lg:text-sm truncate">{activity.user}</p>
                   <p className="font-mali text-gray-600 text-xs">
                     Purchased {activity.modules} module{activity.modules !== 1 ? 's' : ''} • {formatCurrency(activity.amount)}
                   </p>
                 </div>
-                <span className={`px-2 py-1 rounded-full text-xs font-mali font-bold ${
+                <span className={`px-2 py-1 rounded-full text-xs font-mali font-bold flex-shrink-0 ${
                   activity.status === 'completed' ? 'bg-green-100 text-green-800' : 'bg-yellow-100 text-yellow-800'
                 }`}>
                   {activity.status}
@@ -416,39 +420,39 @@ export const AnalyticsPage: React.FC<AnalyticsPageProps> = ({
       </div>
 
       {/* System Health */}
-      <div className="bg-white rounded-2xl p-6 shadow-lg border border-gray-100">
-        <h4 className="text-xl font-mali font-bold text-gray-800 mb-6">System Health</h4>
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
+      <div className="bg-white rounded-xl lg:rounded-2xl p-4 lg:p-6 shadow-lg border border-gray-100">
+        <h4 className="text-lg lg:text-xl font-mali font-bold text-gray-800 mb-4 lg:mb-6">System Health</h4>
+        <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 lg:gap-6">
           <div className="text-center">
-            <div className="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-3">
-              <Activity className="w-8 h-8 text-green-600" />
+            <div className="w-12 h-12 lg:w-16 lg:h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-2 lg:mb-3">
+              <Activity className="w-6 h-6 lg:w-8 lg:h-8 text-green-600" />
             </div>
-            <p className="font-mali font-bold text-gray-800">System Status</p>
-            <p className="font-mali text-green-600 text-sm">Online</p>
+            <p className="font-mali font-bold text-gray-800 text-sm lg:text-base">System Status</p>
+            <p className="font-mali text-green-600 text-xs lg:text-sm">Online</p>
           </div>
           
           <div className="text-center">
-            <div className="w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-3">
-              <Globe className="w-8 h-8 text-blue-600" />
+            <div className="w-12 h-12 lg:w-16 lg:h-16 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-2 lg:mb-3">
+              <Globe className="w-6 h-6 lg:w-8 lg:h-8 text-blue-600" />
             </div>
-            <p className="font-mali font-bold text-gray-800">API Response</p>
-            <p className="font-mali text-blue-600 text-sm">Fast (120ms)</p>
+            <p className="font-mali font-bold text-gray-800 text-sm lg:text-base">API Response</p>
+            <p className="font-mali text-blue-600 text-xs lg:text-sm">Fast (120ms)</p>
           </div>
           
           <div className="text-center">
-            <div className="w-16 h-16 bg-purple-100 rounded-full flex items-center justify-center mx-auto mb-3">
-              <Package className="w-8 h-8 text-purple-600" />
+            <div className="w-12 h-12 lg:w-16 lg:h-16 bg-purple-100 rounded-full flex items-center justify-center mx-auto mb-2 lg:mb-3">
+              <Package className="w-6 h-6 lg:w-8 lg:h-8 text-purple-600" />
             </div>
-            <p className="font-mali font-bold text-gray-800">Data Storage</p>
-            <p className="font-mali text-purple-600 text-sm">Healthy</p>
+            <p className="font-mali font-bold text-gray-800 text-sm lg:text-base">Data Storage</p>
+            <p className="font-mali text-purple-600 text-xs lg:text-sm">Healthy</p>
           </div>
           
           <div className="text-center">
-            <div className="w-16 h-16 bg-orange-100 rounded-full flex items-center justify-center mx-auto mb-3">
-              <Clock className="w-8 h-8 text-orange-600" />
+            <div className="w-12 h-12 lg:w-16 lg:h-16 bg-orange-100 rounded-full flex items-center justify-center mx-auto mb-2 lg:mb-3">
+              <Clock className="w-6 h-6 lg:w-8 lg:h-8 text-orange-600" />
             </div>
-            <p className="font-mali font-bold text-gray-800">Last Backup</p>
-            <p className="font-mali text-orange-600 text-sm">2 hours ago</p>
+            <p className="font-mali font-bold text-gray-800 text-sm lg:text-base">Last Backup</p>
+            <p className="font-mali text-orange-600 text-xs lg:text-sm">2 hours ago</p>
           </div>
         </div>
       </div>
