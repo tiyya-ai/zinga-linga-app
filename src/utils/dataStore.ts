@@ -311,7 +311,23 @@ class DataStore {
   // Save data to localStorage
   saveData(data: any) {
     try {
-      localStorage.setItem(this.storageKey, JSON.stringify(data));
+      // Ensure we're saving the complete data structure
+      const dataToSave = {
+        users: data.users || [],
+        modules: data.modules || [],
+        purchases: data.purchases || [],
+        contentFiles: data.contentFiles || [],
+        analytics: data.analytics || this.defaultData.analytics,
+        lastUpdated: new Date().toISOString()
+      };
+      
+      localStorage.setItem(this.storageKey, JSON.stringify(dataToSave));
+      console.log('Data saved successfully:', {
+        users: dataToSave.users.length,
+        modules: dataToSave.modules.length,
+        purchases: dataToSave.purchases.length,
+        contentFiles: dataToSave.contentFiles.length
+      });
     } catch (error) {
       console.error('Error saving data to localStorage:', error);
     }
