@@ -162,6 +162,59 @@ export const ImprovedAdminDashboard: React.FC<ImprovedAdminDashboardProps> = ({ 
     return () => window.removeEventListener('resize', checkMobile);
   }, []);
 
+  // Auto-hide header on mobile after 3 seconds
+  useEffect(() => {
+    if (isMobile) {
+      // Clear existing timer
+      if (headerTimer) {
+        clearTimeout(headerTimer);
+      }
+      
+      // Show header when page changes
+      setShowHeader(true);
+      
+      // Set timer to hide header after 3 seconds
+      const timer = setTimeout(() => {
+        setShowHeader(false);
+      }, 3000);
+      
+      setHeaderTimer(timer);
+      
+      // Cleanup timer on unmount
+      return () => {
+        if (timer) {
+          clearTimeout(timer);
+        }
+      };
+    } else {
+      // Always show header on desktop
+      setShowHeader(true);
+      if (headerTimer) {
+        clearTimeout(headerTimer);
+        setHeaderTimer(null);
+      }
+    }
+  }, [activeTab, isMobile]);
+
+  // Show header temporarily when user interacts
+  const showHeaderTemporarily = () => {
+    if (isMobile) {
+      setShowHeader(true);
+      
+      // Clear existing timer
+      if (headerTimer) {
+        clearTimeout(headerTimer);
+      }
+      
+      // Set new timer to hide header
+      const timer = setTimeout(() => {
+        setShowHeader(false);
+      }, 3000);
+      
+      setHeaderTimer(timer);
+    }
+  };
+
   // Load real data on component mount
   useEffect(() => {
     loadData();
@@ -277,7 +330,7 @@ export const ImprovedAdminDashboard: React.FC<ImprovedAdminDashboardProps> = ({ 
     }
   };
 
-  // Enhanced sidebar menu items with better organization - ONLY ORDERS SHOW BADGES
+  // Enhanced sidebar menu items with better organization
   const sidebarItems = [
     { 
       id: 'dashboard', 
@@ -290,21 +343,21 @@ export const ImprovedAdminDashboard: React.FC<ImprovedAdminDashboardProps> = ({ 
       id: 'users', 
       label: 'Users', 
       icon: Users, 
-      badge: null,
+      badge: users.length,
       description: 'Manage user accounts'
     },
     { 
       id: 'modules', 
       label: 'Modules', 
       icon: Package, 
-      badge: null,
+      badge: modules.length,
       description: 'Learning content modules'
     },
     { 
       id: 'content', 
       label: 'Content', 
       icon: BookOpen, 
-      badge: null,
+      badge: contentFiles.length,
       description: 'Media & file library'
     },
     { 
@@ -346,7 +399,7 @@ export const ImprovedAdminDashboard: React.FC<ImprovedAdminDashboardProps> = ({ 
       id: 'support', 
       label: 'Support', 
       icon: HelpCircle, 
-      badge: null,
+      badge: notifications,
       description: 'Help & support'
     }
   ];

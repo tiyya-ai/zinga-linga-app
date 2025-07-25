@@ -145,6 +145,8 @@ export const ImprovedAdminDashboard: React.FC<ImprovedAdminDashboardProps> = ({ 
     role: 'user' as 'user' | 'admin',
     totalSpent: 0
   });
+  const [showHeader, setShowHeader] = useState(true);
+  const [headerTimer, setHeaderTimer] = useState<NodeJS.Timeout | null>(null);
 
   // Mobile detection and responsive handling
   useEffect(() => {
@@ -275,7 +277,7 @@ export const ImprovedAdminDashboard: React.FC<ImprovedAdminDashboardProps> = ({ 
     }
   };
 
-  // Enhanced sidebar menu items with better organization
+  // Enhanced sidebar menu items with better organization - ONLY ORDERS SHOW BADGES
   const sidebarItems = [
     { 
       id: 'dashboard', 
@@ -288,21 +290,21 @@ export const ImprovedAdminDashboard: React.FC<ImprovedAdminDashboardProps> = ({ 
       id: 'users', 
       label: 'Users', 
       icon: Users, 
-      badge: users.length,
+      badge: null,
       description: 'Manage user accounts'
     },
     { 
       id: 'modules', 
       label: 'Modules', 
       icon: Package, 
-      badge: modules.length,
+      badge: null,
       description: 'Learning content modules'
     },
     { 
       id: 'content', 
       label: 'Content', 
       icon: BookOpen, 
-      badge: contentFiles.length,
+      badge: null,
       description: 'Media & file library'
     },
     { 
@@ -344,7 +346,7 @@ export const ImprovedAdminDashboard: React.FC<ImprovedAdminDashboardProps> = ({ 
       id: 'support', 
       label: 'Support', 
       icon: HelpCircle, 
-      badge: notifications,
+      badge: null,
       description: 'Help & support'
     }
   ];
@@ -362,242 +364,151 @@ export const ImprovedAdminDashboard: React.FC<ImprovedAdminDashboardProps> = ({ 
 
   return (
     <div className="min-h-screen bg-gray-50 flex">
-      {/* Mobile Bottom Navigation */}
-      {isMobile && (
-        <div className="fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200 shadow-2xl z-50">
-          <div className="grid grid-cols-5 gap-1 p-2">
-            {sidebarItems.slice(0, 5).map((item) => (
-              <button
-                key={item.id}
-                onClick={() => setActiveTab(item.id as any)}
-                className={`flex flex-col items-center justify-center p-3 rounded-xl transition-all relative ${
-                  activeTab === item.id
-                    ? 'bg-gradient-to-t from-brand-blue to-brand-pink text-white shadow-lg'
-                    : 'text-gray-600 hover:bg-gray-100'
-                }`}
-              >
-                <item.icon className="w-5 h-5 mb-1" />
-                <span className="text-xs font-mali font-medium truncate">{item.label}</span>
-                {item.badge && item.badge > 0 && (
-                  <span className="absolute -top-1 -right-1 w-5 h-5 bg-red-500 text-white text-xs font-bold rounded-full flex items-center justify-center">
-                    {item.badge > 9 ? '9+' : item.badge}
-                  </span>
-                )}
-              </button>
-            ))}
-          </div>
-          
-          {/* More Menu Button */}
-          <div className="border-t border-gray-100 p-2">
-            <button
-              onClick={() => setShowMobileSidebar(true)}
-              className="w-full flex items-center justify-center gap-2 bg-gradient-to-r from-gray-100 to-gray-200 text-gray-700 py-3 rounded-xl hover:from-gray-200 hover:to-gray-300 transition-all font-mali font-medium"
-            >
-              <Menu className="w-4 h-4" />
-              <span className="text-sm">More</span>
-            </button>
-          </div>
-        </div>
+      {/* Mobile Sidebar Overlay */}
+      {isMobile && showMobileSidebar && (
+        <div 
+          className="fixed inset-0 bg-black bg-opacity-50 z-40"
+          onClick={() => setShowMobileSidebar(false)}
+        />
       )}
 
-      {/* Mobile Full Menu Modal */}
-      {isMobile && showMobileSidebar && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 z-50 flex items-end">
-          <div className="w-full bg-white rounded-t-3xl max-h-[80vh] overflow-hidden">
-            {/* Modal Header */}
-            <div className="flex items-center justify-between p-4 border-b border-gray-200 bg-gradient-to-r from-brand-blue/5 to-brand-pink/5">
+      {/* Sidebar */}
+      <div className={`fixed left-0 top-0 h-full bg-white shadow-2xl border-r border-gray-200 transition-all duration-300 z-50 ${
+        isMobile 
+          ? showMobileSidebar 
+            ? 'w-80 translate-x-0' 
+            : 'w-80 -translate-x-full'
+          : sidebarCollapsed 
+            ? 'w-20' 
+            : 'w-80'
+      }`}>
+        {/* Sidebar Header */}
+        <div className="p-4 sm:p-6 border-b border-gray-200 bg-gradient-to-r from-brand-blue/5 to-brand-pink/5">
+          <div className="flex items-center justify-between">
+            {(!sidebarCollapsed || isMobile) && (
               <div className="flex items-center gap-3">
                 <div className="p-2 bg-gradient-to-br from-brand-blue to-brand-pink rounded-lg shadow-lg">
-                  <Shield className="w-5 h-5 text-white" />
+                  <Shield className="w-5 h-5 sm:w-6 sm:h-6 text-white" />
                 </div>
                 <div>
-                  <h2 className="text-lg font-mali font-bold text-gray-800">Admin Menu</h2>
-                  <p className="text-sm font-mali text-gray-600">Choose a section</p>
+                  <h1 className="text-lg sm:text-xl font-mali font-bold text-gray-800">Admin Panel</h1>
+                  <p className="text-xs sm:text-sm font-mali text-gray-600">Zinga Linga Management</p>
                 </div>
               </div>
-              <button
-                onClick={() => setShowMobileSidebar(false)}
-                className="p-2 hover:bg-gray-100 rounded-full transition-colors"
-              >
-                <X className="w-6 h-6 text-gray-600" />
-              </button>
-            </div>
-
-            {/* Menu Grid */}
-            <div className="p-4 overflow-y-auto max-h-[calc(80vh-80px)]">
-              <div className="grid grid-cols-2 gap-3 mb-6">
-                {sidebarItems.map((item) => (
-                  <button
-                    key={item.id}
-                    onClick={() => {
-                      setActiveTab(item.id as any);
-                      setShowMobileSidebar(false);
-                    }}
-                    className={`flex flex-col items-center p-4 rounded-2xl transition-all relative ${
-                      activeTab === item.id
-                        ? 'bg-gradient-to-br from-brand-blue to-brand-pink text-white shadow-lg'
-                        : 'bg-gray-50 text-gray-700 hover:bg-gray-100 hover:shadow-md'
-                    }`}
-                  >
-                    <div className={`p-3 rounded-xl mb-3 ${
-                      activeTab === item.id 
-                        ? 'bg-white/20' 
-                        : 'bg-white shadow-sm'
-                    }`}>
-                      <item.icon className={`w-6 h-6 ${
-                        activeTab === item.id ? 'text-white' : 'text-gray-600'
-                      }`} />
-                    </div>
-                    <span className="font-mali font-bold text-sm text-center">{item.label}</span>
-                    <span className={`text-xs text-center mt-1 ${
-                      activeTab === item.id ? 'text-white/80' : 'text-gray-500'
-                    }`}>
-                      {item.description}
-                    </span>
-                    {item.badge && item.badge > 0 && (
-                      <span className="absolute -top-2 -right-2 w-6 h-6 bg-red-500 text-white text-xs font-bold rounded-full flex items-center justify-center shadow-lg">
-                        {item.badge > 99 ? '99+' : item.badge}
-                      </span>
-                    )}
-                  </button>
-                ))}
-              </div>
-
-              {/* User Profile Section */}
-              <div className="bg-gradient-to-r from-gray-50 to-gray-100 rounded-2xl p-4 border border-gray-200">
-                <div className="flex items-center gap-3 mb-4">
-                  <div className="w-12 h-12 bg-gradient-to-br from-brand-green to-brand-blue rounded-full flex items-center justify-center shadow-lg">
-                    <span className="text-white font-mali font-bold text-lg">{user.name.charAt(0)}</span>
-                  </div>
-                  <div className="flex-1">
-                    <p className="font-mali font-bold text-gray-800">{user.name}</p>
-                    <p className="font-mali text-gray-600 text-sm capitalize">{user.role} Account</p>
-                  </div>
-                </div>
-                <button
-                  onClick={() => {
-                    setShowMobileSidebar(false);
-                    onLogout();
-                  }}
-                  className="w-full flex items-center justify-center gap-2 bg-gradient-to-r from-red-50 to-red-100 text-red-600 px-4 py-3 rounded-xl hover:from-red-100 hover:to-red-200 transition-all duration-300 font-mali font-medium shadow-sm"
-                >
-                  <LogOut className="w-4 h-4" />
-                  <span>Logout</span>
-                </button>
-              </div>
-            </div>
-          </div>
-        </div>
-      )}
-
-      {/* Desktop Sidebar */}
-      {!isMobile && (
-        <div className={`fixed left-0 top-0 h-full bg-white shadow-2xl border-r border-gray-200 transition-all duration-300 z-50 ${
-          sidebarCollapsed ? 'w-20' : 'w-80'
-        }`}>
-          {/* Sidebar Header */}
-          <div className="p-4 sm:p-6 border-b border-gray-200 bg-gradient-to-r from-brand-blue/5 to-brand-pink/5">
-            <div className="flex items-center justify-between">
-              {!sidebarCollapsed && (
-                <div className="flex items-center gap-3">
-                  <div className="p-2 bg-gradient-to-br from-brand-blue to-brand-pink rounded-lg shadow-lg">
-                    <Shield className="w-5 h-5 sm:w-6 sm:h-6 text-white" />
-                  </div>
-                  <div>
-                    <h1 className="text-lg sm:text-xl font-mali font-bold text-gray-800">Admin Panel</h1>
-                    <p className="text-xs sm:text-sm font-mali text-gray-600">Zinga Linga Management</p>
-                  </div>
-                </div>
-              )}
+            )}
+            {!isMobile && (
               <button
                 onClick={() => setSidebarCollapsed(!sidebarCollapsed)}
                 className="p-2 hover:bg-gray-100 rounded-lg transition-colors"
               >
                 {sidebarCollapsed ? <ChevronRight className="w-5 h-5" /> : <ChevronLeft className="w-5 h-5" />}
               </button>
-            </div>
+            )}
+            {isMobile && (
+              <button
+                onClick={() => setShowMobileSidebar(false)}
+                className="p-2 hover:bg-gray-100 rounded-lg transition-colors"
+              >
+                <X className="w-5 h-5" />
+              </button>
+            )}
           </div>
+        </div>
 
-          {/* Navigation Menu */}
-          <nav className="p-3 sm:p-4 space-y-2 flex-1 overflow-y-auto bg-gradient-to-b from-white to-gray-50/50">
-            {sidebarItems.map((item) => (
-              <div key={item.id} className="relative group">
-                <button
-                  onClick={() => setActiveTab(item.id as any)}
-                  className={`w-full flex items-center gap-3 px-3 sm:px-4 py-3 rounded-xl font-mali font-medium transition-all relative ${
-                    activeTab === item.id
-                      ? 'bg-gradient-to-r from-brand-blue to-brand-pink text-white shadow-lg transform scale-[1.02]'
-                      : 'text-gray-700 hover:bg-gradient-to-r hover:from-brand-blue/10 hover:to-brand-pink/10 hover:text-gray-900 hover:shadow-md'
-                  }`}
-                >
-                  <item.icon className="w-5 h-5 flex-shrink-0" />
-                  {!sidebarCollapsed && (
-                    <>
-                      <div className="flex-1 text-left">
-                        <div className="font-bold text-sm sm:text-base">{item.label}</div>
-                        <div className="text-xs opacity-75">{item.description}</div>
-                      </div>
-                      {item.badge && item.badge > 0 && (
-                        <span className={`px-2 py-1 text-xs font-bold rounded-full shadow-sm ${
-                          activeTab === item.id 
-                            ? 'bg-white text-brand-blue' 
-                            : 'bg-gradient-to-r from-red-500 to-red-600 text-white'
-                        }`}>
-                          {item.badge}
-                        </span>
-                      )}
-                    </>
-                  )}
-                  {sidebarCollapsed && item.badge && item.badge > 0 && (
-                    <span className="absolute -top-1 -right-1 w-5 h-5 bg-gradient-to-r from-red-500 to-red-600 text-white text-xs font-bold rounded-full flex items-center justify-center shadow-lg">
-                      {item.badge}
-                    </span>
-                  )}
-                </button>
-                
-                {/* Tooltip for collapsed sidebar */}
-                {sidebarCollapsed && (
-                  <div className="absolute left-full ml-2 top-1/2 transform -translate-y-1/2 bg-gray-800 text-white px-3 py-2 rounded-lg text-sm opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none whitespace-nowrap z-50 shadow-lg">
-                    <div className="font-bold">{item.label}</div>
-                    <div className="text-xs opacity-75">{item.description}</div>
-                  </div>
+        {/* Navigation Menu */}
+        <nav className="p-3 sm:p-4 space-y-2 flex-1 overflow-y-auto bg-gradient-to-b from-white to-gray-50/50">
+          {sidebarItems.map((item) => (
+            <div key={item.id} className="relative group">
+              <button
+                onClick={() => {
+                  setActiveTab(item.id as any);
+                  if (isMobile) {
+                    setShowMobileSidebar(false);
+                  }
+                }}
+                className={`w-full flex items-center gap-3 px-3 sm:px-4 py-3 rounded-xl font-mali font-medium transition-all relative ${
+                  activeTab === item.id
+                    ? 'bg-gradient-to-r from-brand-blue to-brand-pink text-white shadow-lg transform scale-[1.02]'
+                    : 'text-gray-700 hover:bg-gradient-to-r hover:from-brand-blue/10 hover:to-brand-pink/10 hover:text-gray-900 hover:shadow-md'
+                }`}
+              >
+                <item.icon className="w-5 h-5 flex-shrink-0" />
+                {(!sidebarCollapsed || isMobile) && (
+                  <>
+                    <div className="flex-1 text-left">
+                      <div className="font-bold text-sm sm:text-base">{item.label}</div>
+                      <div className="text-xs opacity-75">{item.description}</div>
+                    </div>
+                    {item.badge && item.badge > 0 && (
+                      <span className={`px-2 py-1 text-xs font-bold rounded-full shadow-sm ${
+                        activeTab === item.id 
+                          ? 'bg-white text-brand-blue' 
+                          : 'bg-gradient-to-r from-red-500 to-red-600 text-white'
+                      }`}>
+                        {item.badge}
+                      </span>
+                    )}
+                  </>
                 )}
-              </div>
-            ))}
-          </nav>
-
-          {/* User Profile Section */}
-          <div className="absolute bottom-0 left-0 right-0 p-3 sm:p-4 border-t border-gray-200 bg-gradient-to-r from-gray-50 to-white">
-            <div className="flex items-center gap-3 mb-3">
-              <div className="w-10 h-10 sm:w-12 sm:h-12 bg-gradient-to-br from-brand-green to-brand-blue rounded-full flex items-center justify-center shadow-lg">
-                <span className="text-white font-mali font-bold text-base sm:text-lg">{user.name.charAt(0)}</span>
-              </div>
-              {!sidebarCollapsed && (
-                <div className="flex-1">
-                  <p className="font-mali font-bold text-gray-800 text-sm sm:text-base">{user.name}</p>
-                  <p className="font-mali text-gray-600 text-xs sm:text-sm capitalize">{user.role} Account</p>
+                {sidebarCollapsed && item.badge && item.badge > 0 && (
+                  <span className="absolute -top-1 -right-1 w-5 h-5 bg-gradient-to-r from-red-500 to-red-600 text-white text-xs font-bold rounded-full flex items-center justify-center shadow-lg">
+                    {item.badge}
+                  </span>
+                )}
+              </button>
+              
+              {/* Tooltip for collapsed sidebar */}
+              {sidebarCollapsed && (
+                <div className="absolute left-full ml-2 top-1/2 transform -translate-y-1/2 bg-gray-800 text-white px-3 py-2 rounded-lg text-sm opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none whitespace-nowrap z-50 shadow-lg">
+                  <div className="font-bold">{item.label}</div>
+                  <div className="text-xs opacity-75">{item.description}</div>
                 </div>
               )}
             </div>
-            <button
-              onClick={onLogout}
-              className="w-full flex items-center justify-center gap-2 bg-gradient-to-r from-red-50 to-red-100 text-red-600 px-3 sm:px-4 py-2 sm:py-3 rounded-xl hover:from-red-100 hover:to-red-200 transition-all duration-300 font-mali font-medium shadow-sm hover:shadow-md"
-            >
-              <LogOut className="w-4 h-4" />
-              {!sidebarCollapsed && <span className="text-sm sm:text-base">Logout</span>}
-            </button>
+          ))}
+        </nav>
+
+        {/* User Profile Section */}
+        <div className="absolute bottom-0 left-0 right-0 p-3 sm:p-4 border-t border-gray-200 bg-gradient-to-r from-gray-50 to-white">
+          <div className="flex items-center gap-3 mb-3">
+            <div className="w-10 h-10 sm:w-12 sm:h-12 bg-gradient-to-br from-brand-green to-brand-blue rounded-full flex items-center justify-center shadow-lg">
+              <span className="text-white font-mali font-bold text-base sm:text-lg">{user.name.charAt(0)}</span>
+            </div>
+            {(!sidebarCollapsed || isMobile) && (
+              <div className="flex-1">
+                <p className="font-mali font-bold text-gray-800 text-sm sm:text-base">{user.name}</p>
+                <p className="font-mali text-gray-600 text-xs sm:text-sm capitalize">{user.role} Account</p>
+              </div>
+            )}
           </div>
+          <button
+            onClick={onLogout}
+            className="w-full flex items-center justify-center gap-2 bg-gradient-to-r from-red-50 to-red-100 text-red-600 px-3 sm:px-4 py-2 sm:py-3 rounded-xl hover:from-red-100 hover:to-red-200 transition-all duration-300 font-mali font-medium shadow-sm hover:shadow-md"
+          >
+            <LogOut className="w-4 h-4" />
+            {(!sidebarCollapsed || isMobile) && <span className="text-sm sm:text-base">Logout</span>}
+          </button>
         </div>
-      )}
+      </div>
 
       {/* Main Content */}
       <div className={`flex-1 transition-all duration-300 ${
-        isMobile ? 'ml-0 pb-24' : sidebarCollapsed ? 'ml-20' : 'ml-80'
+        isMobile ? 'ml-0' : sidebarCollapsed ? 'ml-20' : 'ml-80'
       }`}>
         {/* Enhanced Top Header */}
         <header className="bg-white shadow-sm border-b border-gray-200 px-4 sm:px-6 py-4 sticky top-0 z-40">
           <div className="flex justify-between items-center">
             <div className="flex items-center gap-4">
+              {/* Mobile Menu Button */}
+              {isMobile && (
+                <button
+                  onClick={() => setShowMobileSidebar(true)}
+                  className="p-2 text-gray-600 hover:bg-gray-100 rounded-lg transition-colors"
+                >
+                  <Menu className="w-6 h-6" />
+                </button>
+              )}
+              
               <h2 className="text-xl sm:text-2xl lg:text-3xl font-mali font-bold text-gray-800 capitalize truncate">
                 {activeTab === 'dashboard' ? 'Dashboard' : activeTab.replace('-', ' ')}
               </h2>
@@ -798,7 +709,7 @@ export const ImprovedAdminDashboard: React.FC<ImprovedAdminDashboardProps> = ({ 
             </div>
           )}
 
-          {/* Orders Management */}
+          {/* Other tabs content remains the same... */}
           {activeTab === 'purchases' && (
             <OrdersPage
               purchases={purchases}
@@ -808,7 +719,6 @@ export const ImprovedAdminDashboard: React.FC<ImprovedAdminDashboardProps> = ({ 
             />
           )}
 
-          {/* Users Management */}
           {activeTab === 'users' && (
             <UsersPage
               users={users}
@@ -816,7 +726,6 @@ export const ImprovedAdminDashboard: React.FC<ImprovedAdminDashboardProps> = ({ 
               purchases={purchases}
               onUsersUpdate={(updatedUsers) => {
                 setUsers(updatedUsers);
-                // Save the updated users to the data store
                 const success = dataStore.saveData({
                   users: updatedUsers,
                   modules,
@@ -833,7 +742,6 @@ export const ImprovedAdminDashboard: React.FC<ImprovedAdminDashboardProps> = ({ 
             />
           )}
 
-          {/* Analytics Tab */}
           {activeTab === 'analytics' && (
             <AnalyticsPage
               users={users}
@@ -844,7 +752,6 @@ export const ImprovedAdminDashboard: React.FC<ImprovedAdminDashboardProps> = ({ 
             />
           )}
 
-          {/* Reports Tab */}
           {activeTab === 'reports' && (
             <ReportsPageEnhanced
               users={users}
@@ -854,7 +761,6 @@ export const ImprovedAdminDashboard: React.FC<ImprovedAdminDashboardProps> = ({ 
             />
           )}
 
-          {/* System Tab */}
           {activeTab === 'system' && (
             <SystemPage
               users={users}
@@ -864,12 +770,10 @@ export const ImprovedAdminDashboard: React.FC<ImprovedAdminDashboardProps> = ({ 
             />
           )}
 
-          {/* Settings Tab */}
           {activeTab === 'settings' && (
             <AdminSettings user={user} />
           )}
 
-          {/* Support Tab */}
           {activeTab === 'support' && (
             <div className="space-y-8">
               <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
@@ -943,7 +847,6 @@ export const ImprovedAdminDashboard: React.FC<ImprovedAdminDashboardProps> = ({ 
             </div>
           )}
 
-          {/* Simple Product Management */}
           {activeTab === 'modules' && (
             <SimpleProductManagement
               modules={modules}
@@ -957,7 +860,6 @@ export const ImprovedAdminDashboard: React.FC<ImprovedAdminDashboardProps> = ({ 
             />
           )}
 
-          {/* Content Tab */}
           {activeTab === 'content' && (
             <div className="space-y-8">
               <div className="bg-white rounded-2xl p-8 shadow-lg border border-gray-100">
