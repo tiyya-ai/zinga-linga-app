@@ -99,23 +99,23 @@ export const AdminSettings: React.FC<AdminSettingsProps> = ({ user }) => {
 
   const [generalSettings, setGeneralSettings] = useState<GeneralSettings>({
     siteName: 'Zinga Linga Trae',
-    adminEmail: 'admin@zingalinga.com',
-    supportEmail: 'support@zingalinga.com',
+    adminEmail: 'admin@zingalingatrae.com',
+    supportEmail: 'support@zingalingatrae.com',
     currency: 'USD',
     timezone: 'America/New_York',
     language: 'en',
     maintenanceMode: false,
     allowRegistrations: true,
     requireEmailVerification: true,
-    autoApproveUsers: true,
-    companyName: 'Zinga Linga Trae Inc.',
-    contactPhone: '+1 (555) 123-4567',
-    address: '123 Learning St',
+    autoApproveUsers: false,
+    companyName: 'Zinga Linga Trae Educational Publishing',
+    contactPhone: '+1 (555) 234-5678',
+    address: '456 Children\'s Learning Avenue',
     city: 'New York',
     country: 'USA',
-    postalCode: '10001',
-    taxId: 'TAX-123456789',
-    vatNumber: 'VAT-123456789'
+    postalCode: '10016',
+    taxId: 'EIN-87-1234567',
+    vatNumber: 'US-VAT-123456789'
   });
 
   // Notification Settings
@@ -425,7 +425,7 @@ export const AdminSettings: React.FC<AdminSettingsProps> = ({ user }) => {
       {/* Tabs */}
       <div className="bg-white rounded-2xl shadow-lg border border-gray-100 overflow-hidden">
         <div className="border-b border-gray-200">
-          <nav className="flex overflow-x-auto scrollbar-hide">
+            <nav className="flex overflow-x-auto scrollbar-hide" style={{ scrollbarWidth: 'none' }}>
             {tabs.map((tab, index) => (
               <button
                 key={tab.id}
@@ -451,7 +451,7 @@ export const AdminSettings: React.FC<AdminSettingsProps> = ({ user }) => {
               <div>
                 <h3 className="text-xl font-mali font-bold text-gray-800 mb-6">General Configuration</h3>
                 
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
                   <div>
                     <label className="block font-mali font-bold text-gray-700 mb-2">Site Name</label>
                     <input
@@ -602,7 +602,7 @@ export const AdminSettings: React.FC<AdminSettingsProps> = ({ user }) => {
                   General Email Settings
                 </h4>
                 
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
                   <div>
                     <label className="block font-mali font-bold text-gray-700 mb-2">Admin Email Address</label>
                     <input
@@ -638,7 +638,7 @@ export const AdminSettings: React.FC<AdminSettingsProps> = ({ user }) => {
                   Email Notification Preferences
                 </h4>
                 
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
                   {[
                     { key: 'newPurchases', label: 'New Purchases', description: 'Get notified when customers make purchases' },
                     { key: 'newUsers', label: 'New User Registrations', description: 'Get notified when new users register' },
@@ -669,7 +669,7 @@ export const AdminSettings: React.FC<AdminSettingsProps> = ({ user }) => {
                   SMTP Configuration
                 </h4>
                 
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 gap-6">
                   <div>
                     <label className="block font-mali font-bold text-gray-700 mb-2">SMTP Host</label>
                     <input
@@ -1253,7 +1253,7 @@ export const AdminSettings: React.FC<AdminSettingsProps> = ({ user }) => {
                     </div>
                   </label>
 
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 gap-4">
                     <div>
                       <label className="block font-mali font-bold text-gray-700 mb-2">Session Timeout (minutes)</label>
                       <input
@@ -1306,7 +1306,7 @@ export const AdminSettings: React.FC<AdminSettingsProps> = ({ user }) => {
                     />
                   </div>
 
-                  <div className="grid grid-cols-2 gap-4">
+                  <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 gap-4">
                     {Object.entries(securitySettings.passwordPolicy).filter(([key]) => key !== 'minLength').map(([key, value]) => (
                       <label key={key} className="flex items-center gap-3">
                         <input
