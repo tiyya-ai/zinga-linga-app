@@ -1,7 +1,9 @@
 import React, { useState, useEffect, useMemo } from 'react';
 import { User, Module, Purchase, Analytics, BundleOffer, ContentItem, ContentFile, ContentStats } from '../types';
 import { dataStore } from '../utils/dataStore';
- import { AdminSettings } from './AdminSettings';
+import { AdminSettings } from './AdminSettings';
+import { ReportsPage } from './ReportsPage';
+import { ReportsCenter } from './ReportsCenter';
 import { 
   Users, 
   DollarSign, 
@@ -108,26 +110,53 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({ user, onLogout }
   const [showContentModal, setShowContentModal] = useState(false);
   const [showUploadModal, setShowUploadModal] = useState(false);
 
+  // Load data from storage
+  const loadData = () => {
+    try {
+      console.log('Loading data from dataStore...');
+      const data = dataStore.loadData();
+      console.log('Data loaded from dataStore:', {
+        users: data.users?.length || 0,
+        modules: data.modules?.length || 0,
+        purchases: data.purchases?.length || 0
+      });
+      
+      // Set users, modules, and purchases with default empty arrays if undefined
+      const users = Array.isArray(data.users) ? data.users : [];
+      const modules = Array.isArray(data.modules) ? data.modules : [];
+      const purchases = Array.isArray(data.purchases) ? data.purchases : [];
+      
+      setUsers(users);
+      setModules(modules);
+      setPurchases(purchases);
+      
+      // Generate real analytics from actual data
+      const realAnalytics = dataStore.generateAnalytics(users, modules, purchases);
+      console.log('Generated analytics:', realAnalytics);
+      setAnalytics(realAnalytics);
+      
+      // Set real notifications count
+      const pendingCount = purchases.filter((p: any) => p.status === 'pending').length;
+      console.log('Pending purchases count:', pendingCount);
+      setNotifications(pendingCount);
+      
+      return { users, modules, purchases };
+    } catch (error) {
+      console.error('Error loading data in AdminDashboard:', error);
+      // Reset to empty arrays on error
+      setUsers([]);
+      setModules([]);
+      setPurchases([]);
+      setAnalytics(null);
+      setNotifications(0);
+      return { users: [], modules: [], purchases: [] };
+    }
+  };
+
   // Load real data on component mount
   useEffect(() => {
     loadData();
   }, []);
-
-  // Load data from storage
-  const loadData = () => {
-    const data = dataStore.loadData();
-    setUsers(data.users);
-    setModules(data.modules);
-    setPurchases(data.purchases);
-    
-    // Generate real analytics from actual data
-    const realAnalytics = dataStore.generateAnalytics(data.users, data.modules, data.purchases);
-    setAnalytics(realAnalytics);
-    
-    // Set real notifications count
-    const pendingCount = data.purchases.filter(p => p.status === 'pending').length;
-    setNotifications(pendingCount);
-  };
 
   // Save data to storage
   const saveData = () => {
@@ -148,6 +177,10 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({ user, onLogout }
   const { EnhancedUserManagement } = require('./EnhancedUserManagement');
   const { EnhancedModuleManagement } = require('./EnhancedModuleManagement');
   const { EnhancedDashboardOverview } = require('./EnhancedDashboardOverview');
+  
+  // Import reports components
+  import { ReportsPage } from './ReportsPage';
+  import { ReportsCenter } from './ReportsCenter';
 
   // Sidebar menu items
   const sidebarItems = [
@@ -1133,8 +1166,18 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({ user, onLogout }
             </div>
           )}
 
+          {/* Reports Page */}
+          {activeTab === 'reports' && (
+            <ReportsPage
+              users={users}
+              modules={modules}
+              purchases={purchases}
+              onRefresh={loadData}
+            />
+          )}
+
           {/* Other tabs placeholder */}
-          {!['dashboard', 'users', 'content', 'system'].includes(activeTab) && (
+          {!['dashboard', 'users', 'content', 'system', 'reports'].includes(activeTab) && (
             <div className="bg-white rounded-2xl p-8 shadow-lg text-center">
               <h2 className="text-2xl font-mali font-bold text-gray-800 mb-4">
                 {activeTab.charAt(0).toUpperCase() + activeTab.slice(1)} Management

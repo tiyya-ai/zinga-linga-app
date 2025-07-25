@@ -5,7 +5,7 @@ import { ProfessionalOrderManagement } from './ProfessionalOrderManagement';
 import { OrdersPage } from './OrdersPage';
 import { UsersPage } from './UsersPage';
 import { AnalyticsPage } from './AnalyticsPage';
-import { ReportsPageEnhanced } from './ReportsPageEnhanced';
+import { ReportsCenter } from './ReportsCenter';
 import { SystemPage } from './SystemPage';
 import { NotificationCenter } from './NotificationCenter';
 import { NotificationsPage } from './NotificationsPage';
@@ -13,6 +13,9 @@ import { EmailNotificationSettings } from './EmailNotificationSettings';
 import { CouponManagement } from './CouponManagement';
 import { AdminSettings } from './AdminSettings';
 import { EnhancedModuleManagement } from './EnhancedModuleManagement';
+import { ProductUserManagement } from './ProductUserManagement';
+import { SimpleProductManagement } from './SimpleProductManagement';
+import ReportsPageEnhanced from './ReportsPageEnhanced';
 import { notificationService } from '../utils/notificationService';
 import { 
   Users, 
@@ -134,9 +137,7 @@ export const ImprovedAdminDashboard: React.FC<ImprovedAdminDashboardProps> = ({ 
   const [currentPage, setCurrentPage] = useState(1);
   const [itemsPerPage] = useState(10);
   const [showFilters, setShowFilters] = useState(false);
-  const [showNotificationCenter, setShowNotificationCenter] = useState(false);
-  const [unreadNotifications, setUnreadNotifications] = useState(0);
-  const [editingUser, setEditingUser] = useState<User | null>(null);
+    const [editingUser, setEditingUser] = useState<User | null>(null);
   const [showEditUserModal, setShowEditUserModal] = useState(false);
   const [userFormData, setUserFormData] = useState({
     name: '',
@@ -162,22 +163,6 @@ export const ImprovedAdminDashboard: React.FC<ImprovedAdminDashboardProps> = ({ 
   // Load real data on component mount
   useEffect(() => {
     loadData();
-    
-    // Listen for notification updates
-    const handleNotificationUpdate = (notifications: any[]) => {
-      const unread = notifications.filter(n => !n.read).length;
-      setUnreadNotifications(unread);
-    };
-
-    notificationService.addListener(handleNotificationUpdate);
-    
-    // Set initial unread count - only count real purchase notifications
-    const initialUnread = notificationService.getUnreadNotifications().filter(n => n.type === 'purchase').length;
-    setUnreadNotifications(initialUnread);
-
-    return () => {
-      notificationService.removeListener(handleNotificationUpdate);
-    };
   }, []);
 
   // Load data from storage
@@ -239,24 +224,17 @@ export const ImprovedAdminDashboard: React.FC<ImprovedAdminDashboardProps> = ({ 
     e.preventDefault();
     if (!editingUser) return;
 
-    const updatedUsers = users.map(user => 
-      user.id === editingUser.id 
-        ? {
-            ...user,
-            name: userFormData.name,
-            email: userFormData.email,
-            role: userFormData.role,
-            totalSpent: userFormData.totalSpent
-          }
+    const updatedUsers = users.map(user =>
+      user.id === editingUser.id
+        ? { ...user, ...userFormData }
         : user
     );
 
     setUsers(updatedUsers);
-    saveData();
+    dataStore.saveData({ users: updatedUsers, modules, purchases, contentFiles });
     setShowEditUserModal(false);
     setEditingUser(null);
-    
-    // Create notification for user update
+
     notificationService.createNotification(
       'system',
       '👤 User Updated',
@@ -268,25 +246,31 @@ export const ImprovedAdminDashboard: React.FC<ImprovedAdminDashboardProps> = ({ 
     );
   };
 
-  // Handle user deletion
+  // Handle user deletion - GUARANTEED SAVE
   const handleDeleteUser = (userId: string) => {
     if (window.confirm('Are you sure you want to delete this user? This action cannot be undone.')) {
       const userToDelete = users.find(u => u.id === userId);
+      // Create the new list of users WITHOUT the deleted user
       const updatedUsers = users.filter(user => user.id !== userId);
-      setUsers(updatedUsers);
-      saveData();
-      
-      // Create notification for user deletion
-      if (userToDelete) {
-        notificationService.createNotification(
-          'system',
-          '🗑️ User Deleted',
-          `User ${userToDelete.name} has been deleted`,
-          'high',
-          userId,
-          undefined,
-          { user: userToDelete }
-        );
+
+      // Save the CORRECT, updated list directly to the data store
+      const success = dataStore.saveData({ users: updatedUsers, modules, purchases, contentFiles });
+
+      // ONLY if the save is successful, update the UI
+      if (success) {
+        setUsers(updatedUsers);
+
+        if (userToDelete) {
+          notificationService.createNotification(
+            'system',
+            '🗑️ User Deleted',
+            `User ${userToDelete.name} has been deleted`,
+            'high',
+            userId,
+            undefined,
+            { user: userToDelete }
+          );
+        }
       }
     }
   };
@@ -538,18 +522,13 @@ export const ImprovedAdminDashboard: React.FC<ImprovedAdminDashboardProps> = ({ 
                 <RefreshCw className="w-4 h-4 sm:w-5 sm:h-5" />
               </button>
 
-              {/* Notifications */}
+              {/* Settings */}
               <button 
-                onClick={() => setShowNotificationCenter(true)}
-                className="relative p-3 text-gray-700 hover:text-brand-blue hover:bg-blue-50 rounded-lg transition-all duration-200"
-                title="View notifications"
+                onClick={() => setActiveTab('settings')}
+                className="p-3 text-gray-700 hover:text-brand-blue hover:bg-blue-50 rounded-lg transition-all duration-200"
+                title="Settings"
               >
-                <Bell className="w-5 h-5" />
-                {unreadNotifications > 0 && (
-                  <span className="absolute -top-1 -right-1 min-w-[18px] h-[18px] bg-brand-red text-white text-xs font-mali font-bold rounded-full flex items-center justify-center px-1 shadow-lg animate-pulse">
-                    {unreadNotifications}
-                  </span>
-                )}
+                <Settings className="w-5 h-5" />
               </button>
 
               {/* System Status - Hidden on mobile */}
@@ -746,7 +725,18 @@ export const ImprovedAdminDashboard: React.FC<ImprovedAdminDashboardProps> = ({ 
               purchases={purchases}
               onUsersUpdate={(updatedUsers) => {
                 setUsers(updatedUsers);
-                saveData();
+                // Save the updated users to the data store
+                const success = dataStore.saveData({
+                  users: updatedUsers,
+                  modules,
+                  purchases,
+                  contentFiles,
+                  analytics: dataStore.generateAnalytics(updatedUsers, modules, purchases),
+                  lastUpdated: new Date().toISOString()
+                });
+                if (!success) {
+                  console.error('Failed to save users data');
+                }
               }}
               onRefresh={loadData}
             />
@@ -862,14 +852,15 @@ export const ImprovedAdminDashboard: React.FC<ImprovedAdminDashboardProps> = ({ 
             </div>
           )}
 
-          {/* Enhanced Modules Management */}
+          {/* Simple Product Management */}
           {activeTab === 'modules' && (
-            <EnhancedModuleManagement
+            <SimpleProductManagement
               modules={modules}
               users={users}
+              purchases={purchases}
               onModulesUpdate={(updatedModules) => {
                 setModules(updatedModules);
-                saveData();
+                dataStore.forceSave({ users, modules: updatedModules, purchases, contentFiles });
               }}
               onRefresh={loadData}
             />
@@ -894,27 +885,6 @@ export const ImprovedAdminDashboard: React.FC<ImprovedAdminDashboardProps> = ({ 
         </main>
       </div>
 
-      {/* Notifications Modal */}
-      {showNotificationCenter && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
-          <div className="bg-white rounded-2xl max-w-6xl w-full max-h-[90vh] overflow-hidden">
-            <div className="p-6 border-b border-gray-200">
-              <div className="flex items-center justify-between">
-                <h3 className="text-2xl font-mali font-bold text-gray-800">Notifications</h3>
-                <button
-                  onClick={() => setShowNotificationCenter(false)}
-                  className="p-2 hover:bg-gray-100 rounded-lg transition-colors"
-                >
-                  <X className="w-5 h-5" />
-                </button>
-              </div>
-            </div>
-            <div className="p-6 max-h-[calc(90vh-120px)] overflow-y-auto">
-              <NotificationsPage onRefresh={loadData} />
-            </div>
           </div>
-        </div>
-      )}
-    </div>
   );
 };

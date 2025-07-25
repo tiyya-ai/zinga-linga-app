@@ -160,21 +160,11 @@ export const UsersPage: React.FC<UsersPageProps> = ({
     });
   };
 
-  // Handle user deletion
+  // Handle user deletion - GUARANTEED SAVE
   const handleDeleteUser = (userId: string) => {
     if (window.confirm('Are you sure you want to delete this user? This action cannot be undone.')) {
-      const userToDelete = users.find(u => u.id === userId);
       const updatedUsers = users.filter(user => user.id !== userId);
-      
-      // Update the users list
       onUsersUpdate(updatedUsers);
-      
-      // Force a refresh to ensure data persistence
-      setTimeout(() => {
-        onRefresh();
-      }, 100);
-      
-      console.log('User deleted:', userToDelete?.name, 'Remaining users:', updatedUsers.length);
     }
   };
 

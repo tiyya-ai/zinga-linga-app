@@ -44,11 +44,20 @@ interface ReportsPageProps {
 }
 
 export const ReportsPage: React.FC<ReportsPageProps> = ({
-  users,
-  purchases,
-  modules,
-  onRefresh
+  users = [],
+  purchases = [],
+  modules = [],
+  onRefresh = () => {}
 }) => {
+  // Log props for debugging
+  React.useEffect(() => {
+    console.log('ReportsPage mounted with props:', {
+      usersCount: users?.length || 0,
+      purchasesCount: purchases?.length || 0,
+      modulesCount: modules?.length || 0,
+      hasOnRefresh: typeof onRefresh === 'function'
+    });
+  }, [users, purchases, modules, onRefresh]);
   const [selectedReport, setSelectedReport] = useState<string>('revenue');
   const [dateRange, setDateRange] = useState<'7d' | '30d' | '90d' | '1y' | 'custom'>('30d');
   const [customStartDate, setCustomStartDate] = useState('');
@@ -110,6 +119,11 @@ export const ReportsPage: React.FC<ReportsPageProps> = ({
 
   // Calculate report data
   const calculateReportData = () => {
+    console.log('Calculating report data with:', {
+      usersCount: users?.length || 0,
+      purchasesCount: purchases?.length || 0,
+      modulesCount: modules?.length || 0
+    });
     const now = new Date();
     const timeRanges = {
       '7d': 7 * 24 * 60 * 60 * 1000,

@@ -1,65 +1,233 @@
-import React, { useState } from 'react';
-import { dataStore } from '../utils/dataStore';
+import React, { useState, useMemo, ReactNode } from 'react';
+import { format } from 'date-fns';
 import { 
   Search, 
-  Download, 
-  Plus, 
-  Eye, 
-  RefreshCw, 
+  Plus,
+  Eye,
+  RefreshCw,
   ArrowUpDown,
   DollarSign,
   ShoppingCart,
   Clock,
+  X,
+  Download,
+  User,
+  Trash2,
+  CreditCard as CreditCardIcon,
+  AlertTriangle,
   TrendingUp,
   BarChart3,
   AlertCircle,
-  Star,
-  X,
-  Edit,
-  Trash2,
-  AlertTriangle,
-  CheckCircle,
-  User,
-  CreditCard
+  Star
 } from 'lucide-react';
+import type { Module as ModuleType, Purchase, User } from '../types';
+
+type OrderStatus = 'pending' | 'completed' | 'failed' | 'refunded' | 'all';
 
 interface ProfessionalOrderManagementProps {
-  purchases: any[];
-  users: any[];
-  modules: any[];
+  purchases: Purchase[];
+  users: UserType[];
+  filterStatus: OrderStatus;
+  setFilterStatus: (status: OrderStatus) => void;
   searchTerm: string;
   setSearchTerm: (term: string) => void;
-  filterStatus: string;
-  setFilterStatus: (status: string) => void;
+  sortBy: string;
+  setSortBy: (field: string) => void;
+  sortOrder: 'asc' | 'desc';
+  setSortOrder: (order: 'asc' | 'desc') => void;
+  handleSort: (field: string) => void;
+}
+
+// Type for credit card payment method
+type CreditCardPayment = {
+  brand: string;
+  last4: string;
+  expMonth: number;
+  expYear: number;
+  isDefault: boolean;
+};
+
+// Type guard for CreditCardPayment
+function isCreditCard(payment: unknown): payment is CreditCardPayment {
+  if (!payment || typeof payment !== 'object') return false;
+  const p = payment as Record<string, unknown>;
+  return (
+    typeof p.brand === 'string' && 
+    typeof p.last4 === 'string' &&
+    typeof p.expMonth === 'number' &&
+    typeof p.expYear === 'number' &&
+    (p.isDefault === undefined || typeof p.isDefault === 'boolean')
+  );
+}
+
+// Type for generic payment method
+type PaymentMethodType = 'credit_card' | 'paypal' | 'bank_transfer' | 'other' | string;
+
+// Type for payment method
+type PaymentMethod = {
+  type: PaymentMethodType;
+  [key: string]: unknown; // Allow additional properties
+};
+
+// Type guard for PaymentMethod
+function isPaymentMethod(payment: unknown): payment is PaymentMethod {
+  if (!payment || typeof payment !== 'object') return false;
+  const p = payment as Record<string, unknown>;
+  return (
+    'type' in p && 
+    typeof p.type === 'string' &&
+    (p.type === 'credit_card' || p.type === 'paypal' || p.type === 'bank_transfer' || p.type === 'other')
+  );
+}
+
+// Type for filter status
+type FilterStatus = OrderStatus | '';
+
+// Helper function to render payment method
+const renderPaymentMethod = (payment: unknown) => {
+  if (!payment || typeof payment !== 'object') return <span>N/A</span>;
+  
+  if (isCreditCard(payment)) {
+    return (
+      <div className="flex items-center">
+        <CreditCardIcon className="w-4 h-4 mr-1" />
+        {payment.brand} •••• {payment.last4}
+      </div>
+    );
+  }
+  
+  if (isPaymentMethod(payment)) {
+    return <span className="capitalize">{payment.type}</span>;
+  }
+  
+  return <span>N/A</span>;
+};
+
+// Type definitions
+interface User {
+  id: string;
+  email: string;
+  name: string;
+  role: string;
+  purchasedModules: string[];
+  createdAt: string;
+  lastLogin: string;
+  totalSpent: number;
+}
+
+interface PaymentMethod {
+  id: string;
+  type: 'credit_card' | 'paypal' | 'bank_transfer' | 'other';
+  last4: string;
+  expMonth: number;
+  expYear: number;
+  brand: string;
+  isDefault: boolean;
+  userId: string;
+  createdAt: string;
+  updatedAt: string;
+}
+
+interface Module extends ModuleType {}
+
+interface Purchase {
+  id: string;
+  userId: string;
+  amount: number;
+  status: OrderStatus;
+  modules: ModuleType[];
+  paymentMethod: PaymentMethod | CreditCardPayment | string;
+  isManual?: boolean;
+  notes?: string;
+  createdAt: string;
+  updatedAt: string;
+  completedAt?: string;
+  refundedAt?: string;
+  refundReason?: string;
+}
+
+interface ProfessionalOrderManagementProps {
+  purchases: Purchase[];
+  users: User[];
+  modules?: ModuleType[];
+  searchTerm: string;
+  setSearchTerm: (term: string) => void;
+  filterStatus: OrderStatus;
+  setFilterStatus: (status: OrderStatus) => void;
   sortBy: string;
   setSortBy: (sort: string) => void;
-  sortOrder: string;
-  setSortOrder: (order: string) => void;
-  onRefresh: () => void;
+  sortOrder: 'asc' | 'desc';
+  setSortOrder: (order: 'asc' | 'desc') => void;
+  onRefresh?: () => void;
 }
 
 export const ProfessionalOrderManagement: React.FC<ProfessionalOrderManagementProps> = ({
-  purchases,
-  users,
-  modules,
-  searchTerm,
-  setSearchTerm,
-  filterStatus,
-  setFilterStatus,
-  sortBy,
-  setSortBy,
-  sortOrder,
-  setSortOrder,
-  onRefresh
+  purchases = [],
+  users = [],
+  modules = [],
+  searchTerm = '',
+  setSearchTerm = () => {},
+  filterStatus = 'all',
+  setFilterStatus = () => {},
+  sortBy = 'date',
+  setSortBy = () => {},
+  sortOrder = 'desc',
+  setSortOrder = () => {},
+  onRefresh = () => {}
 }) => {
-  const [selectedOrder, setSelectedOrder] = useState<any>(null);
+  const [isRefreshing, setIsRefreshing] = useState(false);
+
+  // Process and filter orders
+  const processedOrders = useMemo(() => {
+    return purchases
+      .filter((purchase: Purchase) => {
+        const matchesSearch = 
+          purchase.id.toLowerCase().includes(searchTerm.toLowerCase()) ||
+          purchase.userId.toLowerCase().includes(searchTerm.toLowerCase()) ||
+          users.find((u: User) => u.id === purchase.userId)?.name.toLowerCase().includes(searchTerm.toLowerCase());
+        
+        const matchesStatus = filterStatus === '' || purchase.status === filterStatus;
+        
+        return matchesSearch && matchesStatus;
+      })
+      .sort((a: Purchase, b: Purchase) => {
+        if (sortBy === 'date') {
+          return sortOrder === 'asc'
+            ? new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime()
+            : new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime();
+        } else if (sortBy === 'amount') {
+          return sortOrder === 'asc' ? a.amount - b.amount : b.amount - a.amount;
+        } else if (sortBy === 'customer') {
+          const userA = users.find((u: User) => u.id === a.userId)?.name || '';
+          const userB = users.find((u: User) => u.id === b.userId)?.name || '';
+          return sortOrder === 'asc'
+            ? userA.localeCompare(userB)
+            : userB.localeCompare(userA);
+        } else {
+          return 0;
+        }
+      });
+  }, [purchases, searchTerm, filterStatus, sortBy, sortOrder, users]);
+
+  // Use the processed orders in the component
+  const displayedOrders = processedOrders;
+
+  // Calculate summary stats
+  const stats = useMemo(() => ({
+    totalOrders: purchases.length,
+    totalRevenue: purchases.reduce((sum, p) => sum + p.amount, 0),
+    pendingOrders: purchases.filter(p => p.status === 'pending').length,
+    completedOrders: purchases.filter(p => p.status === 'completed').length
+  }), [purchases]);
+
+  const [selectedOrder, setSelectedOrder] = useState<Purchase | null>(null);
   const [showOrderDetails, setShowOrderDetails] = useState(false);
-  const [showRefundModal, setShowRefundModal] = useState(false);
   const [showStatusModal, setShowStatusModal] = useState(false);
+  const [showRefundModal, setShowRefundModal] = useState(false);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [showManualOrderModal, setShowManualOrderModal] = useState(false);
   const [refundReason, setRefundReason] = useState('');
-  const [newStatus, setNewStatus] = useState('');
+  const [newStatus, setNewStatus] = useState<OrderStatus>('pending');
   const [manualOrder, setManualOrder] = useState({
     customerEmail: '',
     customerName: '',
@@ -71,23 +239,23 @@ export const ProfessionalOrderManagement: React.FC<ProfessionalOrderManagementPr
   });
 
   // Handle order actions
-  const handleViewOrder = (order: any) => {
+  const handleViewOrder = (order: Purchase) => {
     setSelectedOrder(order);
     setShowOrderDetails(true);
   };
 
-  const handleRefundOrder = (order: any) => {
-    setSelectedOrder(order);
-    setShowRefundModal(true);
-  };
-
-  const handleChangeStatus = (order: any) => {
+  const handleChangeStatus = (order: Purchase) => {
     setSelectedOrder(order);
     setNewStatus(order.status);
     setShowStatusModal(true);
   };
 
-  const handleDeleteOrder = (order: any) => {
+  const handleRefundOrder = (order: Purchase) => {
+    setSelectedOrder(order);
+    setShowRefundModal(true);
+  };
+
+  const handleDeleteOrder = (order: Purchase) => {
     setSelectedOrder(order);
     setShowDeleteModal(true);
   };
@@ -108,7 +276,7 @@ export const ProfessionalOrderManagement: React.FC<ProfessionalOrderManagementPr
   const processRefund = () => {
     if (selectedOrder) {
       const data = dataStore.loadData();
-      const updatedPurchases = data.purchases.map(purchase => 
+      const updatedPurchases = data.purchases.map((purchase: Purchase) => 
         purchase.id === selectedOrder.id 
           ? { 
               ...purchase, 
@@ -119,18 +287,32 @@ export const ProfessionalOrderManagement: React.FC<ProfessionalOrderManagementPr
             }
           : purchase
       );
-      dataStore.saveData({ ...data, purchases: updatedPurchases });
-      onRefresh();
-      setShowRefundModal(false);
-      setRefundReason('');
-      setSelectedOrder(null);
+      
+      // Save all data including updated analytics
+      const success = dataStore.saveData({
+        users: data.users,
+        modules: data.modules,
+        purchases: updatedPurchases,
+        contentFiles: data.contentFiles || [],
+        analytics: dataStore.generateAnalytics(data.users, data.modules, updatedPurchases),
+        lastUpdated: new Date().toISOString()
+      });
+      
+      if (success) {
+        onRefresh();
+        setShowRefundModal(false);
+        setRefundReason('');
+        setSelectedOrder(null);
+      } else {
+        console.error('Failed to process refund');
+      }
     }
   };
 
   const updateOrderStatus = () => {
     if (selectedOrder && newStatus) {
       const data = dataStore.loadData();
-      const updatedPurchases = data.purchases.map(purchase => 
+      const updatedPurchases = data.purchases.map((purchase: Purchase) => 
         purchase.id === selectedOrder.id 
           ? { 
               ...purchase, 
@@ -140,22 +322,50 @@ export const ProfessionalOrderManagement: React.FC<ProfessionalOrderManagementPr
             }
           : purchase
       );
-      dataStore.saveData({ ...data, purchases: updatedPurchases });
-      onRefresh();
-      setShowStatusModal(false);
-      setNewStatus('');
-      setSelectedOrder(null);
+      
+      // Save all data including updated analytics
+      const success = dataStore.saveData({
+        users: data.users,
+        modules: data.modules,
+        purchases: updatedPurchases,
+        contentFiles: data.contentFiles || [],
+        analytics: dataStore.generateAnalytics(data.users, data.modules, updatedPurchases),
+        lastUpdated: new Date().toISOString()
+      });
+      
+      if (success) {
+        onRefresh();
+        setShowStatusModal(false);
+        setNewStatus('');
+        setSelectedOrder(null);
+      } else {
+        console.error('Failed to update order status');
+      }
     }
   };
 
   const deleteOrder = () => {
     if (selectedOrder) {
       const data = dataStore.loadData();
-      const updatedPurchases = data.purchases.filter(purchase => purchase.id !== selectedOrder.id);
-      dataStore.saveData({ ...data, purchases: updatedPurchases });
-      onRefresh();
-      setShowDeleteModal(false);
-      setSelectedOrder(null);
+      const updatedPurchases = data.purchases.filter((purchase: Purchase) => purchase.id !== selectedOrder.id);
+      
+      // Save all data including updated analytics
+      const success = dataStore.saveData({
+        users: data.users,
+        modules: data.modules,
+        purchases: updatedPurchases,
+        contentFiles: data.contentFiles || [],
+        analytics: dataStore.generateAnalytics(data.users, data.modules, updatedPurchases),
+        lastUpdated: new Date().toISOString()
+      });
+      
+      if (success) {
+        onRefresh();
+        setShowDeleteModal(false);
+        setSelectedOrder(null);
+      } else {
+        console.error('Failed to delete order');
+      }
     }
   };
 
@@ -171,7 +381,7 @@ export const ProfessionalOrderManagement: React.FC<ProfessionalOrderManagementPr
       console.log('Current data before manual order:', data);
       
       // Find or create user
-      let user = data.users.find(u => u.email === manualOrder.customerEmail);
+      let user = data.users.find((u: User) => u.email === manualOrder.customerEmail);
       if (!user) {
         user = {
           id: `user-${Date.now()}`,
@@ -212,7 +422,7 @@ export const ProfessionalOrderManagement: React.FC<ProfessionalOrderManagementPr
       data.purchases.push(newPurchase);
       
       console.log('Total purchases after adding:', data.purchases.length);
-      console.log('All purchases:', data.purchases.map(p => ({ id: p.id, amount: p.amount, isManual: p.isManual })));
+      console.log('All purchases:', data.purchases.map((p: Purchase) => ({ id: p.id, amount: p.amount, isManual: p.isManual })));
       
       // Save data with explicit structure
       const savedData = {
@@ -259,8 +469,8 @@ export const ProfessionalOrderManagement: React.FC<ProfessionalOrderManagementPr
       ? manualOrder.moduleIds.filter(id => id !== moduleId)
       : [...manualOrder.moduleIds, moduleId];
     
-    const selectedModules = modules.filter(m => updatedModuleIds.includes(m.id));
-    const totalAmount = selectedModules.reduce((sum, module) => sum + module.price, 0);
+    const selectedModules = modules.filter((m: Module) => updatedModuleIds.includes(m.id));
+    const totalAmount = selectedModules.reduce((sum: number, module: Module) => sum + module.price, 0);
     
     setManualOrder({
       ...manualOrder,
@@ -275,16 +485,37 @@ export const ProfessionalOrderManagement: React.FC<ProfessionalOrderManagementPr
         ['Order ID', 'Customer', 'Email', 'Amount', 'Status', 'Payment Method', 'Date', 'Type', 'Notes'],
         ...purchases.map(p => {
           const user = users.find(u => u.id === p.userId);
+          
+          // Get payment method display text
+          let paymentMethodDisplay = 'N/A';
+          if (p.paymentMethod) {
+            if (typeof p.paymentMethod === 'string') {
+              paymentMethodDisplay = p.paymentMethod;
+            } else if (typeof p.paymentMethod === 'object' && p.paymentMethod !== null) {
+              // Handle object payment methods
+              const pm = p.paymentMethod as Record<string, unknown>;
+              if (isCreditCard(pm)) {
+                paymentMethodDisplay = `${pm.brand} •••• ${pm.last4}`;
+              } else if (isPaymentMethod(pm)) {
+                paymentMethodDisplay = pm.type;
+              } else if ('type' in pm && typeof pm.type === 'string') {
+                paymentMethodDisplay = pm.type;
+              } else if ('brand' in pm && 'last4' in pm) {
+                paymentMethodDisplay = `${pm.brand} •••• ${pm.last4}`;
+              }
+            }
+          }
+          
           return [
             p.id.slice(-8).toUpperCase(),
             user?.name || 'Unknown',
             user?.email || 'No email',
             p.amount.toFixed(2),
             p.status,
-            p.paymentMethod || 'card',
+            paymentMethodDisplay,
             new Date(p.createdAt).toLocaleDateString(),
-            p.isManual ? 'Manual' : 'Online',
-            p.notes || ''
+            (p as any).isManual ? 'Manual' : 'Online',
+            (p as any).notes || ''
           ];
         })
       ].map(row => row.join(',')).join('\n');
@@ -305,6 +536,40 @@ export const ProfessionalOrderManagement: React.FC<ProfessionalOrderManagementPr
       alert('❌ Export failed. Please try again.');
     }
   };
+
+  const handleSort = (key: string) => {
+    if (sortBy === key) {
+      setSortOrder(sortOrder === 'asc' ? 'desc' : 'asc');
+    } else {
+      setSortBy(key);
+      setSortOrder('asc');
+    }
+  };
+
+  const getStatusBadge = (status: OrderStatus) => {
+    const statusClasses = {
+      completed: 'bg-green-100 text-green-800',
+      pending: 'bg-yellow-100 text-yellow-800',
+      failed: 'bg-red-100 text-red-800',
+      refunded: 'bg-gray-100 text-gray-800',
+    };
+
+    return (
+      <span className={`px-2 py-1 text-xs font-semibold rounded-full ${statusClasses[status] || 'bg-gray-100 text-gray-800'}`}>
+        {status.charAt(0).toUpperCase() + status.slice(1)}
+      </span>
+    );
+  };
+
+  // Calculate stats
+  const stats = useMemo(() => ({
+    totalOrders: purchases.length,
+    totalRevenue: purchases
+      .filter((p: Purchase) => p.status === 'completed')
+      .reduce((sum: number, p: Purchase) => sum + p.amount, 0),
+    pendingOrders: purchases.filter((p: Purchase) => p.status === 'pending').length,
+    completedOrders: purchases.filter((p: Purchase) => p.status === 'completed').length
+  }), [purchases]);
 
   return (
     <div className="space-y-6">
@@ -342,7 +607,7 @@ export const ProfessionalOrderManagement: React.FC<ProfessionalOrderManagementPr
             <TrendingUp className="w-5 h-5 opacity-80" />
           </div>
           <h3 className="text-3xl font-mali font-bold mb-1">
-            ${purchases.filter(p => p.status === 'completed').reduce((sum, p) => sum + p.amount, 0).toLocaleString()}
+            ${stats.totalRevenue.toLocaleString()}
           </h3>
           <p className="font-mali opacity-90">Total Revenue</p>
         </div>
@@ -354,7 +619,7 @@ export const ProfessionalOrderManagement: React.FC<ProfessionalOrderManagementPr
             </div>
             <BarChart3 className="w-5 h-5 opacity-80" />
           </div>
-          <h3 className="text-3xl font-mali font-bold mb-1">{purchases.length}</h3>
+          <h3 className="text-3xl font-mali font-bold mb-1">{stats.totalOrders}</h3>
           <p className="font-mali opacity-90">Total Orders</p>
         </div>
 
@@ -365,7 +630,7 @@ export const ProfessionalOrderManagement: React.FC<ProfessionalOrderManagementPr
             </div>
             <AlertCircle className="w-5 h-5 opacity-80" />
           </div>
-          <h3 className="text-3xl font-mali font-bold mb-1">{purchases.filter(p => p.status === 'pending').length}</h3>
+          <h3 className="text-3xl font-mali font-bold mb-1">{stats.pendingOrders}</h3>
           <p className="font-mali opacity-90">Pending Orders</p>
         </div>
 
@@ -377,7 +642,7 @@ export const ProfessionalOrderManagement: React.FC<ProfessionalOrderManagementPr
             <Star className="w-5 h-5 opacity-80" />
           </div>
           <h3 className="text-3xl font-mali font-bold mb-1">
-            ${purchases.length > 0 ? (purchases.filter(p => p.status === 'completed').reduce((sum, p) => sum + p.amount, 0) / purchases.filter(p => p.status === 'completed').length).toFixed(0) : '0'}
+            ${stats.totalOrders > 0 ? (stats.totalRevenue / stats.totalOrders).toFixed(0) : '0'}
           </h3>
           <p className="font-mali opacity-90">Avg Order Value</p>
         </div>
@@ -389,7 +654,7 @@ export const ProfessionalOrderManagement: React.FC<ProfessionalOrderManagementPr
             </div>
             <Plus className="w-5 h-5 opacity-80" />
           </div>
-          <h3 className="text-3xl font-mali font-bold mb-1">{purchases.filter(p => p.isManual).length}</h3>
+          <h3 className="text-3xl font-mali font-bold mb-1">{stats.completedOrders}</h3>
           <p className="font-mali opacity-90">Manual Orders</p>
         </div>
       </div>
@@ -411,7 +676,10 @@ export const ProfessionalOrderManagement: React.FC<ProfessionalOrderManagementPr
             
             <select 
               value={filterStatus}
-              onChange={(e) => setFilterStatus(e.target.value)}
+              onChange={(e: React.ChangeEvent<HTMLSelectElement>) => {
+                const value = e.target.value as FilterStatus;
+                setFilterStatus(value === 'all' ? '' : value);
+              }}
               className="px-4 py-2 border border-gray-300 rounded-lg font-mali focus:outline-none focus:ring-2 focus:ring-brand-blue"
             >
               <option value="all">All Status</option>
@@ -423,7 +691,7 @@ export const ProfessionalOrderManagement: React.FC<ProfessionalOrderManagementPr
 
             <select 
               value={sortBy}
-              onChange={(e) => setSortBy(e.target.value)}
+              onChange={(e) => handleSort(e.target.value)}
               className="px-4 py-2 border border-gray-300 rounded-lg font-mali focus:outline-none focus:ring-2 focus:ring-brand-blue"
             >
               <option value="date">Sort by Date</option>
@@ -465,11 +733,12 @@ export const ProfessionalOrderManagement: React.FC<ProfessionalOrderManagementPr
                     p.id.toLowerCase().includes(searchTerm.toLowerCase()) ||
                     user?.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
                     user?.email.toLowerCase().includes(searchTerm.toLowerCase());
-                  const matchesStatus = filterStatus === 'all' || p.status === filterStatus;
+                  const matchesStatus = filterStatus === '' || p.status === filterStatus;
                   return matchesSearch && matchesStatus;
                 })
                 .map((purchase) => {
                   const user = users.find(u => u.id === purchase.userId);
+                  const purchaseDate = purchase.createdAt ? new Date(purchase.createdAt) : null;
                   
                   return (
                     <tr key={purchase.id} className="hover:bg-gray-50 transition-colors group">
@@ -486,9 +755,22 @@ export const ProfessionalOrderManagement: React.FC<ProfessionalOrderManagementPr
                             <p className="font-mali font-bold text-gray-800">
                               #{purchase.id.slice(-8).toUpperCase()}
                             </p>
-                            <p className="font-mali text-gray-500 text-xs">
-                              {purchase.paymentMethod || 'card'}
-                            </p>
+                            <div className="font-mali text-gray-500 text-xs">
+                              {purchase.paymentMethod ? (
+                                isCreditCard(purchase.paymentMethod) ? (
+                                  <div className="flex items-center">
+                                    <CreditCardIcon className="w-4 h-4 mr-1" />
+                                    {purchase.paymentMethod.brand} •••• {purchase.paymentMethod.last4}
+                                  </div>
+                                ) : (
+                                  <span className="capitalize">
+                                    {purchase.paymentMethod.type || 'N/A'}
+                                  </span>
+                                )
+                              ) : (
+                                <span>N/A</span>
+                              )}
+                            </div>
                           </div>
                         </div>
                       </td>
@@ -496,7 +778,7 @@ export const ProfessionalOrderManagement: React.FC<ProfessionalOrderManagementPr
                         <div className="flex items-center gap-3">
                           <div className="w-10 h-10 bg-gradient-to-br from-brand-blue to-brand-pink rounded-full flex items-center justify-center">
                             <span className="text-white font-mali font-bold text-sm">
-                              {user?.name?.charAt(0) || 'U'}
+                              {user?.name?.charAt(0)?.toUpperCase() || 'U'}
                             </span>
                           </div>
                           <div>
@@ -510,8 +792,20 @@ export const ProfessionalOrderManagement: React.FC<ProfessionalOrderManagementPr
                         </div>
                       </td>
                       <td className="px-6 py-4">
+                        <p className="font-mali text-gray-800">
+                          {purchase.moduleIds?.length > 0 
+                            ? purchase.moduleIds
+                                .map(moduleId => {
+                                  const module = modules.find(m => m.id === moduleId);
+                                  return module?.title || 'Unknown Module';
+                                })
+                                .join(', ')
+                            : 'No modules'}
+                        </p>
+                      </td>
+                      <td className="px-6 py-4">
                         <span className="font-mali font-bold text-gray-800 text-lg">
-                          ${purchase.amount.toFixed(2)}
+                          ${purchase.amount ? purchase.amount.toFixed(2) : '0.00'}
                         </span>
                       </td>
                       <td className="px-6 py-4">
@@ -526,19 +820,23 @@ export const ProfessionalOrderManagement: React.FC<ProfessionalOrderManagementPr
                         </span>
                       </td>
                       <td className="px-6 py-4">
-                        <span className={`px-2 py-1 rounded-full text-xs font-mali font-bold ${
-                          purchase.isManual ? 'bg-orange-100 text-orange-800' : 'bg-blue-100 text-blue-800'
-                        }`}>
-                          {purchase.isManual ? 'Manual' : 'Online'}
-                        </span>
+                        <p className="font-mali font-bold text-gray-800">{purchase.isManual ? 'Manual' : 'Online'}</p>
                       </td>
                       <td className="px-6 py-4">
                         <p className="font-mali text-gray-800 font-medium">
-                          {new Date(purchase.createdAt).toLocaleDateString()}
+                          {purchaseDate 
+                            ? purchaseDate.toLocaleDateString('en-US', {
+                                year: 'numeric',
+                                month: 'short',
+                                day: 'numeric',
+                                hour: '2-digit',
+                                minute: '2-digit'
+                              })
+                            : 'N/A'}
                         </p>
                       </td>
                       <td className="px-6 py-4">
-                        <div className="flex items-center gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
+                        <div className="flex items-center gap-3">
                           <button 
                             onClick={() => handleViewOrder(purchase)}
                             className="p-2 text-blue-600 hover:bg-blue-50 rounded-lg transition-colors"
@@ -726,7 +1024,6 @@ export const ProfessionalOrderManagement: React.FC<ProfessionalOrderManagementPr
         </div>
       )}
 
-      {/* Other modals remain the same... */}
       {/* Order Details Modal */}
       {showOrderDetails && selectedOrder && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
@@ -765,7 +1062,13 @@ export const ProfessionalOrderManagement: React.FC<ProfessionalOrderManagementPr
                 </div>
                 <div>
                   <span className="font-mali text-gray-600">Payment Method:</span>
-                  <p className="font-mali font-bold">{selectedOrder.paymentMethod || 'card'}</p>
+                  <div className="font-mali font-bold">
+                    {typeof selectedOrder.paymentMethod === 'string' ? (
+                      <span className="capitalize">{selectedOrder.paymentMethod}</span>
+                    ) : (
+                      renderPaymentMethod(selectedOrder.paymentMethod)
+                    )}
+                  </div>
                 </div>
                 <div>
                   <span className="font-mali text-gray-600">Date:</span>
@@ -959,6 +1262,102 @@ export const ProfessionalOrderManagement: React.FC<ProfessionalOrderManagementPr
           </div>
         </div>
       )}
-    </div>
-  );
-};
+      
+      {/* Export Button */}
+      <div className="mt-4">
+        <button 
+          onClick={exportOrders}
+          className="inline-flex items-center px-4 py-2 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+        >
+          <Download className="-ml-1 mr-2 h-4 w-4" />
+          Export
+        </button>
+      </div>
+
+            {/* Orders Table */}
+            <div className="mt-6 bg-white shadow overflow-hidden border-b border-gray-200 sm:rounded-lg">
+              <table className="min-w-full divide-y divide-gray-200">
+                <thead className="bg-gray-50">
+                  <tr>
+                    {[
+                      { key: 'id', label: 'Order ID' },
+                      { key: 'customer', label: 'Customer' },
+                      { key: 'date', label: 'Date' },
+                      { key: 'amount', label: 'Amount' },
+                      { key: 'status', label: 'Status' },
+                      { key: 'actions', label: 'Actions' }
+                    ].map((header) => (
+                      <th 
+                        key={header.key}
+                        scope="col" 
+                        className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+                      >
+                        {header.key !== 'actions' ? (
+                          <button 
+                            onClick={() => handleSort(header.key)}
+                            className="group inline-flex items-center"
+                          >
+                            {header.label}
+                            <ArrowUpDown className="ml-2 h-4 w-4 text-gray-400 group-hover:text-gray-600" />
+                          </button>
+                        ) : header.label}
+                      </th>
+                    ))}
+                  </tr>
+                </thead>
+                <tbody className="bg-white divide-y divide-gray-200">
+                  {displayedOrders.length > 0 ? (
+                    displayedOrders.map((order: Purchase) => {
+                      const user = users.find((u: User) => u.id === order.userId);
+                      return (
+                        <tr key={order.id} className="hover:bg-gray-50">
+                          <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
+                            {order.id.substring(0, 8)}...
+                          </td>
+                          <td className="px-6 py-4 whitespace-nowrap">
+                            <div className="text-sm text-gray-900">{user?.name || 'Unknown User'}</div>
+                            <div className="text-sm text-gray-500">{user?.email || ''}</div>
+                          </td>
+                          <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                            {format(new Date(order.createdAt), 'MMM d, yyyy')}
+                          </td>
+                          <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                            ${order.amount.toFixed(2)}
+                          </td>
+                          <td className="px-6 py-4 whitespace-nowrap">
+                            {getStatusBadge(order.status)}
+                          </td>
+                          <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+                            <button className="text-indigo-600 hover:text-indigo-900 mr-4">
+                              <Eye className="h-5 w-5" />
+                            </button>
+                            <button className="text-gray-600 hover:text-gray-900">
+                              <Download className="h-5 w-5" />
+                            </button>
+                          </td>
+                        </tr>
+                      );
+                    })
+                  ) : (
+                    <tr>
+                      <td colSpan={6} className="px-6 py-4 text-center text-sm text-gray-500">
+                        No orders found matching your criteria.
+                      </td>
+                    </tr>
+                  )}
+                </tbody>
+              </table>
+            </div>
+          </div>
+        );
+      };
+      
+      // Main component JSX is already properly closed in the existing code
+      return (
+        <div className="min-h-screen bg-gray-100">
+          {/* Main content */}
+          <main className="p-6">
+            {/* Stats and other components */}
+          </main>
+        </div>
+      );

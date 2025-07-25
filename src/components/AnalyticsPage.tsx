@@ -1,33 +1,57 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { 
-  BarChart3, 
   TrendingUp, 
   TrendingDown, 
   Users, 
   DollarSign, 
   ShoppingCart, 
   Target, 
-  Calendar,
   Download,
-  Filter,
   RefreshCw,
-  Eye,
   Package,
   Star,
   Activity,
-  PieChart,
-  LineChart,
-  Award,
   Clock,
-  Globe,
-  Smartphone,
-  Tablet,
-  Desktop,
-  ArrowUpDown,
-  ChevronDown,
-  ChevronUp
+  Globe
 } from 'lucide-react';
 import { User, Module, Purchase, Analytics } from '../types';
+import { ResponsiveContainer, XAxis, YAxis, CartesianGrid, Tooltip, LineChart, Line } from 'recharts';
+
+// Color scheme for charts
+const CHART_COLORS = {
+  blue: '#3b82f6',
+  green: '#10b981',
+  purple: '#8b5cf6',
+  pink: '#ec4899',
+  orange: '#f59e0b',
+  teal: '#14b8a6',
+  indigo: '#6366f1',
+  red: '#ef4444',
+};
+
+// Custom tooltip component
+const CustomTooltip = ({ active, payload, label }: any) => {
+  if (active && payload && payload.length) {
+    return (
+      <div className="bg-white p-3 rounded-lg shadow-lg border border-gray-200 text-sm">
+        <p className="font-bold text-gray-800 mb-1">{label}</p>
+        {payload.map((entry: any) => (
+          <div key={entry.dataKey} className="flex items-center gap-2">
+            <div 
+              className="w-3 h-3 rounded-full" 
+              style={{ backgroundColor: entry.color }}
+            />
+            <span className="text-gray-600">{entry.name}:</span>
+            <span className="font-medium text-gray-900">
+              {entry.dataKey === 'revenue' ? `$${entry.value.toLocaleString()}` : entry.value}
+            </span>
+          </div>
+        ))}
+      </div>
+    );
+  }
+  return null;
+};
 
 interface AnalyticsPageProps {
   users: User[];
@@ -37,41 +61,110 @@ interface AnalyticsPageProps {
   onRefresh: () => void;
 }
 
-export const AnalyticsPage: React.FC<AnalyticsPageProps> = ({ 
-  users, 
-  modules, 
-  purchases, 
-  analytics, 
-  onRefresh 
-}) => {
+export const AnalyticsPage: React.FC<AnalyticsPageProps> = (props) => {
+  const { users, modules, purchases, onRefresh } = props;
   const [timeRange, setTimeRange] = useState<'7d' | '30d' | '90d' | '1y'>('30d');
   const [selectedMetric, setSelectedMetric] = useState<'revenue' | 'users' | 'orders'>('revenue');
   const [isLoading, setIsLoading] = useState(false);
 
+  // Calculate date range based on selected time range
+  const getDateRange = () => {
+    const now = new Date();
+    const from = new Date(now);
+    
+    switch (timeRange) {
+      case '7d': from.setDate(now.getDate() - 7); break;
+      case '30d': from.setDate(now.getDate() - 30); break;
+      case '90d': from.setDate(now.getDate() - 90); break;
+      case '1y': from.setFullYear(now.getFullYear() - 1); break;
+      default: from.setDate(now.getDate() - 30);
+    }
+    
+    return { from, to: now };
+  };
+
   // Calculate real-time analytics
   const calculateAnalytics = () => {
     const now = new Date();
-    const completedPurchases = purchases.filter(p => p.status === 'completed');
+    const { from } = getDateRange();
+    
+    // Filter data based on selected time range
+    const dateFilter = (dateString: string) => {
+      try {
+        const date = new Date(dateString);
+        return date >= from && date <= now;
+      } catch (e) {
+        console.error('Error parsing date:', dateString, e);
+        return false;
+      }
+    };
+    
+    const recentPurchases = purchases.filter(p => dateFilter(p.createdAt));
+    const completedPurchases = recentPurchases.filter(p => p.status === 'completed');
+    const newUsers = users.filter(u => dateFilter(u.createdAt));
+    const payingUsers = Array.from(new Set(completedPurchases.map(p => p.userId))).length;
+    
     const totalRevenue = completedPurchases.reduce((sum, p) => sum + p.amount, 0);
     const averageOrderValue = completedPurchases.length > 0 ? totalRevenue / completedPurchases.length : 0;
-    const conversionRate = users.length > 0 ? (completedPurchases.length / users.length) * 100 : 0;
+    const conversionRate = newUsers.length > 0 ? (payingUsers / newUsers.length) * 100 : 0;
 
-    // Calculate growth rates (mock data for demo)
-    const userGrowth = 12.5;
-    const revenueGrowth = 8.3;
-    const orderGrowth = 15.2;
+    // Calculate growth rates
+    const previousPeriod = new Date(from);
+    previousPeriod.setDate(from.getDate() - (now.getDate() - from.getDate()));
+    
+    const previousPurchases = purchases.filter(p => {
+      const date = new Date(p.createdAt);
+      return date < from && date >= previousPeriod && p.status === 'completed';
+    });
+    
+    const previousRevenue = previousPurchases.reduce((sum, p) => sum + p.amount, 0);
+    const previousUsers = users.filter(u => {
+      const date = new Date(u.createdAt);
+      return date < from && date >= previousPeriod;
+    }).length;
+    
+    const revenueGrowth = previousRevenue > 0 
+      ? ((totalRevenue - previousRevenue) / previousRevenue) * 100 
+      : totalRevenue > 0 ? 100 : 0;
+      
+    const userGrowth = previousUsers > 0 
+      ? ((newUsers.length - previousUsers) / previousUsers) * 100 
+      : newUsers.length > 0 ? 100 : 0;
+      
+    const orderGrowth = previousPurchases.length > 0
+      ? ((completedPurchases.length - previousPurchases.length) / previousPurchases.length) * 100
+      : completedPurchases.length > 0 ? 100 : 0;
 
-    // Popular modules
-    const moduleStats = modules.map(module => {
-      const modulePurchases = purchases.filter(p => 
-        p.moduleIds.includes(module.id) && p.status === 'completed'
+    // Calculate module statistics
+    const moduleStats = modules.map((module) => {
+      // Count purchases that include this module
+      const modulePurchases = purchases.filter(purchase => 
+        purchase.moduleIds.includes(module.id) && purchase.status === 'completed'
       );
+      
+      // Calculate total revenue from these purchases
+      const revenue = modulePurchases.reduce((sum, purchase) => {
+        // Distribute the purchase amount evenly across all modules in the purchase
+        const moduleCount = purchase.moduleIds.length;
+        return sum + (purchase.amount / moduleCount);
+      }, 0);
+      
       return {
         ...module,
         purchaseCount: modulePurchases.length,
-        revenue: modulePurchases.reduce((sum, p) => sum + (p.amount / p.moduleIds.length), 0)
+        revenue,
+        rank: 0, // Will be set after sorting
+        rating: 4.5 // Mock rating for now
       };
-    }).sort((a, b) => b.purchaseCount - a.purchaseCount);
+    });
+    
+    // Sort by revenue and update ranks
+    moduleStats.sort((a, b) => b.revenue - a.revenue)
+      .forEach((module: any, index: number) => {
+        module.rank = index + 1;
+      });
+
+    // Get top 5 modules by revenue (stored directly in moduleStats after sorting)
 
     // Recent activity
     const recentActivity = purchases
@@ -131,9 +224,14 @@ export const AnalyticsPage: React.FC<AnalyticsPageProps> = ({
   const analyticsData = calculateAnalytics();
 
   const handleRefresh = async () => {
-    setIsLoading(true);
-    await onRefresh();
-    setTimeout(() => setIsLoading(false), 1000);
+    try {
+      setIsLoading(true);
+      await onRefresh();
+    } catch (error) {
+      console.error('Error refreshing analytics:', error);
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   const formatCurrency = (amount: number) => {
@@ -183,27 +281,64 @@ export const AnalyticsPage: React.FC<AnalyticsPageProps> = ({
     </div>
   );
 
-  const SimpleChart = ({ data, metric }: { data: any[], metric: string }) => (
-    <div className="h-64 flex items-end justify-between gap-2 px-4">
-      {data.map((item, index) => {
-        const maxValue = Math.max(...data.map(d => d[metric]));
-        const height = maxValue > 0 ? (item[metric] / maxValue) * 100 : 0;
-        
-        return (
-          <div key={index} className="flex flex-col items-center gap-2 flex-1">
-            <div 
-              className="w-full bg-gradient-to-t from-brand-blue to-brand-pink rounded-t-lg min-h-[4px] transition-all duration-500 hover:opacity-80"
-              style={{ height: `${Math.max(height, 4)}%` }}
-              title={`${item.date}: ${metric === 'revenue' ? formatCurrency(item[metric]) : item[metric]}`}
+  const renderChart = (data: any[], metric: string) => {
+    if (!data || data.length === 0) {
+      return (
+        <div className="h-64 flex items-center justify-center text-gray-500">
+          No data available for the selected time period
+        </div>
+      );
+    }
+
+    const chartData = data.map(item => ({
+      ...item,
+      name: item.date,
+      [metric]: item[metric] || 0
+    }));
+
+    const formatYAxis = (tick: any) => {
+      if (metric === 'revenue') return `$${tick.toLocaleString()}`;
+      return tick.toLocaleString();
+    };
+
+    return (
+      <div className="h-64 w-full">
+        <ResponsiveContainer width="100%" height="100%">
+          <LineChart 
+            data={chartData} 
+            margin={{ top: 5, right: 20, bottom: 5, left: 0 }}
+          >
+            <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#f0f0f0" />
+            <XAxis 
+              dataKey="name" 
+              tick={{ fontSize: 12, fontFamily: 'Mali, cursive' }}
+              tickLine={false}
+              axisLine={false}
             />
-            <span className="text-xs font-mali text-gray-600 transform -rotate-45 origin-center">
-              {item.date}
-            </span>
-          </div>
-        );
-      })}
-    </div>
-  );
+            <YAxis 
+              tickFormatter={formatYAxis}
+              tick={{ fontSize: 12, fontFamily: 'Mali, cursive' }}
+              tickLine={false}
+              axisLine={false}
+              width={metric === 'revenue' ? 70 : 50}
+            />
+            <Tooltip 
+              content={<CustomTooltip />} 
+              cursor={{ fill: 'rgba(0, 0, 0, 0.05)' }}
+            />
+            <Line 
+              type="monotone" 
+              dataKey={metric} 
+              stroke={CHART_COLORS.blue} 
+              strokeWidth={2}
+              dot={false}
+              activeDot={{ r: 6, stroke: CHART_COLORS.blue, strokeWidth: 2, fill: '#fff' }}
+            />
+          </LineChart>
+        </ResponsiveContainer>
+      </div>
+    );
+  };
 
   return (
     <div className="space-y-6 lg:space-y-8">
@@ -327,22 +462,61 @@ export const AnalyticsPage: React.FC<AnalyticsPageProps> = ({
 
       {/* Charts Section */}
       <div className="grid grid-cols-1 xl:grid-cols-2 gap-6 lg:gap-8">
-        {/* Revenue Chart */}
+        {/* Main Chart */}
         <div className="bg-white rounded-xl lg:rounded-2xl p-4 lg:p-6 shadow-lg border border-gray-100">
           <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6">
-            <h4 className="text-lg lg:text-xl font-mali font-bold text-gray-800">Revenue Trend</h4>
-            <select 
-              value={selectedMetric}
-              onChange={(e) => setSelectedMetric(e.target.value as any)}
-              className="px-3 py-1 border border-gray-300 rounded-lg font-mali text-sm focus:outline-none focus:ring-2 focus:ring-brand-blue w-full sm:w-auto"
-            >
-              <option value="revenue">Revenue</option>
-              <option value="users">Users</option>
-              <option value="orders">Orders</option>
-            </select>
+            <div>
+              <h4 className="text-lg lg:text-xl font-mali font-bold text-gray-800">Performance Overview</h4>
+              <p className="text-sm text-gray-500">Last {timeRange === '7d' ? '7 days' : timeRange === '30d' ? '30 days' : timeRange === '90d' ? '90 days' : 'year'}</p>
+            </div>
+            <div className="flex gap-2">
+              <select 
+                value={timeRange}
+                onChange={(e) => setTimeRange(e.target.value as any)}
+                className="px-3 py-1 border border-gray-300 rounded-lg font-mali text-sm focus:outline-none focus:ring-2 focus:ring-brand-blue"
+              >
+                <option value="7d">Last 7 days</option>
+                <option value="30d">Last 30 days</option>
+                <option value="90d">Last 90 days</option>
+                <option value="1y">Last year</option>
+              </select>
+              <select 
+                value={selectedMetric}
+                onChange={(e) => setSelectedMetric(e.target.value as any)}
+                className="px-3 py-1 border border-gray-300 rounded-lg font-mali text-sm focus:outline-none focus:ring-2 focus:ring-brand-blue"
+              >
+                <option value="revenue">Revenue</option>
+                <option value="users">Users</option>
+                <option value="orders">Orders</option>
+              </select>
+            </div>
           </div>
-          <div className="overflow-x-auto">
-            <SimpleChart data={analyticsData.chartData} metric={selectedMetric} />
+          
+          {renderChart(analyticsData.chartData, selectedMetric)}
+          
+          {/* Mini metrics */}
+          <div className="grid grid-cols-3 gap-4 mt-6">
+            <div className="text-center p-3 bg-blue-50 rounded-lg">
+              <p className="text-xs text-gray-500 font-mali">Avg. Order</p>
+              <p className="font-mali font-bold text-gray-800">{formatCurrency(analyticsData.averageOrderValue)}</p>
+            </div>
+            <div className="text-center p-3 bg-green-50 rounded-lg">
+              <p className="text-xs text-gray-500 font-mali">New Users</p>
+              <p className="font-mali font-bold text-gray-800">
+                {users.filter(u => {
+                  try {
+                    const date = new Date(u.createdAt);
+                    return date >= getDateRange().from;
+                  } catch (e) {
+                    return false;
+                  }
+                }).length}
+              </p>
+            </div>
+            <div className="text-center p-3 bg-purple-50 rounded-lg">
+              <p className="text-xs text-gray-500 font-mali">Conversion</p>
+              <p className="font-mali font-bold text-gray-800">{analyticsData.conversionRate.toFixed(1)}%</p>
+            </div>
           </div>
         </div>
 
@@ -350,11 +524,11 @@ export const AnalyticsPage: React.FC<AnalyticsPageProps> = ({
         <div className="bg-white rounded-xl lg:rounded-2xl p-4 lg:p-6 shadow-lg border border-gray-100">
           <h4 className="text-lg lg:text-xl font-mali font-bold text-gray-800 mb-6">Top Performing Modules</h4>
           <div className="space-y-3 lg:space-y-4">
-            {analyticsData.moduleStats.slice(0, 5).map((module, index) => (
+            {analyticsData.moduleStats.slice(0, 5).map((module) => (
               <div key={module.id} className="flex items-center justify-between p-3 lg:p-4 bg-gray-50 rounded-xl hover:bg-gray-100 transition-colors">
                 <div className="flex items-center gap-3 min-w-0 flex-1">
                   <div className="w-8 h-8 lg:w-10 lg:h-10 bg-gradient-to-br from-brand-blue to-brand-pink rounded-full flex items-center justify-center flex-shrink-0">
-                    <span className="text-white font-mali font-bold text-xs lg:text-sm">#{index + 1}</span>
+                    <span className="text-white font-mali font-bold text-xs lg:text-sm">#{module.rank || 1}</span>
                   </div>
                   <div className="min-w-0 flex-1">
                     <p className="font-mali font-bold text-gray-800 text-sm lg:text-base truncate">{module.title}</p>
@@ -439,7 +613,7 @@ export const AnalyticsPage: React.FC<AnalyticsPageProps> = ({
         <div className="bg-white rounded-xl lg:rounded-2xl p-4 lg:p-6 shadow-lg border border-gray-100">
           <h4 className="text-lg lg:text-xl font-mali font-bold text-gray-800 mb-4 lg:mb-6">Recent Activity</h4>
           <div className="space-y-2 lg:space-y-3 max-h-64 overflow-y-auto">
-            {analyticsData.recentActivity.map((activity, index) => (
+            {analyticsData.recentActivity.map((activity) => (
               <div key={activity.id} className="flex items-center gap-3 p-2 lg:p-3 hover:bg-gray-50 rounded-lg transition-colors">
                 <div className="w-6 h-6 lg:w-8 lg:h-8 bg-gradient-to-br from-brand-green to-green-600 rounded-full flex items-center justify-center flex-shrink-0">
                   <ShoppingCart className="w-3 h-3 lg:w-4 lg:h-4 text-white" />
