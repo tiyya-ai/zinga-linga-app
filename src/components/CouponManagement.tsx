@@ -139,7 +139,7 @@ export const CouponManagement: React.FC = () => {
       </div>
 
       {/* Stats Cards */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+      <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">
         <div className="bg-gradient-to-br from-blue-500 to-blue-600 rounded-2xl p-6 text-white shadow-lg">
           <div className="flex items-center justify-between mb-4">
             <div className="p-3 bg-white/20 rounded-full">
@@ -185,8 +185,8 @@ export const CouponManagement: React.FC = () => {
         </div>
       </div>
 
-      {/* Coupons Table */}
-      <div className="bg-white rounded-2xl shadow-lg border border-gray-100 overflow-hidden">
+      {/* Coupons Table - Desktop */}
+      <div className="hidden lg:block bg-white rounded-2xl shadow-lg border border-gray-100 overflow-hidden">
         <div className="overflow-x-auto">
           <table className="w-full">
             <thead className="bg-gradient-to-r from-gray-50 to-gray-100 border-b border-gray-200">
@@ -234,7 +234,7 @@ export const CouponManagement: React.FC = () => {
                   </td>
                   <td className="px-6 py-4">
                     <span className="font-mali font-bold text-lg text-gray-800">
-                      {coupon.type === 'percentage' ? `${coupon.value}%` : `$${coupon.value}`}
+                      {coupon.type === 'percentage' ? `${coupon.value}%` : `${coupon.value}`}
                     </span>
                     {coupon.minAmount && (
                       <p className="font-mali text-gray-500 text-xs">
@@ -322,13 +322,151 @@ export const CouponManagement: React.FC = () => {
         </div>
       </div>
 
+      {/* Coupons Cards - Mobile/Tablet */}
+      <div className="lg:hidden space-y-4">
+        {coupons.map((coupon) => (
+          <div key={coupon.code} className="bg-white rounded-2xl shadow-lg border border-gray-100 p-4 sm:p-6">
+            <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-4">
+              {/* Left Section */}
+              <div className="flex-1 space-y-3">
+                {/* Code and Type */}
+                <div className="flex items-center gap-3">
+                  <div className="p-2 bg-brand-blue/10 rounded-lg">
+                    <Gift className="w-4 h-4 text-brand-blue" />
+                  </div>
+                  <div className="flex-1">
+                    <div className="flex items-center gap-2 flex-wrap">
+                      <p className="font-mali font-bold text-gray-800 text-lg">{coupon.code}</p>
+                      <button
+                        onClick={() => copyToClipboard(coupon.code)}
+                        className="font-mali text-gray-500 text-xs hover:text-brand-blue flex items-center gap-1"
+                      >
+                        <Copy className="w-3 h-3" />
+                        Copy
+                      </button>
+                    </div>
+                    <div className="flex items-center gap-2 mt-1">
+                      {coupon.type === 'percentage' ? (
+                        <Percent className="w-4 h-4 text-green-600" />
+                      ) : (
+                        <DollarSign className="w-4 h-4 text-blue-600" />
+                      )}
+                      <span className="font-mali font-medium text-gray-600 capitalize text-sm">
+                        {coupon.type}
+                      </span>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Value and Constraints */}
+                <div className="grid grid-cols-2 gap-4">
+                  <div>
+                    <p className="font-mali text-gray-500 text-xs uppercase tracking-wide">Value</p>
+                    <p className="font-mali font-bold text-lg text-gray-800">
+                      {coupon.type === 'percentage' ? `${coupon.value}%` : `${coupon.value}`}
+                    </p>
+                    {coupon.minAmount && (
+                      <p className="font-mali text-gray-500 text-xs">
+                        Min: ${coupon.minAmount}
+                      </p>
+                    )}
+                    {coupon.maxDiscount && (
+                      <p className="font-mali text-gray-500 text-xs">
+                        Max: ${coupon.maxDiscount}
+                      </p>
+                    )}
+                  </div>
+                  
+                  <div>
+                    <p className="font-mali text-gray-500 text-xs uppercase tracking-wide">Usage</p>
+                    <div className="flex items-center gap-2">
+                      <span className="font-mali font-bold text-gray-800">
+                        {coupon.usedCount}
+                      </span>
+                      {coupon.usageLimit && (
+                        <span className="font-mali text-gray-500">
+                          / {coupon.usageLimit}
+                        </span>
+                      )}
+                    </div>
+                    {coupon.usageLimit && (
+                      <div className="w-full bg-gray-200 rounded-full h-2 mt-1">
+                        <div
+                          className="bg-brand-blue h-2 rounded-full"
+                          style={{ width: `${Math.min(getUsagePercentage(coupon), 100)}%` }}
+                        ></div>
+                      </div>
+                    )}
+                  </div>
+                </div>
+
+                {/* Status and Expiry */}
+                <div className="flex flex-col sm:flex-row sm:items-center gap-3">
+                  <div>
+                    <p className="font-mali text-gray-500 text-xs uppercase tracking-wide mb-1">Status</p>
+                    <span className={`inline-block px-3 py-1 rounded-full text-sm font-mali font-bold ${
+                      !coupon.active ? 'bg-gray-100 text-gray-800' :
+                      isExpired(coupon) ? 'bg-red-100 text-red-800' :
+                      coupon.usageLimit && coupon.usedCount >= coupon.usageLimit ? 'bg-orange-100 text-orange-800' :
+                      'bg-green-100 text-green-800'
+                    }`}>
+                      {!coupon.active ? 'Inactive' :
+                       isExpired(coupon) ? 'Expired' :
+                       coupon.usageLimit && coupon.usedCount >= coupon.usageLimit ? 'Used Up' :
+                       'Active'}
+                    </span>
+                  </div>
+                  
+                  <div>
+                    <p className="font-mali text-gray-500 text-xs uppercase tracking-wide mb-1">Expires</p>
+                    {coupon.expiresAt ? (
+                      <div>
+                        <p className="font-mali text-gray-800 font-medium text-sm">
+                          {new Date(coupon.expiresAt).toLocaleDateString()}
+                        </p>
+                        <p className="font-mali text-gray-500 text-xs">
+                          {isExpired(coupon) ? 'Expired' : 
+                           Math.ceil((new Date(coupon.expiresAt).getTime() - Date.now()) / (1000 * 60 * 60 * 24)) + ' days left'}
+                        </p>
+                      </div>
+                    ) : (
+                      <span className="font-mali text-gray-500 text-sm">Never</span>
+                    )}
+                  </div>
+                </div>
+              </div>
+
+              {/* Actions */}
+              <div className="flex sm:flex-col gap-2">
+                <button
+                  onClick={() => setEditingCoupon(coupon)}
+                  className="flex-1 sm:flex-none px-4 py-2 text-blue-600 hover:bg-blue-50 rounded-lg transition-colors font-mali font-medium text-sm flex items-center justify-center gap-2"
+                  title="Edit Coupon"
+                >
+                  <Edit className="w-4 h-4" />
+                  <span className="sm:hidden">Edit</span>
+                </button>
+                <button
+                  onClick={() => handleDeleteCoupon(coupon.code)}
+                  className="flex-1 sm:flex-none px-4 py-2 text-red-600 hover:bg-red-50 rounded-lg transition-colors font-mali font-medium text-sm flex items-center justify-center gap-2"
+                  title="Delete Coupon"
+                >
+                  <Trash2 className="w-4 h-4" />
+                  <span className="sm:hidden">Delete</span>
+                </button>
+              </div>
+            </div>
+          </div>
+        ))}
+      </div>
+
       {/* Create Coupon Modal */}
       {showCreateModal && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
-          <div className="bg-white rounded-2xl max-w-2xl w-full max-h-[90vh] overflow-y-auto">
-            <div className="p-6 border-b border-gray-200">
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-2 sm:p-4">
+          <div className="bg-white rounded-2xl max-w-2xl w-full max-h-[95vh] sm:max-h-[90vh] overflow-y-auto">
+            <div className="p-4 sm:p-6 border-b border-gray-200">
               <div className="flex items-center justify-between">
-                <h3 className="text-xl font-mali font-bold text-gray-800">Create New Coupon</h3>
+                <h3 className="text-lg sm:text-xl font-mali font-bold text-gray-800">Create New Coupon</h3>
                 <button
                   onClick={() => setShowCreateModal(false)}
                   className="p-2 hover:bg-gray-100 rounded-lg transition-colors"
@@ -338,8 +476,8 @@ export const CouponManagement: React.FC = () => {
               </div>
             </div>
 
-            <div className="p-6 space-y-6">
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div className="p-4 sm:p-6 space-y-4 sm:space-y-6">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6">
                 <div>
                   <label className="block font-mali font-bold text-gray-700 mb-2">Coupon Code *</label>
                   <div className="flex gap-2">
@@ -468,11 +606,11 @@ export const CouponManagement: React.FC = () => {
 
       {/* Edit Coupon Modal */}
       {editingCoupon && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
-          <div className="bg-white rounded-2xl max-w-2xl w-full max-h-[90vh] overflow-y-auto">
-            <div className="p-6 border-b border-gray-200">
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-2 sm:p-4">
+          <div className="bg-white rounded-2xl max-w-2xl w-full max-h-[95vh] sm:max-h-[90vh] overflow-y-auto">
+            <div className="p-4 sm:p-6 border-b border-gray-200">
               <div className="flex items-center justify-between">
-                <h3 className="text-xl font-mali font-bold text-gray-800">Edit Coupon: {editingCoupon.code}</h3>
+                <h3 className="text-lg sm:text-xl font-mali font-bold text-gray-800">Edit Coupon: {editingCoupon.code}</h3>
                 <button
                   onClick={() => setEditingCoupon(null)}
                   className="p-2 hover:bg-gray-100 rounded-lg transition-colors"
@@ -482,8 +620,8 @@ export const CouponManagement: React.FC = () => {
               </div>
             </div>
 
-            <div className="p-6 space-y-6">
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div className="p-4 sm:p-6 space-y-4 sm:space-y-6">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6">
                 <div>
                   <label className="block font-mali font-bold text-gray-700 mb-2">Coupon Code</label>
                   <input
