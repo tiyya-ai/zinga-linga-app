@@ -145,8 +145,6 @@ export const ImprovedAdminDashboard: React.FC<ImprovedAdminDashboardProps> = ({ 
     role: 'user' as 'user' | 'admin',
     totalSpent: 0
   });
-  const [showHeader, setShowHeader] = useState(true);
-  const [headerTimer, setHeaderTimer] = useState<NodeJS.Timeout | null>(null);
 
   // Mobile detection and responsive handling
   useEffect(() => {
@@ -161,59 +159,6 @@ export const ImprovedAdminDashboard: React.FC<ImprovedAdminDashboardProps> = ({ 
     window.addEventListener('resize', checkMobile);
     return () => window.removeEventListener('resize', checkMobile);
   }, []);
-
-  // Auto-hide header on mobile after 3 seconds
-  useEffect(() => {
-    if (isMobile) {
-      // Clear existing timer
-      if (headerTimer) {
-        clearTimeout(headerTimer);
-      }
-      
-      // Show header when page changes
-      setShowHeader(true);
-      
-      // Set timer to hide header after 3 seconds
-      const timer = setTimeout(() => {
-        setShowHeader(false);
-      }, 3000);
-      
-      setHeaderTimer(timer);
-      
-      // Cleanup timer on unmount
-      return () => {
-        if (timer) {
-          clearTimeout(timer);
-        }
-      };
-    } else {
-      // Always show header on desktop
-      setShowHeader(true);
-      if (headerTimer) {
-        clearTimeout(headerTimer);
-        setHeaderTimer(null);
-      }
-    }
-  }, [activeTab, isMobile]);
-
-  // Show header temporarily when user interacts
-  const showHeaderTemporarily = () => {
-    if (isMobile) {
-      setShowHeader(true);
-      
-      // Clear existing timer
-      if (headerTimer) {
-        clearTimeout(headerTimer);
-      }
-      
-      // Set new timer to hide header
-      const timer = setTimeout(() => {
-        setShowHeader(false);
-      }, 3000);
-      
-      setHeaderTimer(timer);
-    }
-  };
 
   // Load real data on component mount
   useEffect(() => {
@@ -649,14 +594,8 @@ export const ImprovedAdminDashboard: React.FC<ImprovedAdminDashboardProps> = ({ 
       <div className={`flex-1 transition-all duration-300 ${
         isMobile ? 'ml-0 pb-24' : sidebarCollapsed ? 'ml-20' : 'ml-80'
       }`}>
-        {/* Enhanced Top Header with Auto-Hide */}
-        <header 
-          className={`bg-white shadow-sm border-b border-gray-200 px-4 sm:px-6 py-4 sticky top-0 z-40 transition-transform duration-300 ${
-            isMobile && !showHeader ? '-translate-y-full' : 'translate-y-0'
-          }`}
-          onTouchStart={showHeaderTemporarily}
-          onClick={showHeaderTemporarily}
-        >
+        {/* Enhanced Top Header */}
+        <header className="bg-white shadow-sm border-b border-gray-200 px-4 sm:px-6 py-4 sticky top-0 z-40">
           <div className="flex justify-between items-center">
             <div className="flex items-center gap-4">
               <h2 className="text-xl sm:text-2xl lg:text-3xl font-mali font-bold text-gray-800 capitalize truncate">
@@ -692,12 +631,8 @@ export const ImprovedAdminDashboard: React.FC<ImprovedAdminDashboardProps> = ({ 
           </div>
         </header>
 
-        {/* Content Area with Touch Handler */}
-        <main 
-          className="p-4 sm:p-6"
-          onTouchStart={showHeaderTemporarily}
-          onScroll={showHeaderTemporarily}
-        >
+        {/* Content Area */}
+        <main className="p-4 sm:p-6">
           {/* Dashboard Overview */}
           {activeTab === 'dashboard' && (
             <div className="space-y-6">
@@ -863,7 +798,7 @@ export const ImprovedAdminDashboard: React.FC<ImprovedAdminDashboardProps> = ({ 
             </div>
           )}
 
-          {/* Other tabs content remains the same... */}
+          {/* Orders Management */}
           {activeTab === 'purchases' && (
             <OrdersPage
               purchases={purchases}
@@ -873,6 +808,7 @@ export const ImprovedAdminDashboard: React.FC<ImprovedAdminDashboardProps> = ({ 
             />
           )}
 
+          {/* Users Management */}
           {activeTab === 'users' && (
             <UsersPage
               users={users}
@@ -880,6 +816,7 @@ export const ImprovedAdminDashboard: React.FC<ImprovedAdminDashboardProps> = ({ 
               purchases={purchases}
               onUsersUpdate={(updatedUsers) => {
                 setUsers(updatedUsers);
+                // Save the updated users to the data store
                 const success = dataStore.saveData({
                   users: updatedUsers,
                   modules,
@@ -896,6 +833,7 @@ export const ImprovedAdminDashboard: React.FC<ImprovedAdminDashboardProps> = ({ 
             />
           )}
 
+          {/* Analytics Tab */}
           {activeTab === 'analytics' && (
             <AnalyticsPage
               users={users}
@@ -906,6 +844,7 @@ export const ImprovedAdminDashboard: React.FC<ImprovedAdminDashboardProps> = ({ 
             />
           )}
 
+          {/* Reports Tab */}
           {activeTab === 'reports' && (
             <ReportsPageEnhanced
               users={users}
@@ -915,6 +854,7 @@ export const ImprovedAdminDashboard: React.FC<ImprovedAdminDashboardProps> = ({ 
             />
           )}
 
+          {/* System Tab */}
           {activeTab === 'system' && (
             <SystemPage
               users={users}
@@ -924,10 +864,12 @@ export const ImprovedAdminDashboard: React.FC<ImprovedAdminDashboardProps> = ({ 
             />
           )}
 
+          {/* Settings Tab */}
           {activeTab === 'settings' && (
             <AdminSettings user={user} />
           )}
 
+          {/* Support Tab */}
           {activeTab === 'support' && (
             <div className="space-y-8">
               <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
@@ -1001,6 +943,7 @@ export const ImprovedAdminDashboard: React.FC<ImprovedAdminDashboardProps> = ({ 
             </div>
           )}
 
+          {/* Simple Product Management */}
           {activeTab === 'modules' && (
             <SimpleProductManagement
               modules={modules}
@@ -1014,6 +957,7 @@ export const ImprovedAdminDashboard: React.FC<ImprovedAdminDashboardProps> = ({ 
             />
           )}
 
+          {/* Content Tab */}
           {activeTab === 'content' && (
             <div className="space-y-8">
               <div className="bg-white rounded-2xl p-8 shadow-lg border border-gray-100">
