@@ -216,22 +216,22 @@ export const EnhancedCheckout: React.FC<EnhancedCheckoutProps> = ({
   const paymentMethods = checkoutManager.getPaymentMethods();
 
   return (
-    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
-      <div className="bg-white rounded-2xl max-w-4xl w-full max-h-[95vh] overflow-hidden shadow-2xl">
+    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-2 sm:p-4">
+      <div className="bg-white rounded-xl sm:rounded-2xl max-w-4xl w-full max-h-[98vh] sm:max-h-[95vh] overflow-hidden shadow-2xl">
         {/* Header */}
-        <div className="bg-gradient-to-r from-brand-blue to-brand-green p-6 text-white">
+        <div className="bg-gradient-to-r from-brand-blue to-brand-green p-4 sm:p-6 text-white">
           <div className="flex justify-between items-center">
             <div>
-              <h2 className="text-2xl font-mali font-bold">Secure Checkout</h2>
-              <p className="font-mali opacity-90">Complete your purchase safely and securely</p>
+              <h2 className="text-lg sm:text-2xl font-mali font-bold">Secure Checkout</h2>
+              <p className="font-mali opacity-90 text-sm sm:text-base">Complete your purchase safely and securely</p>
             </div>
-            <button onClick={onClose} className="text-white hover:text-brand-yellow transition-colors">
-              <X className="w-6 h-6" />
+            <button onClick={onClose} className="text-white hover:text-brand-yellow transition-colors touch-manipulation">
+              <X className="w-5 h-5 sm:w-6 sm:h-6" />
             </button>
           </div>
           
-          {/* Progress Steps */}
-          <div className="flex items-center justify-center mt-6 space-x-4">
+          {/* Progress Steps - Hidden on mobile */}
+          <div className="hidden sm:flex items-center justify-center mt-6 space-x-4">
             {[1, 2, 3].map((step) => (
               <div key={step} className="flex items-center">
                 <div className={`w-8 h-8 rounded-full flex items-center justify-center font-mali font-bold ${
@@ -247,7 +247,7 @@ export const EnhancedCheckout: React.FC<EnhancedCheckoutProps> = ({
               </div>
             ))}
           </div>
-          <div className="flex justify-center mt-2 space-x-8">
+          <div className="hidden sm:flex justify-center mt-2 space-x-8">
             <span className="font-mali text-sm opacity-90">Order Review</span>
             <span className="font-mali text-sm opacity-90">Payment</span>
             <span className="font-mali text-sm opacity-90">Confirmation</span>
@@ -255,46 +255,46 @@ export const EnhancedCheckout: React.FC<EnhancedCheckoutProps> = ({
         </div>
 
         {/* Content */}
-        <div className="p-6 overflow-y-auto max-h-[calc(95vh-200px)]">
-          <div className="grid md:grid-cols-2 gap-8">
+        <div className="p-3 sm:p-6 overflow-y-auto max-h-[calc(98vh-140px)] sm:max-h-[calc(95vh-200px)]">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-8">
             
             {/* Left Column - Order Summary & Coupons */}
-            <div className="space-y-6">
+            <div className="space-y-4 sm:space-y-6">
               {/* Order Summary */}
-              <div className="bg-gray-50 rounded-2xl p-6">
-                <h3 className="text-xl font-mali font-bold text-gray-800 mb-4 flex items-center gap-2">
-                  <ShoppingCart className="w-5 h-5" />
+              <div className="bg-gray-50 rounded-xl sm:rounded-2xl p-4 sm:p-6">
+                <h3 className="text-lg sm:text-xl font-mali font-bold text-gray-800 mb-3 sm:mb-4 flex items-center gap-2">
+                  <CreditCard className="w-4 h-4 sm:w-5 sm:h-5" />
                   Order Summary
                 </h3>
                 <div className="space-y-3">
                   {cart.items.map((item) => (
                     <div key={item.id} className="flex justify-between items-center p-3 bg-white rounded-lg">
-                      <div>
-                        <p className="font-mali font-bold text-gray-800">{item.title}</p>
-                        <p className="font-mali text-gray-600 text-sm">{item.description}</p>
+                      <div className="flex-1 min-w-0">
+                        <p className="font-mali font-bold text-gray-800 text-sm sm:text-base truncate">{item.title}</p>
+                        <p className="font-mali text-gray-600 text-xs sm:text-sm truncate">{item.description}</p>
                       </div>
-                      <span className="font-mali font-bold text-brand-green">${item.price.toFixed(2)}</span>
+                      <span className="font-mali font-bold text-brand-green text-sm sm:text-base ml-2">${item.price.toFixed(2)}</span>
                     </div>
                   ))}
                   
                   <div className="border-t pt-3 space-y-2">
-                    <div className="flex justify-between">
+                    <div className="flex justify-between text-sm sm:text-base">
                       <span className="font-mali text-gray-600">Subtotal</span>
                       <span className="font-mali font-bold">${cart.total.toFixed(2)}</span>
                     </div>
                     {discountApplied && (
-                      <div className="flex justify-between text-green-600">
+                      <div className="flex justify-between text-green-600 text-sm sm:text-base">
                         <span className="font-mali">Discount ({discountCode})</span>
                         <span className="font-mali font-bold">-${discountAmount.toFixed(2)}</span>
                       </div>
                     )}
-                    <div className="flex justify-between">
+                    <div className="flex justify-between text-sm sm:text-base">
                       <span className="font-mali text-gray-600">Tax</span>
                       <span className="font-mali font-bold">${session.taxAmount.toFixed(2)}</span>
                     </div>
                     <div className="border-t pt-2 flex justify-between">
-                      <span className="font-mali font-bold text-lg">Total</span>
-                      <span className="font-mali font-bold text-lg text-brand-green">
+                      <span className="font-mali font-bold text-base sm:text-lg">Total</span>
+                      <span className="font-mali font-bold text-base sm:text-lg text-brand-green">
                         ${session.totalAmount.toFixed(2)}
                       </span>
                     </div>
@@ -303,25 +303,25 @@ export const EnhancedCheckout: React.FC<EnhancedCheckoutProps> = ({
               </div>
 
               {/* Coupon Section */}
-              <div className="bg-gradient-to-br from-yellow-50 to-orange-50 rounded-2xl p-6 border border-yellow-200">
-                <h4 className="text-lg font-mali font-bold text-gray-800 mb-4 flex items-center gap-2">
-                  <Gift className="w-5 h-5 text-yellow-600" />
+              <div className="bg-gradient-to-br from-yellow-50 to-orange-50 rounded-xl sm:rounded-2xl p-4 sm:p-6 border border-yellow-200">
+                <h4 className="text-base sm:text-lg font-mali font-bold text-gray-800 mb-3 sm:mb-4 flex items-center gap-2">
+                  <Gift className="w-4 h-4 sm:w-5 sm:h-5 text-yellow-600" />
                   Discount Codes
                 </h4>
                 
                 {!discountApplied ? (
-                  <div className="space-y-4">
-                    <div className="flex gap-3">
+                  <div className="space-y-3 sm:space-y-4">
+                    <div className="flex flex-col sm:flex-row gap-2 sm:gap-3">
                       <input
                         type="text"
                         placeholder="Enter coupon code"
                         value={discountCode}
                         onChange={(e) => setDiscountCode(e.target.value.toUpperCase())}
-                        className="flex-1 px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-brand-blue font-mali"
+                        className="flex-1 px-3 sm:px-4 py-2 sm:py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-brand-blue font-mali text-sm sm:text-base min-h-[44px] touch-manipulation"
                       />
                       <button
                         onClick={handleApplyDiscount}
-                        className="px-6 py-3 bg-brand-blue text-white rounded-lg hover:bg-brand-blue/90 transition-colors font-mali font-bold"
+                        className="px-4 sm:px-6 py-2 sm:py-3 bg-brand-blue text-white rounded-lg hover:bg-brand-blue/90 transition-colors font-mali font-bold text-sm sm:text-base min-h-[44px] touch-manipulation"
                       >
                         Apply
                       </button>
@@ -329,17 +329,17 @@ export const EnhancedCheckout: React.FC<EnhancedCheckoutProps> = ({
                     
                     {/* Available Coupons */}
                     <div className="space-y-2">
-                      <p className="font-mali text-gray-700 text-sm font-bold">Available Coupons:</p>
+                      <p className="font-mali text-gray-700 text-xs sm:text-sm font-bold">Available Coupons:</p>
                       {availableCoupons.map((coupon) => (
                         <div key={coupon.code} className="bg-white rounded-lg p-3 border border-yellow-300">
                           <div className="flex items-center justify-between">
-                            <div>
-                              <span className="font-mali font-bold text-brand-blue">{coupon.code}</span>
-                              <p className="font-mali text-gray-600 text-xs">{coupon.description}</p>
+                            <div className="flex-1 min-w-0">
+                              <span className="font-mali font-bold text-brand-blue text-sm sm:text-base">{coupon.code}</span>
+                              <p className="font-mali text-gray-600 text-xs truncate">{coupon.description}</p>
                             </div>
                             <button
                               onClick={() => setDiscountCode(coupon.code)}
-                              className="text-brand-blue hover:text-brand-blue/80 font-mali text-sm underline"
+                              className="text-brand-blue hover:text-brand-blue/80 font-mali text-xs sm:text-sm underline ml-2 touch-manipulation"
                             >
                               Use Code
                             </button>
@@ -349,15 +349,15 @@ export const EnhancedCheckout: React.FC<EnhancedCheckoutProps> = ({
                     </div>
                   </div>
                 ) : (
-                  <div className="bg-green-100 rounded-lg p-4 border border-green-300">
+                  <div className="bg-green-100 rounded-lg p-3 sm:p-4 border border-green-300">
                     <div className="flex items-center justify-between">
-                      <div className="flex items-center gap-2">
-                        <CheckCircle className="w-5 h-5 text-green-600" />
-                        <div>
-                          <span className="font-mali font-bold text-green-800">
+                      <div className="flex items-center gap-2 flex-1 min-w-0">
+                        <CheckCircle className="w-4 h-4 sm:w-5 sm:h-5 text-green-600 flex-shrink-0" />
+                        <div className="min-w-0">
+                          <span className="font-mali font-bold text-green-800 text-sm sm:text-base block truncate">
                             Coupon Applied: {discountCode}
                           </span>
-                          <p className="font-mali text-green-700 text-sm">
+                          <p className="font-mali text-green-700 text-xs sm:text-sm">
                             You saved ${discountAmount.toFixed(2)}!
                           </p>
                         </div>
@@ -374,7 +374,7 @@ export const EnhancedCheckout: React.FC<EnhancedCheckoutProps> = ({
                           });
                           if (updatedSession) setSession(updatedSession);
                         }}
-                        className="text-red-600 hover:text-red-800 font-mali text-sm underline"
+                        className="text-red-600 hover:text-red-800 font-mali text-xs sm:text-sm underline ml-2 touch-manipulation"
                       >
                         Remove
                       </button>
@@ -383,41 +383,41 @@ export const EnhancedCheckout: React.FC<EnhancedCheckoutProps> = ({
                 )}
                 
                 {errors.discountCode && (
-                  <p className="text-red-600 font-mali text-sm mt-2">{errors.discountCode}</p>
+                  <p className="text-red-600 font-mali text-xs sm:text-sm mt-2">{errors.discountCode}</p>
                 )}
               </div>
 
-              {/* Notification Preferences */}
-              <div className="bg-blue-50 rounded-2xl p-6 border border-blue-200">
-                <h4 className="text-lg font-mali font-bold text-gray-800 mb-4 flex items-center gap-2">
-                  <Mail className="w-5 h-5 text-blue-600" />
+              {/* Notification Preferences - Hidden on mobile to save space */}
+              <div className="hidden sm:block bg-blue-50 rounded-xl sm:rounded-2xl p-4 sm:p-6 border border-blue-200">
+                <h4 className="text-base sm:text-lg font-mali font-bold text-gray-800 mb-3 sm:mb-4 flex items-center gap-2">
+                  <Mail className="w-4 h-4 sm:w-5 sm:h-5 text-blue-600" />
                   Notification Preferences
                 </h4>
                 
-                <div className="space-y-4">
-                  <label className="flex items-center gap-3">
+                <div className="space-y-3 sm:space-y-4">
+                  <label className="flex items-start gap-3 touch-manipulation">
                     <input
                       type="checkbox"
                       checked={emailNotifications}
                       onChange={(e) => setEmailNotifications(e.target.checked)}
-                      className="w-4 h-4 text-brand-blue focus:ring-brand-blue border-gray-300 rounded"
+                      className="w-4 h-4 text-brand-blue focus:ring-brand-blue border-gray-300 rounded mt-0.5 touch-manipulation"
                     />
                     <div>
-                      <span className="font-mali font-bold text-gray-800">Email Notifications</span>
-                      <p className="font-mali text-gray-600 text-sm">Receive order confirmations and updates</p>
+                      <span className="font-mali font-bold text-gray-800 text-sm sm:text-base">Email Notifications</span>
+                      <p className="font-mali text-gray-600 text-xs sm:text-sm">Receive order confirmations and updates</p>
                     </div>
                   </label>
                   
-                  <label className="flex items-center gap-3">
+                  <label className="flex items-start gap-3 touch-manipulation">
                     <input
                       type="checkbox"
                       checked={smsNotifications}
                       onChange={(e) => setSmsNotifications(e.target.checked)}
-                      className="w-4 h-4 text-brand-blue focus:ring-brand-blue border-gray-300 rounded"
+                      className="w-4 h-4 text-brand-blue focus:ring-brand-blue border-gray-300 rounded mt-0.5 touch-manipulation"
                     />
                     <div>
-                      <span className="font-mali font-bold text-gray-800">SMS Notifications</span>
-                      <p className="font-mali text-gray-600 text-sm">Get text updates about your order</p>
+                      <span className="font-mali font-bold text-gray-800 text-sm sm:text-base">SMS Notifications</span>
+                      <p className="font-mali text-gray-600 text-xs sm:text-sm">Get text updates about your order</p>
                     </div>
                   </label>
                   
@@ -428,7 +428,7 @@ export const EnhancedCheckout: React.FC<EnhancedCheckoutProps> = ({
                         placeholder="Phone number"
                         value={phoneNumber}
                         onChange={(e) => setPhoneNumber(e.target.value)}
-                        className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-brand-blue font-mali"
+                        className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-brand-blue font-mali text-sm sm:text-base min-h-[44px] touch-manipulation"
                       />
                     </div>
                   )}
@@ -437,28 +437,28 @@ export const EnhancedCheckout: React.FC<EnhancedCheckoutProps> = ({
             </div>
 
             {/* Right Column - Payment Information */}
-            <div className="space-y-6">
+            <div className="space-y-4 sm:space-y-6">
               {/* Payment Methods */}
-              <div className="bg-gray-50 rounded-2xl p-6">
-                <h3 className="text-xl font-mali font-bold text-gray-800 mb-4 flex items-center gap-2">
-                  <CreditCard className="w-5 h-5" />
+              <div className="bg-gray-50 rounded-xl sm:rounded-2xl p-4 sm:p-6">
+                <h3 className="text-lg sm:text-xl font-mali font-bold text-gray-800 mb-3 sm:mb-4 flex items-center gap-2">
+                  <CreditCard className="w-4 h-4 sm:w-5 sm:h-5" />
                   Payment Method
                 </h3>
                 
-                <div className="grid grid-cols-2 gap-3 mb-6">
+                <div className="grid grid-cols-2 gap-2 sm:gap-3 mb-4 sm:mb-6">
                   {paymentMethods.map((method) => (
                     <button
                       key={method.id}
                       onClick={() => setSelectedPaymentMethod(method)}
-                      className={`p-4 rounded-lg border-2 transition-all ${
+                      className={`p-3 sm:p-4 rounded-lg border-2 transition-all touch-manipulation ${
                         selectedPaymentMethod?.id === method.id
                           ? 'border-brand-blue bg-blue-50'
                           : 'border-gray-300 bg-white hover:border-gray-400'
                       }`}
                     >
                       <div className="text-center">
-                        <span className="text-2xl mb-2 block">{method.icon}</span>
-                        <span className="font-mali font-bold text-sm">{method.name}</span>
+                        <span className="text-xl sm:text-2xl mb-1 sm:mb-2 block">{method.icon}</span>
+                        <span className="font-mali font-bold text-xs sm:text-sm">{method.name}</span>
                       </div>
                     </button>
                   ))}
@@ -466,44 +466,44 @@ export const EnhancedCheckout: React.FC<EnhancedCheckoutProps> = ({
 
                 {/* Credit Card Form */}
                 {selectedPaymentMethod?.type === 'credit_card' && (
-                  <div className="space-y-4">
+                  <div className="space-y-3 sm:space-y-4">
                     <div>
-                      <label className="block font-mali font-bold text-gray-700 mb-2">Card Number</label>
+                      <label className="block font-mali font-bold text-gray-700 mb-2 text-sm sm:text-base">Card Number</label>
                       <input
                         type="text"
                         placeholder="1234 5678 9012 3456"
                         value={paymentInfo.cardNumber}
                         onChange={handleCardNumberChange}
                         maxLength={19}
-                        className={`w-full px-4 py-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-brand-blue font-mali ${
+                        className={`w-full px-3 sm:px-4 py-2 sm:py-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-brand-blue font-mali text-sm sm:text-base min-h-[44px] touch-manipulation ${
                           errors.cardNumber ? 'border-red-500' : 'border-gray-300'
                         }`}
                       />
                       {errors.cardNumber && (
-                        <p className="text-red-600 font-mali text-sm mt-1">{errors.cardNumber}</p>
+                        <p className="text-red-600 font-mali text-xs sm:text-sm mt-1">{errors.cardNumber}</p>
                       )}
                     </div>
 
-                    <div className="grid grid-cols-2 gap-4">
+                    <div className="grid grid-cols-2 gap-3 sm:gap-4">
                       <div>
-                        <label className="block font-mali font-bold text-gray-700 mb-2">Expiry Date</label>
+                        <label className="block font-mali font-bold text-gray-700 mb-2 text-sm sm:text-base">Expiry Date</label>
                         <input
                           type="text"
                           placeholder="MM/YY"
                           value={paymentInfo.expiryDate}
                           onChange={handleExpiryDateChange}
                           maxLength={5}
-                          className={`w-full px-4 py-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-brand-blue font-mali ${
+                          className={`w-full px-3 sm:px-4 py-2 sm:py-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-brand-blue font-mali text-sm sm:text-base min-h-[44px] touch-manipulation ${
                             errors.expiryDate ? 'border-red-500' : 'border-gray-300'
                           }`}
                         />
                         {errors.expiryDate && (
-                          <p className="text-red-600 font-mali text-sm mt-1">{errors.expiryDate}</p>
+                          <p className="text-red-600 font-mali text-xs sm:text-sm mt-1">{errors.expiryDate}</p>
                         )}
                       </div>
 
                       <div>
-                        <label className="block font-mali font-bold text-gray-700 mb-2">CVV</label>
+                        <label className="block font-mali font-bold text-gray-700 mb-2 text-sm sm:text-base">CVV</label>
                         <div className="relative">
                           <input
                             type={showCvv ? "text" : "password"}
@@ -511,43 +511,43 @@ export const EnhancedCheckout: React.FC<EnhancedCheckoutProps> = ({
                             value={paymentInfo.cvv}
                             onChange={(e) => setPaymentInfo({ ...paymentInfo, cvv: e.target.value })}
                             maxLength={4}
-                            className={`w-full px-4 py-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-brand-blue font-mali ${
+                            className={`w-full px-3 sm:px-4 py-2 sm:py-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-brand-blue font-mali text-sm sm:text-base min-h-[44px] touch-manipulation ${
                               errors.cvv ? 'border-red-500' : 'border-gray-300'
                             }`}
                           />
                           <button
                             type="button"
                             onClick={() => setShowCvv(!showCvv)}
-                            className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-500"
+                            className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-500 touch-manipulation"
                           >
-                            {showCvv ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+                            {showCvv ? <EyeOff className="w-3 h-3 sm:w-4 sm:h-4" /> : <Eye className="w-3 h-3 sm:w-4 sm:h-4" />}
                           </button>
                         </div>
                         {errors.cvv && (
-                          <p className="text-red-600 font-mali text-sm mt-1">{errors.cvv}</p>
+                          <p className="text-red-600 font-mali text-xs sm:text-sm mt-1">{errors.cvv}</p>
                         )}
                       </div>
                     </div>
 
                     <div>
-                      <label className="block font-mali font-bold text-gray-700 mb-2">Cardholder Name</label>
+                      <label className="block font-mali font-bold text-gray-700 mb-2 text-sm sm:text-base">Cardholder Name</label>
                       <input
                         type="text"
                         placeholder="John Doe"
                         value={paymentInfo.cardholderName}
                         onChange={(e) => setPaymentInfo({ ...paymentInfo, cardholderName: e.target.value })}
-                        className={`w-full px-4 py-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-brand-blue font-mali ${
+                        className={`w-full px-3 sm:px-4 py-2 sm:py-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-brand-blue font-mali text-sm sm:text-base min-h-[44px] touch-manipulation ${
                           errors.cardholderName ? 'border-red-500' : 'border-gray-300'
                         }`}
                       />
                       {errors.cardholderName && (
-                        <p className="text-red-600 font-mali text-sm mt-1">{errors.cardholderName}</p>
+                        <p className="text-red-600 font-mali text-xs sm:text-sm mt-1">{errors.cardholderName}</p>
                       )}
                     </div>
 
                     {/* Billing Address */}
-                    <div className="space-y-4">
-                      <h4 className="font-mali font-bold text-gray-800">Billing Address</h4>
+                    <div className="space-y-3 sm:space-y-4">
+                      <h4 className="font-mali font-bold text-gray-800 text-sm sm:text-base">Billing Address</h4>
                       
                       <div>
                         <input
@@ -558,16 +558,16 @@ export const EnhancedCheckout: React.FC<EnhancedCheckoutProps> = ({
                             ...paymentInfo,
                             billingAddress: { ...paymentInfo.billingAddress, street: e.target.value }
                           })}
-                          className={`w-full px-4 py-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-brand-blue font-mali ${
+                          className={`w-full px-3 sm:px-4 py-2 sm:py-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-brand-blue font-mali text-sm sm:text-base min-h-[44px] touch-manipulation ${
                             errors.street ? 'border-red-500' : 'border-gray-300'
                           }`}
                         />
                         {errors.street && (
-                          <p className="text-red-600 font-mali text-sm mt-1">{errors.street}</p>
+                          <p className="text-red-600 font-mali text-xs sm:text-sm mt-1">{errors.street}</p>
                         )}
                       </div>
 
-                      <div className="grid grid-cols-2 gap-4">
+                      <div className="grid grid-cols-2 gap-3 sm:gap-4">
                         <div>
                           <input
                             type="text"
@@ -577,12 +577,12 @@ export const EnhancedCheckout: React.FC<EnhancedCheckoutProps> = ({
                               ...paymentInfo,
                               billingAddress: { ...paymentInfo.billingAddress, city: e.target.value }
                             })}
-                            className={`w-full px-4 py-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-brand-blue font-mali ${
+                            className={`w-full px-3 sm:px-4 py-2 sm:py-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-brand-blue font-mali text-sm sm:text-base min-h-[44px] touch-manipulation ${
                               errors.city ? 'border-red-500' : 'border-gray-300'
                             }`}
                           />
                           {errors.city && (
-                            <p className="text-red-600 font-mali text-sm mt-1">{errors.city}</p>
+                            <p className="text-red-600 font-mali text-xs sm:text-sm mt-1">{errors.city}</p>
                           )}
                         </div>
                         
@@ -595,12 +595,12 @@ export const EnhancedCheckout: React.FC<EnhancedCheckoutProps> = ({
                               ...paymentInfo,
                               billingAddress: { ...paymentInfo.billingAddress, zipCode: e.target.value }
                             })}
-                            className={`w-full px-4 py-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-brand-blue font-mali ${
+                            className={`w-full px-3 sm:px-4 py-2 sm:py-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-brand-blue font-mali text-sm sm:text-base min-h-[44px] touch-manipulation ${
                               errors.zipCode ? 'border-red-500' : 'border-gray-300'
                             }`}
                           />
                           {errors.zipCode && (
-                            <p className="text-red-600 font-mali text-sm mt-1">{errors.zipCode}</p>
+                            <p className="text-red-600 font-mali text-xs sm:text-sm mt-1">{errors.zipCode}</p>
                           )}
                         </div>
                       </div>
@@ -610,8 +610,8 @@ export const EnhancedCheckout: React.FC<EnhancedCheckoutProps> = ({
 
                 {/* Other Payment Methods */}
                 {selectedPaymentMethod?.type !== 'credit_card' && (
-                  <div className="bg-blue-50 rounded-lg p-4 text-center">
-                    <p className="font-mali text-blue-800">
+                  <div className="bg-blue-50 rounded-lg p-3 sm:p-4 text-center">
+                    <p className="font-mali text-blue-800 text-sm sm:text-base">
                       You will be redirected to {selectedPaymentMethod?.name} to complete your payment.
                     </p>
                   </div>
@@ -619,16 +619,16 @@ export const EnhancedCheckout: React.FC<EnhancedCheckoutProps> = ({
               </div>
 
               {/* Terms and Security */}
-              <div className="space-y-4">
-                <div className="bg-green-50 rounded-lg p-4 border border-green-200">
-                  <label className="flex items-start gap-3">
+              <div className="space-y-3 sm:space-y-4">
+                <div className="bg-green-50 rounded-lg p-3 sm:p-4 border border-green-200">
+                  <label className="flex items-start gap-3 touch-manipulation">
                     <input
                       type="checkbox"
                       checked={agreedToTerms}
                       onChange={(e) => setAgreedToTerms(e.target.checked)}
-                      className="mt-1 w-4 h-4 text-brand-blue focus:ring-brand-blue border-gray-300 rounded"
+                      className="mt-1 w-4 h-4 text-brand-blue focus:ring-brand-blue border-gray-300 rounded touch-manipulation"
                     />
-                    <span className="font-mali text-gray-700 text-sm">
+                    <span className="font-mali text-gray-700 text-xs sm:text-sm">
                       I agree to the{' '}
                       <a href="#" className="text-brand-blue underline">Terms of Service</a>{' '}
                       and{' '}
@@ -636,31 +636,31 @@ export const EnhancedCheckout: React.FC<EnhancedCheckoutProps> = ({
                     </span>
                   </label>
                   {errors.terms && (
-                    <p className="text-red-600 font-mali text-sm mt-2">{errors.terms}</p>
+                    <p className="text-red-600 font-mali text-xs sm:text-sm mt-2">{errors.terms}</p>
                   )}
                 </div>
 
-                <div className="flex items-center justify-center gap-6 text-gray-600">
-                  <div className="flex items-center gap-2">
-                    <Lock className="w-4 h-4" />
-                    <span className="font-mali text-sm">SSL Secure</span>
+                <div className="flex items-center justify-center gap-3 sm:gap-6 text-gray-600">
+                  <div className="flex items-center gap-1 sm:gap-2">
+                    <Lock className="w-3 h-3 sm:w-4 sm:h-4" />
+                    <span className="font-mali text-xs sm:text-sm">SSL Secure</span>
                   </div>
-                  <div className="flex items-center gap-2">
-                    <Shield className="w-4 h-4" />
-                    <span className="font-mali text-sm">256-bit Encryption</span>
+                  <div className="flex items-center gap-1 sm:gap-2">
+                    <Shield className="w-3 h-3 sm:w-4 sm:h-4" />
+                    <span className="font-mali text-xs sm:text-sm">256-bit Encryption</span>
                   </div>
-                  <div className="flex items-center gap-2">
-                    <Star className="w-4 h-4" />
-                    <span className="font-mali text-sm">PCI Compliant</span>
+                  <div className="flex items-center gap-1 sm:gap-2">
+                    <Star className="w-3 h-3 sm:w-4 sm:h-4" />
+                    <span className="font-mali text-xs sm:text-sm">PCI Compliant</span>
                   </div>
                 </div>
               </div>
 
               {errors.payment && (
-                <div className="bg-red-50 border border-red-200 rounded-lg p-4">
+                <div className="bg-red-50 border border-red-200 rounded-lg p-3 sm:p-4">
                   <div className="flex items-center gap-2">
-                    <AlertTriangle className="w-5 h-5 text-red-600" />
-                    <p className="font-mali text-red-800">{errors.payment}</p>
+                    <AlertTriangle className="w-4 h-4 sm:w-5 sm:h-5 text-red-600" />
+                    <p className="font-mali text-red-800 text-sm sm:text-base">{errors.payment}</p>
                   </div>
                 </div>
               )}
@@ -669,10 +669,10 @@ export const EnhancedCheckout: React.FC<EnhancedCheckoutProps> = ({
         </div>
 
         {/* Footer */}
-        <div className="border-t bg-gray-50 p-6">
-          <div className="flex justify-between items-center">
-            <div className="text-gray-600">
-              <p className="font-mali text-sm">
+        <div className="border-t bg-gray-50 p-3 sm:p-6">
+          <div className="flex flex-col sm:flex-row justify-between items-center gap-3 sm:gap-0">
+            <div className="text-gray-600 text-center sm:text-left">
+              <p className="font-mali text-xs sm:text-sm">
                 🔒 Your payment information is encrypted and secure
               </p>
             </div>
@@ -680,17 +680,17 @@ export const EnhancedCheckout: React.FC<EnhancedCheckoutProps> = ({
             <button
               onClick={handleProcessPayment}
               disabled={isProcessing}
-              className="px-8 py-4 bg-brand-green text-white rounded-xl hover:bg-brand-green/90 transition-colors font-mali font-bold disabled:opacity-50 flex items-center gap-3 text-lg"
+              className="w-full sm:w-auto px-6 sm:px-8 py-3 sm:py-4 bg-brand-green text-white rounded-xl hover:bg-brand-green/90 transition-colors font-mali font-bold disabled:opacity-50 flex items-center justify-center gap-2 sm:gap-3 text-base sm:text-lg min-h-[48px] touch-manipulation"
             >
               {isProcessing ? (
                 <>
-                  <Clock className="w-5 h-5 animate-spin" />
-                  Processing Payment...
+                  <Clock className="w-4 h-4 sm:w-5 sm:h-5 animate-spin" />
+                  <span>Processing Payment...</span>
                 </>
               ) : (
                 <>
-                  <Zap className="w-5 h-5" />
-                  Complete Payment ${session.totalAmount.toFixed(2)}
+                  <Zap className="w-4 h-4 sm:w-5 sm:h-5" />
+                  <span>Complete Payment ${session.totalAmount.toFixed(2)}</span>
                 </>
               )}
             </button>

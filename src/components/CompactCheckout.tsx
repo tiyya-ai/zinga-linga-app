@@ -154,30 +154,30 @@ export const CompactCheckout: React.FC<CompactCheckoutProps> = ({
   };
 
   return (
-    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
-      <div className="bg-white rounded-2xl max-w-md w-full max-h-[90vh] overflow-hidden shadow-2xl">
+    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-2 sm:p-4">
+      <div className="bg-white rounded-xl sm:rounded-2xl max-w-md w-full max-h-[98vh] sm:max-h-[90vh] overflow-hidden shadow-2xl">
         {/* Compact Header */}
-        <div className="bg-gradient-to-r from-brand-blue to-brand-green p-4 text-white">
+        <div className="bg-gradient-to-r from-brand-blue to-brand-green p-3 sm:p-4 text-white">
           <div className="flex justify-between items-center">
             <div>
-              <h2 className="text-lg font-mali font-bold">Secure Checkout</h2>
-              <p className="font-mali text-sm opacity-90">SSL Protected</p>
+              <h2 className="text-base sm:text-lg font-mali font-bold">Secure Checkout</h2>
+              <p className="font-mali text-xs sm:text-sm opacity-90">SSL Protected</p>
             </div>
-            <button onClick={onClose} className="text-white hover:text-brand-yellow transition-colors">
-              <X className="w-5 h-5" />
+            <button onClick={onClose} className="text-white hover:text-brand-yellow transition-colors touch-manipulation">
+              <X className="w-4 h-4 sm:w-5 sm:h-5" />
             </button>
           </div>
         </div>
 
         {/* Compact Content */}
-        <div className="p-4 overflow-y-auto max-h-[calc(90vh-140px)] space-y-4">
+        <div className="p-3 sm:p-4 overflow-y-auto max-h-[calc(98vh-120px)] sm:max-h-[calc(90vh-140px)] space-y-3 sm:space-y-4">
           {/* Order Summary */}
           <div className="bg-gray-50 p-3 rounded-xl">
-            <h3 className="font-mali font-bold text-gray-800 mb-2 text-sm">Order Summary</h3>
-            <div className="space-y-1 text-sm">
+            <h3 className="font-mali font-bold text-gray-800 mb-2 text-sm sm:text-base">Order Summary</h3>
+            <div className="space-y-1 text-xs sm:text-sm">
               {cart.items.map((item) => (
-                <div key={item.id} className="flex justify-between">
-                  <span className="font-mali text-gray-600 truncate">{item.title}</span>
+                <div key={item.id} className="flex justify-between items-center">
+                  <span className="font-mali text-gray-600 truncate flex-1 mr-2">{item.title}</span>
                   <span className="font-mali font-bold">${item.price.toFixed(2)}</span>
                 </div>
               ))}
@@ -202,22 +202,22 @@ export const CompactCheckout: React.FC<CompactCheckoutProps> = ({
 
           {/* Discount Code */}
           <div className="bg-blue-50 p-3 rounded-xl">
-            <h4 className="font-mali font-bold text-gray-800 mb-2 text-sm flex items-center gap-1">
-              <Tag className="w-4 h-4" />
+            <h4 className="font-mali font-bold text-gray-800 mb-2 text-xs sm:text-sm flex items-center gap-1">
+              <Tag className="w-3 h-3 sm:w-4 sm:h-4" />
               Discount Code
             </h4>
             {!discountApplied ? (
-              <div className="flex gap-2">
+              <div className="flex flex-col sm:flex-row gap-2">
                 <input
                   type="text"
                   placeholder="Enter code"
                   value={discountCode}
                   onChange={(e) => setDiscountCode(e.target.value)}
-                  className="flex-1 px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-brand-blue font-mali text-sm"
+                  className="flex-1 px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-brand-blue font-mali text-xs sm:text-sm min-h-[40px] touch-manipulation"
                 />
                 <button
                   onClick={handleApplyDiscount}
-                  className="px-4 py-2 bg-brand-blue text-white rounded-lg hover:bg-brand-blue/90 transition-colors font-mali font-bold text-sm"
+                  className="px-3 sm:px-4 py-2 bg-brand-blue text-white rounded-lg hover:bg-brand-blue/90 transition-colors font-mali font-bold text-xs sm:text-sm min-h-[40px] touch-manipulation"
                 >
                   Apply
                 </button>
@@ -225,8 +225,8 @@ export const CompactCheckout: React.FC<CompactCheckoutProps> = ({
             ) : (
               <div className="flex items-center justify-between bg-green-100 p-2 rounded-lg">
                 <div className="flex items-center gap-1">
-                  <CheckCircle className="w-4 h-4 text-green-600" />
-                  <span className="font-mali font-bold text-green-800 text-sm">
+                  <CheckCircle className="w-3 h-3 sm:w-4 sm:h-4 text-green-600" />
+                  <span className="font-mali font-bold text-green-800 text-xs sm:text-sm">
                     Code applied
                   </span>
                 </div>
@@ -236,7 +236,7 @@ export const CompactCheckout: React.FC<CompactCheckoutProps> = ({
                     setDiscountAmount(0);
                     setDiscountCode('');
                   }}
-                  className="text-red-600 hover:text-red-800 font-mali text-xs underline"
+                  className="text-red-600 hover:text-red-800 font-mali text-xs underline touch-manipulation"
                 >
                   Remove
                 </button>
@@ -249,7 +249,7 @@ export const CompactCheckout: React.FC<CompactCheckoutProps> = ({
 
           {/* Payment Form */}
           <div className="space-y-3">
-            <h3 className="font-mali font-bold text-gray-800 text-sm">Payment Information</h3>
+            <h3 className="font-mali font-bold text-gray-800 text-xs sm:text-sm">Payment Information</h3>
             
             <div>
               <input
@@ -258,7 +258,7 @@ export const CompactCheckout: React.FC<CompactCheckoutProps> = ({
                 value={paymentInfo.cardNumber}
                 onChange={handleCardNumberChange}
                 maxLength={19}
-                className={`w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-brand-blue font-mali text-sm ${
+                className={`w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-brand-blue font-mali text-xs sm:text-sm min-h-[40px] touch-manipulation ${
                   errors.cardNumber ? 'border-red-500' : 'border-gray-300'
                 }`}
               />
@@ -267,7 +267,7 @@ export const CompactCheckout: React.FC<CompactCheckoutProps> = ({
               )}
             </div>
 
-            <div className="grid grid-cols-2 gap-3">
+            <div className="grid grid-cols-2 gap-2 sm:gap-3">
               <div>
                 <input
                   type="text"
@@ -275,7 +275,7 @@ export const CompactCheckout: React.FC<CompactCheckoutProps> = ({
                   value={paymentInfo.expiryDate}
                   onChange={handleExpiryDateChange}
                   maxLength={5}
-                  className={`w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-brand-blue font-mali text-sm ${
+                  className={`w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-brand-blue font-mali text-xs sm:text-sm min-h-[40px] touch-manipulation ${
                     errors.expiryDate ? 'border-red-500' : 'border-gray-300'
                   }`}
                 />
@@ -291,14 +291,14 @@ export const CompactCheckout: React.FC<CompactCheckoutProps> = ({
                   value={paymentInfo.cvv}
                   onChange={(e) => setPaymentInfo({ ...paymentInfo, cvv: e.target.value })}
                   maxLength={4}
-                  className={`w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-brand-blue font-mali text-sm ${
+                  className={`w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-brand-blue font-mali text-xs sm:text-sm min-h-[40px] touch-manipulation ${
                     errors.cvv ? 'border-red-500' : 'border-gray-300'
                   }`}
                 />
                 <button
                   type="button"
                   onClick={() => setShowCvv(!showCvv)}
-                  className="absolute right-2 top-1/2 transform -translate-y-1/2 text-gray-500"
+                  className="absolute right-2 top-1/2 transform -translate-y-1/2 text-gray-500 touch-manipulation"
                 >
                   {showCvv ? <EyeOff className="w-3 h-3" /> : <Eye className="w-3 h-3" />}
                 </button>
@@ -314,7 +314,7 @@ export const CompactCheckout: React.FC<CompactCheckoutProps> = ({
                 placeholder="Cardholder Name"
                 value={paymentInfo.cardholderName}
                 onChange={(e) => setPaymentInfo({ ...paymentInfo, cardholderName: e.target.value })}
-                className={`w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-brand-blue font-mali text-sm ${
+                className={`w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-brand-blue font-mali text-xs sm:text-sm min-h-[40px] touch-manipulation ${
                   errors.cardholderName ? 'border-red-500' : 'border-gray-300'
                 }`}
               />
@@ -323,7 +323,7 @@ export const CompactCheckout: React.FC<CompactCheckoutProps> = ({
               )}
             </div>
 
-            <div className="grid grid-cols-2 gap-3">
+            <div className="grid grid-cols-2 gap-2 sm:gap-3">
               <input
                 type="text"
                 placeholder="City"
@@ -332,7 +332,7 @@ export const CompactCheckout: React.FC<CompactCheckoutProps> = ({
                   ...paymentInfo,
                   billingAddress: { ...paymentInfo.billingAddress, city: e.target.value }
                 })}
-                className={`px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-brand-blue font-mali text-sm ${
+                className={`px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-brand-blue font-mali text-xs sm:text-sm min-h-[40px] touch-manipulation ${
                   errors.city ? 'border-red-500' : 'border-gray-300'
                 }`}
               />
@@ -344,7 +344,7 @@ export const CompactCheckout: React.FC<CompactCheckoutProps> = ({
                   ...paymentInfo,
                   billingAddress: { ...paymentInfo.billingAddress, zipCode: e.target.value }
                 })}
-                className={`px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-brand-blue font-mali text-sm ${
+                className={`px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-brand-blue font-mali text-xs sm:text-sm min-h-[40px] touch-manipulation ${
                   errors.zipCode ? 'border-red-500' : 'border-gray-300'
                 }`}
               />
@@ -353,12 +353,12 @@ export const CompactCheckout: React.FC<CompactCheckoutProps> = ({
 
           {/* Terms */}
           <div className="bg-gray-50 p-3 rounded-lg">
-            <label className="flex items-start gap-2">
+            <label className="flex items-start gap-2 touch-manipulation">
               <input
                 type="checkbox"
                 checked={agreedToTerms}
                 onChange={(e) => setAgreedToTerms(e.target.checked)}
-                className="mt-0.5"
+                className="mt-0.5 w-4 h-4 text-brand-blue focus:ring-brand-blue border-gray-300 rounded touch-manipulation"
               />
               <span className="font-mali text-gray-700 text-xs">
                 I agree to the <a href="#" className="text-brand-blue underline">Terms</a> and{' '}
@@ -373,16 +373,16 @@ export const CompactCheckout: React.FC<CompactCheckoutProps> = ({
           {errors.payment && (
             <div className="bg-red-50 border border-red-200 rounded-lg p-3">
               <div className="flex items-center gap-2">
-                <AlertTriangle className="w-4 h-4 text-red-600" />
-                <p className="font-mali text-red-800 text-sm">{errors.payment}</p>
+                <AlertTriangle className="w-3 h-3 sm:w-4 sm:h-4 text-red-600" />
+                <p className="font-mali text-red-800 text-xs sm:text-sm">{errors.payment}</p>
               </div>
             </div>
           )}
         </div>
 
         {/* Compact Footer */}
-        <div className="border-t bg-gray-50 p-4">
-          <div className="flex items-center justify-between mb-3">
+        <div className="border-t bg-gray-50 p-3 sm:p-4">
+          <div className="flex items-center justify-between mb-2 sm:mb-3">
             <div className="flex items-center gap-1 text-gray-600">
               <Lock className="w-3 h-3" />
               <span className="font-mali text-xs">SSL Secure</span>
@@ -396,16 +396,16 @@ export const CompactCheckout: React.FC<CompactCheckoutProps> = ({
           <button
             onClick={handleProcessPayment}
             disabled={isProcessing}
-            className="w-full py-3 bg-brand-green text-white rounded-xl hover:bg-brand-green/90 transition-colors font-mali font-bold disabled:opacity-50 flex items-center justify-center gap-2"
+            className="w-full py-3 bg-brand-green text-white rounded-xl hover:bg-brand-green/90 transition-colors font-mali font-bold disabled:opacity-50 flex items-center justify-center gap-2 text-sm sm:text-base min-h-[48px] touch-manipulation"
           >
             {isProcessing ? (
               <>
-                <Clock className="w-4 h-4 animate-spin" />
+                <Clock className="w-3 h-3 sm:w-4 sm:h-4 animate-spin" />
                 Processing...
               </>
             ) : (
               <>
-                <Shield className="w-4 h-4" />
+                <Shield className="w-3 h-3 sm:w-4 sm:h-4" />
                 Complete Payment ${session.totalAmount.toFixed(2)}
               </>
             )}
