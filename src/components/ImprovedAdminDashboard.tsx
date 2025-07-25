@@ -376,23 +376,31 @@ export const ImprovedAdminDashboard: React.FC<ImprovedAdminDashboardProps> = ({ 
       <div className={`fixed left-0 top-0 h-full bg-white shadow-2xl border-r border-gray-200 transition-all duration-300 z-50 ${
         isMobile 
           ? showMobileSidebar 
-            ? 'w-80 translate-x-0' 
-            : 'w-80 -translate-x-full'
+            ? 'w-72 translate-x-0' 
+            : 'w-72 -translate-x-full'
           : sidebarCollapsed 
             ? 'w-20' 
             : 'w-80'
       }`}>
         {/* Sidebar Header */}
-        <div className="p-4 sm:p-6 border-b border-gray-200 bg-gradient-to-r from-brand-blue/5 to-brand-pink/5">
+        <div className={`border-b border-gray-200 ${
+          isMobile ? 'p-3 bg-gray-50' : 'p-4 sm:p-6 bg-gradient-to-r from-brand-blue/5 to-brand-pink/5'
+        }`}>
           <div className="flex items-center justify-between">
             {(!sidebarCollapsed || isMobile) && (
               <div className="flex items-center gap-3">
-                <div className="p-2 bg-gradient-to-br from-brand-blue to-brand-pink rounded-lg shadow-lg">
-                  <Shield className="w-5 h-5 sm:w-6 sm:h-6 text-white" />
+                <div className={`bg-gradient-to-br from-brand-blue to-brand-pink rounded-lg shadow-lg ${
+                  isMobile ? 'p-1.5' : 'p-2'
+                }`}>
+                  <Shield className={`text-white ${isMobile ? 'w-4 h-4' : 'w-5 h-5 sm:w-6 sm:h-6'}`} />
                 </div>
                 <div>
-                  <h1 className="text-lg sm:text-xl font-mali font-bold text-gray-800">Admin Panel</h1>
-                  <p className="text-xs sm:text-sm font-mali text-gray-600">Zinga Linga Management</p>
+                  <h1 className={`font-mali font-bold text-gray-800 ${
+                    isMobile ? 'text-base' : 'text-lg sm:text-xl'
+                  }`}>Admin Panel</h1>
+                  <p className={`font-mali text-gray-600 ${
+                    isMobile ? 'text-xs' : 'text-xs sm:text-sm'
+                  }`}>Zinga Linga Management</p>
                 </div>
               </div>
             )}
@@ -407,16 +415,18 @@ export const ImprovedAdminDashboard: React.FC<ImprovedAdminDashboardProps> = ({ 
             {isMobile && (
               <button
                 onClick={() => setShowMobileSidebar(false)}
-                className="p-2 hover:bg-gray-100 rounded-lg transition-colors"
+                className="p-1.5 hover:bg-gray-200 rounded-lg transition-colors"
               >
-                <X className="w-5 h-5" />
+                <X className="w-4 h-4" />
               </button>
             )}
           </div>
         </div>
 
         {/* Navigation Menu */}
-        <nav className="p-3 sm:p-4 space-y-2 flex-1 overflow-y-auto bg-gradient-to-b from-white to-gray-50/50">
+        <nav className={`flex-1 overflow-y-auto ${
+          isMobile ? 'p-2 space-y-1 bg-white' : 'p-3 sm:p-4 space-y-2 bg-gradient-to-b from-white to-gray-50/50'
+        }`}>
           {sidebarItems.map((item) => (
             <div key={item.id} className="relative group">
               <button
@@ -426,23 +436,35 @@ export const ImprovedAdminDashboard: React.FC<ImprovedAdminDashboardProps> = ({ 
                     setShowMobileSidebar(false);
                   }
                 }}
-                className={`w-full flex items-center gap-3 px-3 sm:px-4 py-3 rounded-xl font-mali font-medium transition-all relative ${
-                  activeTab === item.id
-                    ? 'bg-gradient-to-r from-brand-blue to-brand-pink text-white shadow-lg transform scale-[1.02]'
-                    : 'text-gray-700 hover:bg-gradient-to-r hover:from-brand-blue/10 hover:to-brand-pink/10 hover:text-gray-900 hover:shadow-md'
+                className={`w-full flex items-center gap-3 font-mali font-medium transition-all relative ${
+                  isMobile 
+                    ? `px-3 py-2.5 rounded-lg ${
+                        activeTab === item.id
+                          ? 'bg-gray-900 text-white shadow-md'
+                          : 'text-gray-700 hover:bg-gray-100 active:bg-gray-900 active:text-white'
+                      }`
+                    : `px-3 sm:px-4 py-3 rounded-xl ${
+                        activeTab === item.id
+                          ? 'bg-gradient-to-r from-brand-blue to-brand-pink text-white shadow-lg transform scale-[1.02]'
+                          : 'text-gray-700 hover:bg-gradient-to-r hover:from-brand-blue/10 hover:to-brand-pink/10 hover:text-gray-900 hover:shadow-md'
+                      }`
                 }`}
               >
-                <item.icon className="w-5 h-5 flex-shrink-0" />
+                <item.icon className={`flex-shrink-0 ${isMobile ? 'w-4 h-4' : 'w-5 h-5'}`} />
                 {(!sidebarCollapsed || isMobile) && (
                   <>
                     <div className="flex-1 text-left">
-                      <div className="font-bold text-sm sm:text-base">{item.label}</div>
-                      <div className="text-xs opacity-75">{item.description}</div>
+                      <div className={`font-bold ${isMobile ? 'text-sm' : 'text-sm sm:text-base'}`}>{item.label}</div>
+                      {!isMobile && (
+                        <div className="text-xs opacity-75">{item.description}</div>
+                      )}
                     </div>
                     {item.badge && item.badge > 0 && (
                       <span className={`px-2 py-1 text-xs font-bold rounded-full shadow-sm ${
                         activeTab === item.id 
-                          ? 'bg-white text-brand-blue' 
+                          ? isMobile 
+                            ? 'bg-white text-gray-900'
+                            : 'bg-white text-brand-blue'
                           : 'bg-gradient-to-r from-red-500 to-red-600 text-white'
                       }`}>
                         {item.badge}
@@ -458,7 +480,7 @@ export const ImprovedAdminDashboard: React.FC<ImprovedAdminDashboardProps> = ({ 
               </button>
               
               {/* Tooltip for collapsed sidebar */}
-              {sidebarCollapsed && (
+              {sidebarCollapsed && !isMobile && (
                 <div className="absolute left-full ml-2 top-1/2 transform -translate-y-1/2 bg-gray-800 text-white px-3 py-2 rounded-lg text-sm opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none whitespace-nowrap z-50 shadow-lg">
                   <div className="font-bold">{item.label}</div>
                   <div className="text-xs opacity-75">{item.description}</div>
@@ -469,24 +491,36 @@ export const ImprovedAdminDashboard: React.FC<ImprovedAdminDashboardProps> = ({ 
         </nav>
 
         {/* User Profile Section */}
-        <div className="absolute bottom-0 left-0 right-0 p-3 sm:p-4 border-t border-gray-200 bg-gradient-to-r from-gray-50 to-white">
-          <div className="flex items-center gap-3 mb-3">
-            <div className="w-10 h-10 sm:w-12 sm:h-12 bg-gradient-to-br from-brand-green to-brand-blue rounded-full flex items-center justify-center shadow-lg">
-              <span className="text-white font-mali font-bold text-base sm:text-lg">{user.name.charAt(0)}</span>
+        <div className={`border-t border-gray-200 ${
+          isMobile ? 'p-3 bg-gray-50' : 'absolute bottom-0 left-0 right-0 p-3 sm:p-4 bg-gradient-to-r from-gray-50 to-white'
+        }`}>
+          <div className={`flex items-center gap-3 ${isMobile ? 'mb-2' : 'mb-3'}`}>
+            <div className={`bg-gradient-to-br from-brand-green to-brand-blue rounded-full flex items-center justify-center shadow-lg ${
+              isMobile ? 'w-8 h-8' : 'w-10 h-10 sm:w-12 sm:h-12'
+            }`}>
+              <span className={`text-white font-mali font-bold ${
+                isMobile ? 'text-sm' : 'text-base sm:text-lg'
+              }`}>{user.name.charAt(0)}</span>
             </div>
             {(!sidebarCollapsed || isMobile) && (
               <div className="flex-1">
-                <p className="font-mali font-bold text-gray-800 text-sm sm:text-base">{user.name}</p>
-                <p className="font-mali text-gray-600 text-xs sm:text-sm capitalize">{user.role} Account</p>
+                <p className={`font-mali font-bold text-gray-800 ${
+                  isMobile ? 'text-sm' : 'text-sm sm:text-base'
+                }`}>{user.name}</p>
+                <p className={`font-mali text-gray-600 capitalize ${
+                  isMobile ? 'text-xs' : 'text-xs sm:text-sm'
+                }`}>{user.role} Account</p>
               </div>
             )}
           </div>
           <button
             onClick={onLogout}
-            className="w-full flex items-center justify-center gap-2 bg-gradient-to-r from-red-50 to-red-100 text-red-600 px-3 sm:px-4 py-2 sm:py-3 rounded-xl hover:from-red-100 hover:to-red-200 transition-all duration-300 font-mali font-medium shadow-sm hover:shadow-md"
+            className={`w-full flex items-center justify-center gap-2 bg-gradient-to-r from-red-50 to-red-100 text-red-600 rounded-xl hover:from-red-100 hover:to-red-200 transition-all duration-300 font-mali font-medium shadow-sm hover:shadow-md ${
+              isMobile ? 'px-3 py-2 text-sm' : 'px-3 sm:px-4 py-2 sm:py-3 text-sm sm:text-base'
+            }`}
           >
             <LogOut className="w-4 h-4" />
-            {(!sidebarCollapsed || isMobile) && <span className="text-sm sm:text-base">Logout</span>}
+            {(!sidebarCollapsed || isMobile) && <span>Logout</span>}
           </button>
         </div>
       </div>
